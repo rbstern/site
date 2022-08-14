@@ -6,4 +6,3 @@ title: Cursos
 type: page
 view: 2
 ---
-
