@@ -1,5 +1,5 @@
 ---
-date: "2022-08-15"
+date: "2022-08-14"
 author: "Rafael B. Stern"
 highlight: true
 linkTitle: Introdução à Probabilidade e à Estatística II
