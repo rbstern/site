@@ -122,7 +122,7 @@ escrever um dicionário como:
 - **Sepal.length**: Comprimento em centímetros da sépala. 
 - **Sepal.width**: Largura em centímetro da sépala.
 - **Petal.length**: Comprimento em centímetros da pétala. 
-- **Sepal.width**: Largura em centímetro da pétala.
+- **Petal.width**: Largura em centímetro da pétala.
 - **Species**: Espécie da unidade amostral.
 Pode assumir os valores "setosa", "versicolor" ou "virginica".
 

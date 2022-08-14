@@ -1,0 +1,143 @@
+-
+ date: "15/08"
+ lecture: "Descrição do curso e revisão"
+ 
+-
+ date: "17/08"
+ lecture: "Variáveis aleatórias e função de densidade acumulada"
+ 
+-
+ date: "22/08"
+ lecture: "Função de densidade"
+ 
+-
+ date: "24/08"
+ lecture: "Função de densidade condicional e independência"
+
+-
+ date: "29/08"
+ lecture: "Esperança"
+ 
+-
+ date: "31/08"
+ lecture: "Variância"
+ 
+-
+ date: "12/09"
+ lecture: "Funções geradora de momentos e característica"
+ 
+-
+ date: "14/09"
+ lecture: "Distribuição normal multivariada"
+
+-
+ date: "19/09"
+ lecture: "Transformações sobre a normal multivariada"
+ 
+-
+ date: "21/09"
+ lecture: "Transformações sobre a normal multivariada"
+
+-
+ date: "26/09"
+ lecture: "Revisão"
+ 
+-
+ date: "28/09"
+ lecture: "<strong> Prova 1 </strong>"
+
+-
+ date: "03/10"
+ lecture: "Introdução à Inferência Estatística"
+
+-
+ date: "05/10"
+ lecture: "Estimação pontual: mínimos quadrados"
+
+-
+ date: "10/10"
+ lecture: "Estimação pontual: máxima verossimilhança"
+
+-
+ date: "12/10"
+ lecture: "Feriado"
+
+-
+ date: "17/10"
+ lecture: "Conceitos de estimação intervalar"
+
+-
+ date: "19/10"
+ lecture: "Conceitos de testes de hipótese"
+
+-
+ date: "24/10"
+ lecture: "Exemplo: Teste z"
+
+-
+ date: "26/10"
+ lecture: "Exemplo: Teste t"
+
+-
+ date: "31/10"
+ lecture: "Exemplo: Teste para duas populações: independentes e pareadas"
+
+-
+ date: "02/11"
+ lecture: "Feriado"
+
+-
+ date: "07/11"
+ lecture: "Revisão"
+
+-
+ date: "09/11"
+ lecture: "<strong> Prova 2 </strong>"
+
+-
+ date: "14/11"
+ lecture: "Feriado"
+
+-
+ date: "16/11"
+ lecture: "Exemplo: Testes de aderência, homogeneidade e independência"
+
+-
+ date: "21/11"
+ lecture: "Introdução à regressão"
+
+-
+ date: "23/11"
+ lecture: "Regressão linear simples"
+
+-
+ date: "28/11"
+ lecture: "Regressão linear simples"
+
+-
+ date: "30/11"
+ lecture: "Regressão linear múltipla"
+
+-
+ date: "05/12"
+ lecture: "Regressão linear múltipla"
+
+-
+ date: "07/12"
+ lecture: "Validação cruzada"
+
+-
+ date: "12/12"
+ lecture: "Regularização em regressão"
+
+-
+ date: "14/12"
+ lecture: "Regularização em regressão"
+
+-
+ date: "19/12"
+ lecture: "Revisão"
+
+- 
+ date: "21/12"
+ lecture: "<strong> Prova 3 </strong>"

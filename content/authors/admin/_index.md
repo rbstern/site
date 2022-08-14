@@ -1,5 +1,5 @@
 ---
-bio: I am an Assistant Professor at the Federal University of São Carlos. I have a B.A. in Statistics from University of São Paulo, a B.A. in Law from Pontifícia Universidade Católica in São Paulo, and a Ph.D. in Statistics from Carnegie Mellon University. I am currently a member of the Scientific Council of the Brazilian Association of Jurimetrics, an associate investigator at NeuroMat and a member of the Order of Attorneys of Brazil.
+bio: I am an Assistant Professor at the University of São Paulo. I have a B.A. in Statistics from the University of São Paulo, a B.A. in Law from Pontifícia Universidade Católica in São Paulo, and a Ph.D. in Statistics from Carnegie Mellon University. I am currently a member of the Scientific Council of the Brazilian Association of Jurimetrics, an associate investigator at NeuroMat and a member of the Order of Attorneys of Brazil.
 education:
   courses:
   - course: PhD in Statistics
@@ -49,7 +49,7 @@ superuser: true
 title: Rafael B. Stern
 ---
 
-I am an Assistant Professor at the Federal University of São Carlos. I am currently a member of the Scientific Council of the Brazilian Association of Jurimetrics, an associate investigator at NeuroMat and a member of the Order of Attorneys of Brazil.
+I am an Assistant Professor at the University of São Paulo. I am currently a member of the Scientific Council of the Brazilian Association of Jurimetrics, an associate investigator at NeuroMat and a member of the Order of Attorneys of Brazil.
 I am a member of the following research groups:
 
 <table>
