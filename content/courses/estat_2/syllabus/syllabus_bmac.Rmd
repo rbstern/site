@@ -187,3 +187,4 @@ knitr::kable(calendar_table,
               rownames = FALSE) %>% 
 kableExtra::kable_styling()
 ```
+
