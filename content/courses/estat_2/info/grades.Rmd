@@ -1,0 +1,32 @@
+---
+date: "2022-08-14"
+title: "Notas"
+highlight: true
+output: html_document
+type: book
+---
+
+## Tabela de notas
+
+- OBS: Notas são indexadas pelos últimos 3 dígitos do número USP.
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+library(DT)
+library(tidyverse)
+library(widgetframe)
+data = read_csv("./grades.csv")
+rmarkdown::paged_table(data)
+``` 
+
+# Resumo das avaliações
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+data %>% 
+  pivot_longer(-NUSP, names_to = "key", values_to = "value") %>% 
+  filter(value != 0) %>% 
+  group_by(key) %>% 
+  ggplot(aes(x = key, y = value)) +
+  geom_boxplot() +
+  xlab("Avaliação") +
+  ylab("Nota")
+``` 
