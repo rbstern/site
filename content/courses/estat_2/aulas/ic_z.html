@@ -1,0 +1,247 @@
+---
+title: "Intervalos de Confiança I"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 10
+bibliography: refs.bib
+---
+
+
+
+<p>Em algumas situações, desejamos criar
+um intervalo pequeno tal que
+seja bastante plausível que
+o parâmetro esteja dentro dele.
+A seguir, veremos formalmente como
+operacionalizar este objetivo.
+Estaremos interessados em construir
+um intervalo de confiança para <span class="math inline">\(\mu\)</span>.</p>
+<p>O primeiro passo consiste em observar que
+um intervalo é constituído por
+um limite inferior, <span class="math inline">\(l_1(X)\)</span>, e
+um limite superior <span class="math inline">\(l_2(X)\)</span>. Assim,
+construir o intervalos consiste em
+escolher <span class="math inline">\(l_1(X)\)</span> e <span class="math inline">\(l_2(X)\)</span> baseados na amostra.
+Para cumprir nossos objetivos, gostaríamos que
+<span class="math inline">\(l2(X)-l_1(X)\)</span> fosse pequeno, ou seja,
+o comprimento do intervalo fosse pequeno e,
+antes de a amostra ser observada,
+<span class="math inline">\(P(l_1(X) &lt; \mu &lt; l_2(X))\)</span> seja grande.
+Em particular, fixaremos um <span class="math inline">\(\alpha\)</span> pequeno e
+construíremos o intervalo de tal forma que
+<span class="math inline">\(P(l_1(X) &lt; \mu &lt; l_2(X)) = 1-\alpha\)</span>.
+Após obtida a amostra, dizemos que
+<span class="math inline">\([l_1(x),l_2(x)]\)</span> é um intervalo de confiança
+<span class="math inline">\(1-\alpha\)</span> para <span class="math inline">\(\mu\)</span>.</p>
+<p>A seguir, veremos alguns exemplos de intervalo de confiança.</p>
+<div id="normal-com-variância-conhecida" class="section level2">
+<h2>Normal com variância conhecida</h2>
+<p>Considere que <span class="math inline">\(X_{1},\ldots,X_{n}\)</span> são
+observações independentes e tais que
+<span class="math inline">\(X_{i} \sim N(\mu,\sigma_0^2)\)</span>, onde
+<span class="math inline">\(\sigma_0^2\)</span> é o desvio padrão conhecido
+das observações. Gostaríamos de
+utilizar estas observações para determinar
+<span class="math inline">\(l_1(X)\)</span> e <span class="math inline">\(l_2(X)\)</span> de tal forma que</p>
+<p><span class="math display">\[
+P(l_1(X) \leq \mu \leq l_2(X))
+= 1-\alpha
+\]</span>
+Para tal, note que <span class="math inline">\(\bar{X} \sim N\left(\mu,\frac{\sigma_0^2}{n}\right)\)</span> e,
+portanto, decorre da padronização da distribuição normal que
+<span class="math display">\[
+\frac{\sqrt{n}(\bar{X}-\mu)}{\sigma_0}
+= \frac{\bar{X}-\mu}{\sqrt{\frac{\sigma_0^2}{n}}}
+\sim N(0,1)
+\]</span>
+Como <span class="math inline">\(Z = \frac{\sqrt{n}(\bar{X}-\mu)}{\sigma_0}\)</span> tem
+distribuição normal padrão, podemos determinar
+<span class="math inline">\(c_1\)</span> e <span class="math inline">\(c_2\)</span> de tal forma que
+<span class="math inline">\(P(Z &lt; c_1) = 0.5\alpha\)</span> e <span class="math inline">\(P(Z &gt; c_2)=0.5\alpha\)</span>.
+Neste caso, temos que:</p>
+<p><span class="math display">\[P\left(c_1 &lt; \frac{\bar{X}-\mu}{\sqrt{\frac{\sigma_0^2}{n}}} &lt; c_2\right) = 1-\alpha\]</span></p>
+<p>No <strong>R</strong>, o comando <em>qnorm</em>(<span class="math inline">\(\alpha\)</span>) determina o valor <span class="math inline">\(z\)</span>,
+tal que <span class="math inline">\(P(Z &lt; z) = \alpha\)</span>. Assim, as constantes <span class="math inline">\(c_1\)</span> e <span class="math inline">\(c_2\)</span>
+podem ser obtidas no <strong>R</strong>
+por meio do comando <em>qnorm</em>:
+<span class="math display">\[
+\begin{align*}
+P\left(qnorm(0.5\alpha) \leq \frac{\sqrt{n}(\bar{X}-\mu)}{\sigma_0}
+\leq qnorm(1-0.5\alpha)\right)
+&amp;= 1-\alpha \\
+P\left(\frac{\sigma_0}{\sqrt{n}} qnorm(0.5\alpha) \leq (\bar{X}-\mu)
+\leq \frac{\sigma_0}{\sqrt{n}} qnorm(1-0.5\alpha)\right)
+&amp;= 1 - \alpha \\
+P\left(\bar{X} - \frac{\sigma_0}{\sqrt{n}} qnorm(1-0.5\alpha) \leq \mu
+\leq \bar{X} - \frac{\sigma_0}{\sqrt{n}} qnorm(0.5\alpha) \right)
+&amp;= 1 - \alpha
+\end{align*}
+\]</span>
+Portanto, se tomarmos
+<span class="math inline">\(l_1(X) = \bar{X} - \frac{\sigma_0}{\sqrt{n}} qnorm(1-0.5\alpha)\)</span> e
+<span class="math inline">\(l_2(X) = \bar{X} - \frac{\sigma_0}{\sqrt{n}} qnorm(0.5\alpha)\)</span>, então
+<span class="math inline">\([l_1(X),l_2(X)]\)</span> é
+um intervalo de confiança <span class="math inline">\(1-\alpha\)</span> para <span class="math inline">\(\mu\)</span>.</p>
+<div id="aplicação-numérica" class="section level3">
+<h3>Aplicação numérica</h3>
+<p>Considere que <span class="math inline">\(X_{1},\ldots,X_{9}\)</span> são independentes e
+<span class="math inline">\(X_i \sim N(\mu,1)\)</span>, Considere que
+observamos que <span class="math inline">\(\bar{X} = 8\)</span> e
+desejamos construir um intervalo de
+confiança <span class="math inline">\(95\%\)</span> para <span class="math inline">\(\mu\)</span>.
+Neste caso, temos que <span class="math inline">\(\alpha = 0.05\)</span>,
+assim podemos obter as quantidades apropriadas
+da distribuição normal e o intervalo de confiança
+para <span class="math inline">\(\mu\)</span> da seguinte forma.</p>
+<pre class="r"><code> n = 9
+ media = 8
+ alpha = 0.05
+ sigma = 1
+ print(qnorm(1-0.5*alpha))</code></pre>
+<pre><code>## [1] 1.959964</code></pre>
+<pre class="r"><code> l_1 = media - sigma/sqrt(n) * qnorm(1-0.5*alpha)
+ l_2 = media - sigma/sqrt(n) * qnorm(0.5*alpha)
+ c(l_1, l_2)</code></pre>
+<pre><code>## [1] 7.346679 8.653321</code></pre>
+<p>Isto é, <span class="math inline">\([7.34, 8.65]\)</span> é um intervalo
+de confiança <span class="math inline">\(95\%\)</span> para <span class="math inline">\(\mu\)</span>.</p>
+</div>
+</div>
+<div id="interpretação" class="section level2">
+<h2>Interpretação</h2>
+<p>Intervalos de confiança são interpretados
+incorretamente com frequência. Por exemplo,
+considere que, antes que a amostra seja observada
+temos <span class="math inline">\(P(l_1(X) &lt; \mu &lt; l_2(X)) = 95\%\)</span>, e
+com base na amostra calculamos <span class="math inline">\(l_1(x) = 0.5\)</span> e <span class="math inline">\(l_2(x)=0.7\)</span>.
+Dizemos que <span class="math inline">\([0.5, 0.7]\)</span> tem confiança 95% para <span class="math inline">\(\mu\)</span>.
+Também é comum que se interprete que, com probabilidade 95%,
+<span class="math inline">\(\mu\)</span> está em <span class="math inline">\([0.5,0.7]\)</span>. Contudo,
+está interpretação está <strong>errada</strong>!</p>
+<p>Note que a probabilidade de 95% no exemplo é
+calculada antes de a amostra ter sido coletada.
+Em outras palavras, podemos interpretar que,
+se gerarmos vários bancos de dados independentes
+da mesma população, então <span class="math inline">\(\mu\)</span> pertencerá a
+cerca de 95% dos intervalos gerados por
+meio destes bancos de dados.
+Contudo, após um particular banco de dados ser coletado,
+ou <span class="math inline">\(\mu\)</span> está dentro do intervalo calculado ou não está.
+A confiança de um particular intervalo gerado
+não é a probabilidade de que o parâmetro pertença a ele.</p>
+</div>
+<div id="estudo-de-simulação" class="section level2">
+<h2>Estudo de simulação</h2>
+<p>Podemos utilizar um estudo de simulação para
+afiar nossa intuição sobre esta interpretação.
+A vantagem de um estudo de simulação é que
+ele é uma dos raros casos em que sabemos quais
+são os parâmetros populacionais que geram a amostra.
+Assim, podemos verificar empiricamente
+se nossos métodos estão funcionando adequadamente.
+Neste exemplo, geraremos uma amostra em que
+<span class="math inline">\(\mu = 10\)</span>, <span class="math inline">\(\sigma = 1\)</span> e fixaremos <span class="math inline">\(\alpha=0.05\)</span>.</p>
+<pre class="r"><code>mu = 10
+sigma = 1
+n = 36
+alpha = 0.05
+x = rnorm(n, mu, sigma)</code></pre>
+<p>Para gerar um intervalo de confiança,
+podemos usar o código abaixo:</p>
+<pre class="r"><code>ic = function(x, alpha)
+{
+  l = mean(x) - qnorm(1-alpha/2)*sigma/sqrt(n)
+  u = mean(x) - qnorm(alpha/2)*sigma/sqrt(n)
+  c(l, u)
+}</code></pre>
+<p>Suscintamente, a função ic nos retorna dois valores:
+o limite inferior e o limite superior do intervalo de confiança.
+Usando estes esclarecimentos, a função ic nos retorna
+exatamente o intervalo de confiança que vimos em aula.
+Para esta simulação, temos o intervalo:</p>
+<pre class="r"><code>library(tidyverse)
+ic_obs = ic(x, alpha) 
+ic_obs %&gt;% round(2)</code></pre>
+<pre><code>## [1]  9.92 10.58</code></pre>
+<p>Como neste estudo de simulação sabemos que <span class="math inline">\(\mu = 10\)</span>,
+podemos verificar empiricamente se, para esta amostra,
+<span class="math inline">\(\mu\)</span> pertence ao intervalo de confiança.
+Isto é, se <span class="math inline">\(\mu\)</span> é inferior ao limite superior do intervalo e
+superior ao limite inferior do intervalo.</p>
+<pre class="r"><code>(mu &lt;= ic_obs[2]) &amp;&amp; (mu &gt;= ic_obs[1])</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>É por isso que neste curso que dizemos que,
+<strong>após a amostra ser observada</strong>,
+é falso que a probabilidade de
+o intervalo
+obtido conter o parâmetro é <span class="math inline">\(1-\alpha\)</span>.
+De fato, após a amostra ser observada,
+podemos a princípio verificar se <span class="math inline">\(\mu\)</span> está ou não no intervalo,
+então a probabilidade é <span class="math inline">\(0\)</span> ou <span class="math inline">\(1\)</span>.
+A única dificuldade prática é que,
+fora de um estudo de simulação,
+raramente sabemos o valor de <span class="math inline">\(\mu\)</span>.
+Então não é possível realizar diretamente essa verificação.</p>
+<p>Então o que significa
+termos confiança de <span class="math inline">\(1-\alpha\)</span> sobre o intervalo?
+Como vimos, esta garantia deve ser interpretada realizando
+um experimento mental em que
+coletamos os mesmos dados inúmeras vezes e independentemente.
+Se para conjunto de dados coletado
+construirmos um intervalo de confiança,
+<span class="math inline">\(1-\alpha\)</span> destes intervalos vão conter o valor de <span class="math inline">\(\mu\)</span>.</p>
+<p>Como estamos realizando um estudo de simulação,
+podemos concretizar este experimento mental:</p>
+<pre class="r"><code>B = 10^5
+sucesso = rep(NA, B)
+for(ii in 1:B)
+{
+  x = rnorm(n, mu, sigma)
+  ic_obs = ic(x , alpha)
+  sucesso[ii] = (mu &lt;= ic_obs[2]) &amp;&amp; (mu &gt;= ic_obs[1])
+}
+mean(sucesso) %&gt;% round(2)</code></pre>
+<pre><code>## [1] 0.95</code></pre>
+<p>Neste código, coletamos <span class="math inline">\(100.000\)</span> vezes
+uma amostra de <span class="math inline">\(36\)</span> observações e,
+para cada amostra obtida,
+calculamos o intervalo de confiança.
+Ao final do código, observamos que
+aproximadamente <span class="math inline">\(95\%\)</span> dos intervalos contém
+o valor de <span class="math inline">\(\mu\)</span>. Isto é,
+a confiança de um IC é um critério de
+<strong>replicabilidade</strong> e não uma garantia sobre
+o intervalo construído para uma particular amostra observada.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li><p>Defina e interprete intervalo de confiança
+em suas próprias palavras.</p></li>
+<li><p>Um experimentalista experiente realizou <span class="math inline">\(9\)</span> medições da
+largura de um objeto usando um paquímetro.
+A média destas observações foi de <span class="math inline">\(1.2 mm\)</span>.
+O desvio padrão do experimentalista
+com o paquímetro é de <span class="math inline">\(0.2 mm\)</span>.
+Usando estas informações, construa intervalo com confiança
+90%, 95% e 99% para a largura do objeto.</p></li>
+<li><p>No exemplo da normal com variância conhecida, obtemos
+que o comprimento do intervalo de confiança é
+<span class="math inline">\(\frac{2\sigma_0 qnorm(1-0.5\alpha)}{\sqrt{n}}\)</span>.
+Isto ocorre pois <span class="math inline">\(qnorm(0.5\alpha)=1-qnorm(1-0.5\alpha)\)</span>.
+Interprete <span class="math inline">\(\sigma_0\)</span>, <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(n\)</span> e
+como estas quantidades inluenciam no
+tamanho do intervalo de confiança.</p></li>
+<li><p>O caso da normal com variância populacional conhecida é
+um caso especial do caso da normal com variância populacional desconhecida.
+Em particular, o intervalo de confiança obtido
+para a variância populacional desconhecida é válido
+mesmo quando ela é conhecida. Apesar disso, é indesejável
+usar este intervalo neste caso. Por quê?</p></li>
+<li><p>Obtenha a linha de raciocínio completa para obter
+o intervalo de confiança no caso da normal com variância desconhecida.</p></li>
+</ol>
+</div>
