@@ -12,3 +12,4 @@ type: book
 - [Notas de aula de Inferência](https://www.overleaf.com/read/ndcxvbjgvkbx).
 
 - [Lista de exercícios 1](https://www.overleaf.com/read/gnfhhrddpqjg).
+- [Lista de exercícios 2](https://www.overleaf.com/read/fznpbzkkdyvt).
