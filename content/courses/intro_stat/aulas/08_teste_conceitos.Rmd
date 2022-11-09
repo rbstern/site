@@ -114,8 +114,8 @@ $X_i$ pode ser o peso da $i$-ésima vaca
 alimentada com uma determinada ração.
 Deseja-se provar que o peso médio de
 vacas alimentadas com esta ração é maior do que
-$\mu_0 kg$, ou seja, a hipótese nula é
-$H_0: \mu_0 \leq 500$.
+$500 kg$, ou seja, a hipótese nula é
+$H_0: \mu \leq 500$.
 
 Para capturar o quanta a evidência 
 os dados trazem contra $H_0$, podemos
@@ -174,8 +174,8 @@ $$\bar{X}-\mu_0 > \frac{\text{qnorm}(1-\alpha)\sigma_0}{\sqrt{n}}.$$
 Por exemplo, considere que observamos $9$ vacas
 alimentadas com a ração de interesse.
 Sabemos que o desvio padrão nos pesos destas vacas é de $50 kg$
-e, portanto, o peso de cada vaca é $X_i \sim N(\mu, 50)$.
-O peso média destas foi de $530$.
+e, portanto, o peso de cada vaca é $X_i \sim N(\mu, 50^2)$.
+O peso médio destas foi de $530$.
 Se desejamos testar a hipótese $H_0: \mu \leq 500$ a
 um nível de $\alpha = 5\%$, podemos
 realizar os cálculos no **R** da seguinte forma:
@@ -302,3 +302,4 @@ A medida $|\bar{X}-\mu_0|$ captura evidência contra $H_0: \mu = \mu_0$?
 Se desejamos rejeitar $H_0$ quando $|\bar{X}-\mu_0| > c$,
 determine o valor de $c$ que controla o erro tipo I em $\alpha$.
 Determine o p-valor deste teste.
+

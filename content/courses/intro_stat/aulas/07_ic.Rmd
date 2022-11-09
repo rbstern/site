@@ -200,7 +200,7 @@ incorretamente com frequência. Por exemplo,
 considere que, antes que a amostra seja observada
 temos $P(l_1(X) < \mu < l_2(X)) = 95\%$, e
 com base na amostra calculamos $l_1(x) = 0.5$ e $l_2(x)=0.7$.
-Dizemos que $[0.5, 0.7]$ tem coniança 95\% para $\mu$.
+Dizemos que $[0.5, 0.7]$ tem confiança 95\% para $\mu$.
 Também é comum que se interprete que, com probabilidade 95\%,
 $\mu$ está em $[0.5,0.7]$. Contudo, 
 está interpretação está **errada**!
@@ -269,3 +269,4 @@ usar este intervalo neste caso. Por quê?
 
 5. Obtenha a linha de raciocínio completa para obter 
 o intervalo de confiança no caso da normal com variância desconhecida.
+
