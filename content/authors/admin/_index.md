@@ -56,7 +56,7 @@ I am a member of the following research groups:
   <tr>
     <td valign="top"><a href = "http://www.small.ufscar.br/"><img src="https://www.small-lab.science/figures/logo.png" width="200"></a></td>
     <td valign="top"><a href = "https://www.abj.org.br/"><img src="https://abj.org.br/assets/logo-home.png" width="200"></a></td>
-    <td valign="top"><a href = "https://www.abj.org.br/"><img src="http://www.gis.des.ufscar.br/imagens/group1.png" width="200"></a></td>
+    <td valign="top"><a href = "http://www.gis.des.ufscar.br/index.php">{{< figure src="gis.png" >}}</a></td>
     <td valign="top"><a href = "https://neuromat.numec.prp.usp.br/"><img src="https://neuromat.numec.prp.usp.br/static/img/neuromat.png" width="200"></a></td>
   </tr>
 </table>
