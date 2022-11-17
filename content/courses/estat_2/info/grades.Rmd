@@ -14,7 +14,8 @@ type: book
 library(DT)
 library(tidyverse)
 library(widgetframe)
-data = read_csv("./grades.csv")
+data = read_csv("./grades.csv") %>% 
+  filter(P1 + P2 != 0)
 rmarkdown::paged_table(data)
 ``` 
 
@@ -30,3 +31,5 @@ data %>%
   xlab("Avaliação") +
   ylab("Nota")
 ``` 
+ 
+ 
