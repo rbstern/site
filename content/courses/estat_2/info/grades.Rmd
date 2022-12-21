@@ -15,7 +15,8 @@ library(DT)
 library(tidyverse)
 library(widgetframe)
 data = read_csv("./grades.csv") %>% 
-  filter(P1 + P2 != 0)
+  filter((P1 + P2 + P3) != 0) %>% 
+  mutate(MF = 0.3*P1 + 0.3*P2 + 0.35*P3 + Part)
 rmarkdown::paged_table(data)
 ``` 
 
@@ -31,5 +32,3 @@ data %>%
   xlab("Avaliação") +
   ylab("Nota")
 ``` 
- 
- 
