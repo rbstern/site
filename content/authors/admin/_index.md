@@ -23,8 +23,8 @@ interests:
 - Jurimetrics
 - Machine Learning
 organizations:
-- name: Universidade Federal de São Carlos
-  url: https://www.ufscar.br/
+- name: Universidade de São Paulo
+  url: https://www.usp.br/
 role: Professor of Statistics
 social:
 - icon: envelope
@@ -54,10 +54,9 @@ I am a member of the following research groups:
 
 <table>
   <tr>
-    <td valign="top"><a href = "http://www.small.ufscar.br/"><img src="https://www.small-lab.science/figures/logo.png" width="200"></a></td>
-    <td valign="top"><a href = "https://www.abj.org.br/"><img src="https://abj.org.br/assets/logo-home.png" width="200"></a></td>
-    <td valign="top"><a href = "http://www.gis.des.ufscar.br/index.php">{{< figure src="gis.png" >}}</a></td>
-    <td valign="top"><a href = "https://neuromat.numec.prp.usp.br/"><img src="https://neuromat.numec.prp.usp.br/static/img/neuromat.png" width="200"></a></td>
+    <td valign="top"><a href = "http://www.small.ufscar.br/"><img src="https://www.small-lab.science/figures/logo.png" heigth="100"></a></td>
+    <td valign="top"><a href = "https://www.abj.org.br/"><img src="https://abj.org.br/assets/logo-home.png" heigth="100"></a></td>
+    <td valign="top"><a href = "https://neuromat.numec.prp.usp.br/"><img src="https://neuromat.numec.prp.usp.br/static/img/neuromat.png" heigth="100"></a></td>
   </tr>
 </table>
 
