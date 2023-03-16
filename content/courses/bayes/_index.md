@@ -1,8 +1,8 @@
 ---
-date: "2022-01-01"
-linkTitle: "Inferência Bayesiana"
+date: "2023-03-10"
+linkTitle: "(MAE0302) Inferência Bayesiana"
 summary: Princípios e aplicações da Inferência Bayesiana
-title: "Inferência Bayesiana"
+title: "MAE0302 - Inferência Bayesiana"
 type: book
 ---
 
