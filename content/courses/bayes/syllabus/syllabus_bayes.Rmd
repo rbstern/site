@@ -14,10 +14,11 @@ values_mon = c("Carlos Alberto de Souza", "carlos.silva.souza@usp.br", "a marcar
 contato = tibble::tibble(variaveis = keys,
                          Instrutor = values,
                          Monitor  = values_mon)
-DT::datatable(contato,
-              escape = FALSE,
-              options = list(dom = 't'),
-              rownames = FALSE)
+knitr::kable(contato,
+             escape = FALSE,
+             options = list(dom = 't'),
+             rownames = FALSE) %>% 
+kableExtra::kable_styling()
 ```
 
 - Aulas: 2as às 19h20.

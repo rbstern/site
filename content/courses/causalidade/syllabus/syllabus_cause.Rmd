@@ -1,6 +1,6 @@
 ---
-date: "2022-08-15"
-title: "MAE0418	- Estatística Documentária"
+date: "2023-03-10"
+title: "Programa do curso"
 highlight: true
 output: html_document
 type: book
@@ -20,10 +20,10 @@ knitr::kable(escape = FALSE,
 kableExtra::kable_styling()
 ```
 
-- Aulas: 2a, 16h00-17h40; e 5a, 16h00-17h40
+- Aulas: 5as e 6as: 16h00-17h40
 
 - Instruções para o envio de e-mails: 
-Por favor adicione ``[MAE418]'' ao 
+Por favor adicione ``[Causalidade]'' ao 
 tópico de e-mails relacionados a este curso.
 O envio de e-mail deve ser tratado como uma comunicação profissional.
 Evite o uso de abreviações, acrônimos e gírias nos e-mails.
@@ -81,9 +81,6 @@ sem a sua respectiva linha de raciocínio
 - **Geral**: Os alunos são incentivados a 
 discutir comigo e entre si as listas de exercícios.
 
-- Ainda que as listas de exercícios não sejam corrigidas,
-apresentarão questões essenciais para o bom desempenho no curso.
-
 ### Participação
 
 - Para obter maestria dos conceitos vistos em aula,
@@ -94,6 +91,12 @@ Estes exercícios são projetados para que você possa
 rapidamente idenficar dúvidas sobre os conceitos aprendidos naquele dia.
 Participação em classe será determinada de acordo com 
 a performance nestes exercícios. 
+
+### Seminário
+
+Você deverá desenvolver um seminário 
+em grupos de até 5 alunos a respeito
+de um tema de seu interesse em Causalidade.
 
 **Política de re-avaliação**: Você poderá requerer uma nova correção
 de uma prova até 5 dias após a devolução desta.
@@ -110,7 +113,7 @@ podendo sua nota aumentar ou diminuir.
 
 ```{r echo = FALSE, message = FALSE}
 library(magrittr)
-keys = c("Participação (geral)", "Lista 1", "Lista 2", "Lista 3")
+keys = c("Participação (geral)", "Prova 1", "Média de Listas", "Seminário")
 values = c("0.05", "0.3", "0.3", "0.35")
 pesos = tibble::tibble(Avaliacao = keys, 
                        Peso = values)
@@ -157,18 +160,15 @@ como reprovação automática e encaminhamento do seu caso a uma Comissão Disci
 
 # Calendário
 
-```{r echo = FALSE, warning = FALSE}
+```{r echo = FALSE, message = FALSE}
 `%>%` = magrittr::`%>%`
-calendar_table = yaml::read_yaml("calendar_cause.yaml") %>% 
-  do.call(rbind, .) %>% 
-  as.data.frame() %>% 
-  tidyr::unnest() %>%
-  tibble::as_tibble() %>%
+calendar_table = readr::read_csv("calendar_cause.csv") %>% 
   dplyr::rename(aula = lecture, data = date)
 knitr::kable(calendar_table,
               escape = FALSE,
-              options = list(dom = 't', pageLength = 50),
+              options = list(dom = 't'),
               rownames = FALSE) %>% 
 kableExtra::kable_styling()
 ```
+
 
