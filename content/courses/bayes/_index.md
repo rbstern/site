@@ -9,3 +9,4 @@ type: book
 - [Notas de aula](https://github.com/rbstern/bayesian_inference_book/raw/master/book.pdf)
 - [Vídeo-aulas](https://www.youtube.com/c/rafaelstern/playlists?view=50&sort=dd&shelf_id=2)
 - [Lista 1](https://www.overleaf.com/read/tnrbwjjgjcbc)
+- [Lista 2](https://www.overleaf.com/read/jjqqphynhgbw)
