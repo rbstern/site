@@ -10,3 +10,4 @@ type: book
 
 - [Notas de aula](https://github.com/rbstern/causality_book/blob/master/book.pdf)
 - [Lista 1](https://www.overleaf.com/read/mnttrwvxzmpb)
+- [Lista 2](https://www.overleaf.com/read/mqgcrxcjhchj)
