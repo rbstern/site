@@ -171,4 +171,3 @@ knitr::kable(calendar_table,
 kableExtra::kable_styling()
 ```
 
-
