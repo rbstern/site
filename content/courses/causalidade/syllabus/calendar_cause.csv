@@ -1,37 +1,39 @@
 date,lecture
-16/03/23,Descrição do curso e Paradoxo de Simpson
-17/03/23,Modelos probabilísticos em grafos
-23/03/23,Confudidores cadeias e colisores
-24/03/23,Independência condicional e D-separação
-30/03/23,D-separação
-31/03/23,Intervenções
-06/04/23,Feriado
-07/04/23,Feriado
-13/04/23,Critério backdoor
-14/04/23,Fórmula do ajuste
-20/04/23,Ponderação pelo inverso da probabilidade
-21/04/23,Feriado
-27/04/23,Estimador duplamente robusto
-28/04/23,Regression discontinuity design (RDD)
-04/05/23,Critério frontdoor
-05/05/23,Do calculus
-11/05/23,Revisão
-12/05/23,Prova 1
-18/05/23,Resultados potenciais
-19/05/23,Variáveis instrumentais
-25/05/23,Variáveis sintéticas
-26/05/23,Contrafactuais
-01/06/23,Contrafactuais
-02/06/23,Aplicação ao Direito
-08/06/23,Feriado
-09/06/23,Feriado
-15/06/23,Descoberta Causal
-16/06/23,Descoberta Causal
-22/06/23,Testes de Independência Condicional
-23/06/23,Aprendizado de representação causal
-29/06/23,Aprendizado de representação causal
-30/06/23,Tópicos especiais
-06/07/23,Tópicos especiais
-07/07/23,Seminário
-13/07/23,Seminário
-14/07/23,Seminário
+05/08/24,Descrição do curso e Paradoxo de Simpson
+07/08/24,Modelos probabilísticos em grafos
+12/08/24,Confudidores cadeias e colisores
+14/08/24,Independência condicional e D-separação
+19/08/24,Intervenções
+21/08/24,Critério backdoor (definição e exemplos)
+26/08/24,Critério backdoor (identificação)
+28/08/24,Critério backdoor (estimação)
+02/09/24,Feriado
+04/09/24,Feriado
+09/09/24,Revisão
+11/09/24,Prova 1
+16/09/24,Regression Discontinuity Design (RDD; exemplos)
+18/09/24,Regression Discontinuity Design (RDD; teoria)
+23/09/24,Critério frontdoor (definição e exemplos)
+25/09/24,Do calculus
+30/09/24,Resultados potenciais
+02/10/24,Comparações entre Pearl e Rubin
+07/10/24,Variáveis instrumentais (definição e exemplos)
+09/10/24,Variáveis instrumentais (teoria)
+14/10/24,Variáveis sintéticas (definição e exemplos)
+16/10/24,Contrafactuais (definição e exemplos)
+21/10/24,Contrafactuais (teoria)
+23/10/24,Contrafactuais (aplicação ao Direito)
+28/10/24,Descoberta Causal (motivação)
+30/10/24,Testes de Independência Condicional
+04/11/24,Algoritmo PC
+06/11/24,Tópicos especiais
+11/11/24,Tópicos especiais
+13/11/24,Tópicos especiais
+18/11/24,Seminários
+20/11/24,Seminários
+25/11/24,Seminários
+27/11/24,Seminários
+02/12/24,Recesso
+04/12/24,Recesso
+09/12/24,Prova Substitutiva
+11/12/24,Prova de Recuperação
