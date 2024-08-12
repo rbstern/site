@@ -4,7 +4,7 @@ author: "Rafael B. Stern"
 highlight: true
 linkTitle: Inferência Causal
 summary: Introdução à Inferência Causal
-title: "Inferência Causal"
+title: "MAE0042/MAE5910 - Inferência Causal"
 type: book
 ---
 
