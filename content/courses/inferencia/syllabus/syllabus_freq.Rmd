@@ -12,7 +12,7 @@ type: book
 library(magrittr)
 keys = c("nome", "email", "encontro")
 values_i = c("Rafael Bassi Stern", "rbstern@gmail.com", "a definir")
-values_m = c("Ana Paula Cavalcante", "analocav@usp.br", "5a - 16h; B139")
+values_m = c("Ana Paula Cavalcante", "analocav@usp.br", "5a - 18h; B139")
 tibble::tibble(variaveis = keys, 
                Instrutor = values_i,
                Monitora = values_m) %>%
