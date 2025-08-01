@@ -1,5 +1,5 @@
 ---
-date: "2025-08-04"
+date: "2025-08-01"
 author: "Rafael B. Stern"
 highlight: true
 linkTitle: Inferência Causal

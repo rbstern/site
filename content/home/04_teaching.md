@@ -15,7 +15,7 @@ subtitle: ''
 
 *Undergraduate courses*
 - [Bayesian Inference]({{< ref "/courses/bayes" >}} "Inferência Bayesiana")
-- 
+- [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
 - Classical Inference
 - Computational Statistics
 - [Game Theory]({{< ref "/courses/jogos" >}} "Introdução à Teoria dos Jogos")
@@ -26,7 +26,7 @@ subtitle: ''
 
 *Graduate courses*
 - Bayesian Inference
-- 
+- [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
 - Classical Inference
 - Decision Theory
 - Jurimetrics
