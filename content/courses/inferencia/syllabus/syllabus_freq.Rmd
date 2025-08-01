@@ -1,5 +1,5 @@
 ---
-date: "2024-08-05"
+date: "2025-08-01"
 title: "Programa do curso"
 highlight: true
 output: html_document
@@ -12,7 +12,7 @@ type: book
 library(magrittr)
 keys = c("nome", "email", "encontro")
 values_i = c("Rafael Bassi Stern", "rbstern@gmail.com", "a definir")
-values_m = c("Ana Paula Cavalcante", "analocav@usp.br", "5a - 18h; B139")
+values_m = c("Sil", "fabricio.bittencourt@usp.br", "a definir")
 tibble::tibble(variaveis = keys, 
                Instrutor = values_i,
                Monitora = values_m) %>%
@@ -22,10 +22,10 @@ knitr::kable(escape = FALSE,
 kableExtra::kable_styling()
 ```
 
-- Aulas: 2as: 19:20-22:50, 2as: 21:10-22:50
+- Aulas: 2as: 19:20-22:50, 4as: 21:10-22:50
 
 - Instruções para o envio de e-mails: 
-Por favor adicione ``[Inferência]'' ao 
+Por favor adicione ``[Frequentista]'' ao 
 tópico de e-mails relacionados a este curso.
 O envio de e-mail deve ser tratado como uma comunicação profissional.
 Evite o uso de abreviações, acrônimos e gírias nos e-mails.
@@ -142,7 +142,7 @@ como reprovação automática e encaminhamento do seu caso a uma Comissão Disci
 
 # Calendário
 
-```{r echo = FALSE, message = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 `%>%` = magrittr::`%>%`
 calendar_table = readr::read_csv("calendar_freq.csv") %>% 
   dplyr::rename(aula = lecture, data = date)

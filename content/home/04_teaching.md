@@ -13,11 +13,16 @@ title: Teaching
 subtitle: ''
 ---
 
+*This semester*
+- [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
+- [Frequentist Inference]({{< ref "/courses/inferencia" >}} "Inferência Estatística Frequentista")
+- Jurimetrics
+
 *Undergraduate courses*
 - [Bayesian Inference]({{< ref "/courses/bayes" >}} "Inferência Bayesiana")
 - [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
-- Classical Inference
 - Computational Statistics
+- [Frequentist Inference]({{< ref "/courses/inferencia" >}} "Inferência Estatística Frequentista")
 - [Game Theory]({{< ref "/courses/jogos" >}} "Introdução à Teoria dos Jogos")
 - [Introduction to Statistics]({{< ref "/courses/intro_stat" >}} "Introdução à Estatística")
 - [Multivariate Statistics]({{< ref "/courses/multivariada" >}} "Análise Multivariada de Dados")
@@ -27,6 +32,6 @@ subtitle: ''
 *Graduate courses*
 - Bayesian Inference
 - [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
-- Classical Inference
 - Decision Theory
+- Frequentist Inference
 - Jurimetrics
