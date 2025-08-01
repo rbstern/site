@@ -26,7 +26,7 @@ subtitle: ''
 
 *Graduate courses*
 - Bayesian Inference
-- [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
+- 
 - Classical Inference
 - Decision Theory
 - Jurimetrics
