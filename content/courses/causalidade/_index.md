@@ -1,9 +1,9 @@
 ---
-date: "2024-08-05"
+date: "2025-08-04"
 author: "Rafael B. Stern"
 highlight: true
 linkTitle: Inferência Causal
-summary: Introdução à Inferência Causal
+summary: Inferência Causal
 title: "MAE0042/MAE5910 - Inferência Causal"
 type: book
 ---
