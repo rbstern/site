@@ -1,39 +1,39 @@
 date,lecture
-04/08/24,Modelo estatístico, parâmetro e familia exponencial
-06/08/24,Exemplos
-11/08/24,Problema de decisão estatístico e função de risco
-13/08/24,Inferência como decisão estatística
-18/08/24,Decisão de Bayes
-20/08/24,Admissibilidade
-25/08/24,Estatística suficiente, Teorema da fatoração e Rao-Blackwell
-27/08/24,Informação de Fisher
-01/09/24,Feriado
-03/09/24,Feriado
-08/09/24,Exemplos e Revisão
-10/09/24,Prova 1
-15/09/24,Estimação estatística. Método dos momentos e plugin
-17/09/24,Estimador de máxima verossimilhança e suas propriedades
-22/09/24,Estimação não-viesada 
-24/09/24,Estimação Bayesiana
-29/09/24,Estimação em alta dimensionalidade: quando tudo falha
-01/10/24,Regularização e Estimação de densidade
-06/10/24,Testes de hipótese
-08/10/24,Teorema de Neyman-Pearson
-13/10/24,Teorema de Karlin-Rubin e aplicações
-15/10/24,Teste da razão de verossimilhanças
-20/10/24,Teste de score e de Wald
-22/10/24,Revisão
-27/10/24,Feriado
-29/10/24,Prova 2
-03/11/24,Aproximação chi-quadrado e Teste da permutação
-05/11/24,Estimação de região: quantidades pivotais
-10/11/24,Estimação de região: inversão e aproximação assintótica 
-12/11/24,Estimação de região: bootstrap
-17/11/24,Inferência estatística na normal multivariada
-19/11/24,Inferência estatística na normal multivariada
-24/11/24,Inferência estatística na normal multivariada e Revisão
-26/11/24,Prova 3
-01/12/24,Não há aula
-03/12/24,Não há aula
-08/12/24,Prova substitutiva
-10/12/24,Prova de recuperação
+04/08/25,Modelo estatístico, parâmetro e familia exponencial
+06/08/25,Exemplos
+11/08/25,Problema de decisão estatístico e função de risco
+13/08/25,Inferência como decisão estatística
+18/08/25,Decisão de Bayes
+20/08/25,Admissibilidade
+25/08/25,Estatística suficiente, Teorema da fatoração e Rao-Blackwell
+27/08/25,Informação de Fisher
+01/09/25,Feriado
+03/09/25,Feriado
+08/09/25,Exemplos e Revisão
+10/09/25,Prova 1
+15/09/25,Estimação estatística. Método dos momentos e plugin
+17/09/25,Estimador de máxima verossimilhança e suas propriedades
+22/09/25,Estimação não-viesada 
+25/09/25,Estimação Bayesiana
+29/09/25,Estimação em alta dimensionalidade: quando tudo falha
+01/10/25,Regularização e Estimação de densidade
+06/10/25,Testes de hipótese
+08/10/25,Teorema de Neyman-Pearson
+13/10/25,Teorema de Karlin-Rubin e aplicações
+15/10/25,Teste da razão de verossimilhanças
+20/10/25,Teste de score e de Wald
+22/10/25,Revisão
+27/10/25,Feriado
+29/10/25,Prova 2
+03/11/25,Aproximação chi-quadrado e Teste da permutação
+05/11/25,Estimação de região: quantidades pivotais
+10/11/25,Estimação de região: inversão e aproximação assintótica 
+12/11/25,Estimação de região: bootstrap
+17/11/25,Inferência estatística na normal multivariada
+19/11/25,Inferência estatística na normal multivariada
+25/11/25,Inferência estatística na normal multivariada e Revisão
+26/11/25,Prova 3
+01/12/25,Não há aula
+03/12/25,Não há aula
+08/12/25,Prova substitutiva
+10/12/25,Prova de recuperação

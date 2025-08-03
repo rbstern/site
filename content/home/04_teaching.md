@@ -16,7 +16,7 @@ subtitle: ''
 *This semester*
 - [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
 - [Frequentist Inference]({{< ref "/courses/inferencia" >}} "Inferência Estatística Frequentista")
-- Jurimetrics
+- [Jurimetrics]({{< ref "/courses/jurimetria" >}} "Jurimetria")
 
 *Undergraduate courses*
 - [Bayesian Inference]({{< ref "/courses/bayes" >}} "Inferência Bayesiana")
@@ -34,4 +34,4 @@ subtitle: ''
 - [Causal Inference]({{< ref "/courses/causalidade" >}} "Inferência Causal")
 - Decision Theory
 - Frequentist Inference
-- Jurimetrics
+- [Jurimetrics]({{< ref "/courses/jurimetria" >}} "Jurimetria")

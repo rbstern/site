@@ -12,20 +12,22 @@ type: book
 library(magrittr)
 keys = c("nome", "email", "encontro")
 values_i = c("Rafael Bassi Stern", "rbstern@gmail.com", "a definir")
-values_m = c("Sil", "fabricio.bittencourt@usp.br", "a definir")
-tibble::tibble(variaveis = keys, 
-               Instrutor = values_i,
-               Monitor = values_m) %>%
+#values_m = c("", "", "a definir")
+tibble::tibble(
+  variaveis = keys, 
+  Instrutor = values_i#,
+  #Monitor = values_m
+) %>%
 knitr::kable(escape = FALSE,
              options = list(dom = 't'),
              rownames = FALSE) %>% 
 kableExtra::kable_styling()
 ```
 
-- Aulas: 2as: 19:20-22:50, 4as: 21:10-22:50
+- Aulas: 2as: 8h-12h
 
 - Instruções para o envio de e-mails: 
-Por favor adicione ``[Frequentista]'' ao 
+Por favor adicione ``[Jurimetria]'' ao 
 tópico de e-mails relacionados a este curso.
 O envio de e-mail deve ser tratado como uma comunicação profissional.
 Evite o uso de abreviações, acrônimos e gírias nos e-mails.
@@ -35,17 +37,22 @@ Evite o uso de abreviações, acrônimos e gírias nos e-mails.
 
 ### Objetivos do curso
 
-- Avaliar regras de decisão em um modelo estatístico
-- Justificar métodos de estimação e de testes de hipótese
+- Aplicar métodos quantitativos ao Direito:
+-- Compreender as suposições,
+-- interpretar o resultado, e
+-- conhecer principais usos.
 
 <br/>
 
 ### Material do curso
 
-- As aulas do curso são fortemente baseadas nas seguintes referências:
+- Algumas referências **complementares** ao curso são:
 
-    - Wasserman, L. (2013). All of statistics: a concise course in statistical inference. Springer Science & Business Media.
-    - Casella, G., & Berger, R. (2024). Statistical inference. CRC Press.
+    - Finkelstein, M. O., & Levin, B. (2001). Statistics for lawyers (Vol. 657). New York: Springer.
+    - Kadane, J. B. (2008). Statistics in the Law: A Practitioner's Guide, Cases, and Materials. Oxford University Press.
+    - James, G., Witten, D., Hastie, T., & Tibshirani, R. (2013). An introduction to statistical learning (Vol. 112, No. 1). New York: springer.
+    - Epstein, L., & Martin, A. D. (2014). An introduction to empirical legal research. OUP Oxford.
+    - Lawless, R. M., Robbennolt, J. K., & Ulen, T. (2010). Empirical methods in law (p. 172). New York: Aspen Publishers.
  
 # Atividades do Curso
 								
@@ -95,8 +102,8 @@ podendo sua nota aumentar ou diminuir.
 
 ```{r echo = FALSE, message = FALSE}
 library(magrittr)
-keys = c("Média de Listas", "Prova 1", "Prova 2", "Prova 3")
-values = c("0.3", "0.2", "0.2", "0.3")
+keys = c("Média de Listas", "Participação", "Seminário")
+values = c("0.4", "0.2", "0.4")
 pesos = tibble::tibble(Avaliacao = keys, 
                        Peso = values)
 knitr::kable(pesos,
@@ -144,7 +151,7 @@ como reprovação automática e encaminhamento do seu caso a uma Comissão Disci
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 `%>%` = magrittr::`%>%`
-calendar_table = readr::read_csv("calendar_freq.csv") %>% 
+calendar_table = readr::read_csv("calendar_jur.csv") %>% 
   dplyr::rename(aula = lecture, data = date)
 knitr::kable(calendar_table,
               escape = FALSE,
