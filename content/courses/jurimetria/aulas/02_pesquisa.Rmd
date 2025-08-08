@@ -40,7 +40,7 @@ A pesquisa empírica é dividida em 3 etapas:
 
 - **Identificando a População**: Lista de números de processo
 
-![TJSP/CJSG](./images/consulta_esaj.png)
+![TJSP/CJSG](consulta_esaj.png)
 
 # Amostragem
 
