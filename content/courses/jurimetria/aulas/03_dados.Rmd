@@ -9,43 +9,23 @@ weight: 30
 bibliography: refs.bib
 ---
 
-
-Para aprendermos sobre a população, é comum que observemos
-as características de um subconjunto de seus elementos.
+Para aprendermos sobre a população, geralmente 
+observamos apenas alguns de seus elementos.
 Este subconjunto é chamado de **amostra**.
 Cada elemento da amostra é chamado de **unidade amostral**.
-No exemplo da eleição, podemos entrevistar indivíduos
-a respeito da sua intenção de voto.
-Neste caso, a amostra é o conjunto de indivíduos entrevistados e
-cada indivíduo entrevistado é uma unidade amostral.
 
 # Desenho de um estudo
 
 - Observações que podem falsear ou corroborar a teoria conjecturada
   - Experimentos vs. Dados Observacionais
-
-
-
-é um conjunto de elementos sobre os quais temos interesse. 
-Por exemplo, se considerarmos as eleições presidencias brasileiras,
-a população é o conjunto de brasileiros com título de eleitor.
-
-
-
-
-
-# Elementos da análise estatística
-
-
-
+  
+# Coletando dados
 
 - Em estudos, observamos características de cada unidade amostral.
 Chamamos estas características de **variáveis**.
-No exemplo da eleição, possíveis características seriam
-a intenção de voto e o estado de domicílio de cada eleitor.
 
 - Um **banco de dados** é uma estrutura em que 
-guardamos as observações das características de cada unidade amostral.
+guardamos as observações de cada unidade amostral.
 
 - Um **banco de dados Tidy (arrumado)** [@Wickham2014]
 é um banco de dados em formato de matriz em que 
@@ -72,122 +52,64 @@ facilitar a comunicação entre eles.
 aquele que o compila deve especificar de **antemão**
 os possíveis valores que cada variável pode assumir e
 se ater a estes valores. Por exemplo, digamos que 
-uma variável seja o "número de bactérias observados na urina".
+uma variável seja o "número de litisconsortes passivos na ação".
 Observações como "2", "4" e "7" são números e
 estão dentro das especificações.
 Por outro lado, seria prejudicial anotar no banco de dados
-"5, mas também observei uma estrutura que pode ou não ser uma bactéria adicional".
+"5, dos quais 2 são pessoas físicas e 3 são pessoas jurídicas".
 A inserção de texto em uma variável que deveria ser um número
 quebra padrões e torna muito mais difícil a análise do banco de dados.
 
-## Exemplo de elementos da análise estatística
+## Exemplo de banco de dados tidy
 
-Em 1936, Edgar Anderson coletou informações 
-sobre flores pertencentes a três espécies do gênero Iris
-(*Iris setosa*, *Iris virginica* e *Iris versicolor*).
-Os dados estão disponíveis em [@Anderson1936].
-Neste caso, consideramos como população
-o conjunto de todas as flores de cada uma das três espécies.
-A amostra é o conjunto de flores que 
-foram observadas e registradas por Anderson.
-As variáveis anotadas foram o tamanho em centímetro das
-sépalas e das pétalas das flores.
-Observe, a seguir, uma representação Tidy das
-primeiras 10 unidades amostrais no
-banco de dados obtido por Anderson:
+[@Correa2025] avalia o tempo transcorrido até a primeira sentença em casos civis ajuizados no Fórum Central João Mendes. Para tal, o DataJud [@CNJ2025] foi utilizado para obter dados sobre 6888 ações cíveis ajuizadas no Fórum Central entre 2020 e o $1^o$ semestre de 2025:
 
 ```{r, message = F, warning = F}
 require(tidyverse)
-data(iris)
-iris = as_tibble(iris)
-print(iris)
+require(readxl)
+data = read_xlsx("./dados_civeis.xlsx") %>% 
+  select(-processo_por_dependencia)
 ```
 
-Para complementar este banco dados, podemos
-escrever um dicionário como:
+Um **dicionário** para este banco de dados poderia ser escrito da seguinte forma:
 
-- **Sepal.length**: Comprimento em centímetros da sépala. 
-- **Sepal.width**: Largura em centímetro da sépala.
-- **Petal.length**: Comprimento em centímetros da pétala. 
-- **Petal.width**: Largura em centímetro da pétala.
-- **Species**: Espécie da unidade amostral.
-Pode assumir os valores "setosa", "versicolor" ou "virginica".
+- **numeProcesso**: Número CNJ da ação
+- **dataRecebimento**: Data de propositura
+- **data_movimentacao_sentenca**: Data da primeira sentença, caso exista
+- **ultima_movimentacao**: Data da última movimentação
+- **evento**: Categoria da ultima movimentação
+- **Time**: Duração do processo de sua propositura até o primeiro dentre a data da sentença e a data da coleta dos dados
+- **valor_numerico**: Valor da causa
+- **assunto_info**: Assunto processual 
+- **classe_info**: Classe processual
+
 
 # Tipos de variáveis
 
-É comum dividirmos as variáveis em 4 categorias.
+É comum dividirmos as variáveis em 4 categorias:
+**identificação**, **não-estruturada**, **qualitativas** e **quantitativas**.
 Estas categorias são úteis para entendermos que 
-tipos de análise podemos fazer em cada variável.
-Para construir estas categorias, primeiramente
-dividimos as variáveis em **qualitativas** ou **quantitativas**.
-Enquanto variáveis quantitativas são números,
-variáveis qualitativas não o são.
-Por exemplo, peso é uma variável quantitativa e
-fruta favorita é uma variável qualitativa.
+tipos de análise podemos fazer em cada variável:
 
-Por sua vez, as variáveis qualitativas e quantitativas
-podem ser divididas em categorias mais finas.
-Variáveis qualitativas podem ser
-**nominais** ou **ordinais**.
+- Variáveis de **identificação**: Assume um valor distinto para cada unidade amostral. Por exemplo, para ações judiciais, o número CNJ pode ser usado como uma variável de identificação. Este tipo de variável é útil para permitir o uso simultâneo de dados obtidos de diversas fontes. Por exemplo, se obtivéssemos informações tanto do DataJud quanto do sistema interno do TJSP, o número CNJ permitiria que cruzássemos todas as informações que foram obtidas sobre cada ação analisada.
 
-- Variáveis **nominais**: 
-Assumem como valores nomes próprios, 
-não havendo estrutura entre 
-os possíveis valores assumidos por elas.
-Por exemplo, fruta favorita entre 
-"manga", "goiaba" e "pera" é
-uma variável nominal.
+- Variáveis **não-estruturadas**: Assumem valores não-numéricos de forma tão variada que tornam difícil o emprego direto de métodos estatísticos. Apesar desta dificuldade, estas variáveis podem ser úteis, na medida em que trazem muita informação sobre a unidade amostral. Assim, é comum que elas sejam **refinadas** em outros tipos de variável, assim permitindo a análise estatística. Por exemplo, uma variável pode conter a integridade do texto de uma sentença. É difícil empregar métodos estatísticos diretamente em um texto. Contudo, é possível **refinar** a sentença e criar uma nova variável que indica se a ação foi julgada procedente ou não. Similarmente, não é comum que uma variável textual com o endereço completo do réu possa ser usada diretamente em uma análise estatística. Por outro lado, é possível extrair coordenadas GPS deste texto, que são mais favoráveis à análise estatística. Similarmente, é comum que variáveis com imagens e arquivos digitais sejam consideradas não-estruturadas.
 
-- Variáveis **ordinais**: 
-Existe uma ordem entre os possíveis valores assumidos 
-por estas variáveis.
-Por exemplo, em uma pesquisa de satisfação,
-clientes podem escolher entre as categorias:
-"insatisfeito", "satisfeito" e "muito satisfeito".
-Existe uma ordem entre estes valores, dado que
-"insatisfeito" é menos satisfeito que "satisfeito" que,
-por sua vez, é menos satisfeito que "muito satisfeito".
+- Variáveis **qualitativas**: Assumem valores não-numéricos dentro de uma lista fixada.
+Podem ser divididas em 2 grupos:
+  - **ordinais**: Há uma ordenação dentre os valores assumidos pela variável. Por exemplo, poderíamos criar uma variável que assume o nome "Pandemia", caso uma ação tenha sido proposta entre 2020 e 2021, "Transição", caso tenha sido proposta em 2022, e  "Pós-Pandemia", caso tenha sido proposta de 2023 em diante. Observando sua construção, estes nomes estão ordenados no tempo. Variáveis ordinais também são comuns em pesquisas de satisfação. Se clientes podem escolher entre as categorias: "insatisfeito", "satisfeito" e "muito satisfeito", existe uma ordem entre estes valores, dado que "insatisfeito" é menos satisfeito que "satisfeito" que,
+por sua vez, é menos satisfeito que "muito satisfeito". É importante observar que apesar de existir uma ordem neste tipo de variável, ele não tem todas as propriedades de um número. Por exemplo, não sabemos como a variação de satisfação da categoria "insatisfeito" para "satisfeito" se compara aquela de "satisfeito" para "muito satisfeito".
+  - **categóricas**: Não há uma ordenação dentre os valores assumidos pela variável. Por exemplo, no banco de dados de ações cíveis estudado, a variável **classe_info** é categórica pois seu valor é um nome dentre as possibilidades: "Procedimento Comum Cível", "Procedimento do Juizado Especial Cível", "Produção Antecipada da Prova", e "Carta Precatória Cível". Um número relativamente pequeno de categorias em relação ao tamanho da amostra é a característica que permite o emprego de métodos estatíticos a este tipo de variável. Quando este não é o caso, podemos estar diante de uma variável não-estruturada. Por exemplo, em um conjunto de dados pequeno, a classificação integral de uma ação na TPU pode ser uma variável não-estruturada.
 
-Variáveis quantitativas podem ser dividas em
-**discretas** ou **contínuas**:
+- Variáveis **quantitativas**: Assumem valores numéricos. Podem ser divididas em 2 grupos:
+  - **contagem**: Referem-se a uma determinada contagem. Por exemplo, o Relatório Justiça em Números [@CNJ2025b] apresenta o número de ações judiciais baixadas por mês. Neste caso, há uma variável de contagem para cada mês. Similarmente, considere um banco de dados de ações judiciais que contém uma variável não-estruturada com o texto da sentença. Pode-se obter uma nova variável quantitativa de contagem que indica o número de usos da palavra "usucapião" na sentença.
+  - **contínuas**: Assumem números reais, o que inclui valores com precisão decimal. Por exemplo, o valor da causa medido em reais da primeira ação em [@Correa2025] é "10.673,97". Assim, o valor da causa é uma variável contínua. Similarmente, o Relatório Justiça em Números indica que a Taxa de Congestionamento da Justiça Estudal em junho de 2025 é de 65.71%. Taxas de Congestionamento são variáveis quantitativas contínuas.
 
-- Variáveis **contínuas**:
-Assumem como valores números tal que,
-entre dois possíveis valores, 
-sempre é possível observar um outro.
-Um típico exemplo é o "peso".
-Por exemplo, é possível observar um peso 
-de 1kg e de 2kg. Entre esses dois valores,
-há o valor de 1.5kg. Por sua vez,
-entre 1kg e 1.5kg há 1.25kg, 
-e assim por diante.
-
-- Variáveis **discretas**: 
-São variáveis que não são contínuas.
-Por exemplo,
-o número de bactérias em uma substância
-pode assumir os valores "0", "1", "2", etc.
-Não há nenhum possível valor entre "0" e "1"
-ou entre "1" e "2". Assim,
-esta variável é discreta.
-
-Estas categorias nem sempre são óbvias e
-podem depender do uso que é
-dado para cada variável. Por exemplo,
-ainda que seja comum considerarmos peso
-como uma variável contínua, o
-instrumento de medição pode 
-observar apenas um número finito de algarismos.
-Assim, pode fazer sentido considerar 
-o peso como variável discreta.
-Mesmo assim, é mais comum considerarmos o
-peso como variável contínua, pois
-esta abstração é útil.
+Estas categorias nem sempre são óbvias e podem depender do uso que é dado para cada variável. Por exemplo, ainda que seja comum considerarmos o número de CNJ como uma variável de identificação, ela também pode ser um dado não-estruturado. Por exemplo, é possível refinar o número CNJ para obter o ano de propositura da ação. Similarmente, datas podem ser usadas tanto como variáveis qualitativas ordinais, quanto como quantitativas contínuas.
 
 # Exercícios
 
-1. No banco de dados de flores de Anderson,
-classifique o tipo de cada uma das variáveis.
+1. Classifique o tipo de cada uma das variáveis em [@Correa2025].
 
 2. Dentre uma população de alunos, observamos as
 seguintes variáveis: intenção de voto nas eleições de 2018,
@@ -206,5 +128,6 @@ db = tibble(pais = c("Brasil", "Brasil", "Canada", "Canada"),
 print(db)
 ```
 
-# Referências
+4. Um pesquisador deseja determinar se as modificações na Lei de Improbidade Administrativa em 2021 trouxe impacto sobre a taxa de procedência em ações baseadas nesta lei. Indique possíveis populações, unidades amostrais, e variáveis coletadas para avaliar este questionamento.
 
+# Referências

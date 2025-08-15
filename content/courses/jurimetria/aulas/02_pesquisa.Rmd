@@ -38,9 +38,18 @@ A pesquisa empírica é dividida em 3 etapas:
 
 ## Processos
 
+### CJSG
+
 - **Identificando a População**: Lista de números de processo
 
-![TJSP/CJSG](/courses/jurimetria/images/consulta_esaj.png)
+![Consulta](/courses/jurimetria/images/consulta_esaj.png)
+- Processo circular para definir palavras-chave
+- **Cuidado**: Classe e assunto
+
+### Alternativas
+
+- DJE:
+- DataJud: https://www.cnj.jus.br/sistemas/datajud/
 
 # Amostragem
 
