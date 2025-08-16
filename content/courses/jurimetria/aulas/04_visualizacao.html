@@ -1,0 +1,405 @@
+---
+title: "Visualização de Dados"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 40
+bibliography: refs.bib
+---
+
+
+
+<div id="medidas-resumo" class="section level1">
+<h1>Medidas resumo</h1>
+<p>Os resultados de um experimento geralmente apresentam variabilidade. Esta variabilidade pode acontecer, por exemplo, por falta de controle nas condições experimentais, por erros de medição, ou pela complexidade inerente ao fenômeno observado. Assim, se obtivermos um número elevado de observações, pode ser difícil obter informações relevantes meramente olhando para o banco de dados. Por exemplo, considere o valor da causa nas primeiras 100 ações cíveis observadas em <span class="citation">(<a href="#ref-Correa2025">Corrêa and Stern 2025</a>)</span>. O que você consegue observar?</p>
+<pre class="r"><code>require(tidyverse)
+require(readxl)
+data = read_xlsx(&quot;./dados_civeis.xlsx&quot;) %&gt;% 
+  select(-processo_por_dependencia)
+normais = data$valor_numerico
+data$valor_numerico[1:100]</code></pre>
+<pre><code>##   [1]    10673.97    86000.00    35603.04    31224.51   173425.73    33220.64
+##   [7]   569561.33   198940.25   277603.20    72157.76  1078863.60   553426.90
+##  [13]    15917.56    30000.00    43831.28          NA 15708933.66     1000.00
+##  [19]    30856.00  1340270.00   429332.56          NA   233193.09   328832.36
+##  [25]   163530.58     9420.58    27000.00    29060.04    45620.62   208476.08
+##  [31]    64618.88   106500.00   653273.91  1198278.30     2728.17  1000000.00
+##  [37]    22332.00    14050.00   138467.48    10000.00    40000.00     6140.90
+##  [43]    39854.97    37907.01  2100000.00  1247588.71   295714.50    18480.00
+##  [49]    92667.67     9500.14   100000.00   117403.78   113890.00   194243.18
+##  [55]   740500.00   278746.67   260000.00   175000.00    63579.16    13200.00
+##  [61]    20988.40  3920989.95       40.02    12631.06    13500.00    16337.32
+##  [67]    28196.78    28611.33   609163.45    10000.00    10000.00    31203.66
+##  [73]    47772.00    17916.77    10000.00    13943.70    16124.06    15000.00
+##  [79]    65650.33     6246.06    89922.86    84023.72    82606.00    13019.37
+##  [85]    75682.40     6761.58    12000.00    10000.00    10099.99   795882.49
+##  [91]    66469.72    10000.00    28000.00    22026.35   878377.21    15577.26
+##  [97]    30354.69    92000.00    10000.00    21593.81</code></pre>
+<p>Ao invés da inspeção direta de uma variável, podemos resumí-la em valores que
+expressam algumas de suas características. A seguir, estudaremos algumas destas medidas de resumo.</p>
+<div id="medidas-de-centralidade" class="section level2">
+<h2>Medidas de centralidade</h2>
+<p>Uma medida de centralidade descreve um número ao redor dos quais as observações se concentram.
+Ela expressa um valor ``típico’’ nas observações para uma determinada variável. Existem várias possíveis medidas de centralidade, algumas das quais veremos a seguir.</p>
+<div id="média" class="section level3">
+<h3>Média</h3>
+<p>A <strong>média</strong> de uma variável, comumente designada por <span class="math inline">\(\bar{X}\)</span>, é obtida somando
+todas as observações desta e dividindo o resultado pelo número total de observações.
+Este procedimento é sintetizado da seguinte forma:</p>
+<p><span class="math display">\[
+\bar{X} = \frac{\sum_{i=1}^{n}{X_i}}{n} = \frac{X_1 + \ldots + X_n}{n}
+\]</span>
+Nesta expressão, o termo <span class="math inline">\(\sum_{i=1}^{n}{X_i}\)</span> é traduzido como “em <span class="math inline">\(X_i\)</span> substituta <span class="math inline">\(i\)</span> por
+todos os números entre <span class="math inline">\(1\)</span> e <span class="math inline">\(n\)</span> e some os valores encontrados”. Em particular, o símbolo “<span class="math inline">\(\sum\)</span>” é chamado de somatória.</p>
+<p>No <strong>R</strong>, a média pode ser calculada usando o comando <em>mean()</em>. Por exemplo, a média do dos valores de causa pode ser calculada da seguinte forma:</p>
+<pre class="r"><code>mean(data$valor_numerico, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 315132.3</code></pre>
+</div>
+<div id="mediana" class="section level3">
+<h3>Mediana</h3>
+<p>A <strong>mediana</strong> de uma variável é um número tal que há a mesma quantia de observações acima e abaixo dele. No <strong>R</strong>, a mediana é calculada pela função <em>median()</em>.</p>
+<pre class="r"><code>median(data$valor_numerico, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 16149.46</code></pre>
+<p>A mediana é menos afetada por valores extremos do que a média. Por isso, é comum dizer que
+a mediana é uma medida <strong>robusta</strong>. Este conceito é ilustrado a seguir.</p>
+<pre class="r"><code> dados = c(0, 0.1, 0.1, 0.2, 0.25, 0.5, 0.7, 0.9, 1.1, 10000)
+ c(mean(dados), median(dados))</code></pre>
+<pre><code>## [1] 1000.385    0.375</code></pre>
+<p>Observamos que, dos 10 dados, 9 estão concentrados próximo a 0 e 1 tem o valor 10.000.
+Enquanto que a média de aproximadamente 1.000 é afetada pelo valor extremo, a mediana de 0.375 não o é. É comum chamarmos observações atípicas, como o valor 10.000 neste caso, de <strong>outliers</strong>. Para o valor da causa em ações cíveis, observamos que a média é muito maior do que a mediana. Isto indica que existe um conjunto de <strong>outliers</strong> em que o valor da causa é muito maior do que no restante das ações.</p>
+</div>
+<div id="moda" class="section level3">
+<h3>Moda</h3>
+<p>A <strong>moda</strong> é o valor mais frequente observado nos dados. Como em variáveis contínuas tipicamente não observamos valores repetidos, a moda não é usado nestes casos. Por outro lado, dentre média, mediana e moda, a moda é a única medida resumo que pode ser aplicada a variáveis nominais.</p>
+<p>No R, a função <em>table()</em> cria uma tabela de frequências observadas para cada valor. Aplicando esta função para a classe processual em ações cíveis, obtemos:</p>
+<pre class="r"><code>table(data$classe_info)</code></pre>
+<pre><code>## 
+##                 Carta Precatória Cível               Procedimento Comum Cível 
+##                                      1                                   6873 
+## Procedimento do Juizado Especial Cível           Produção Antecipada da Prova 
+##                                      9                                      5</code></pre>
+<p>Assim, “Procedimento Comum Cível” é a moda da variável classe processual, sendo a categoria mais frequente neste banco de dados.</p>
+</div>
+</div>
+<div id="medidas-de-variabilidade" class="section level2">
+<h2>Medidas de variabilidade</h2>
+<p>Medidas de variabilidade indicam o quanto as observações variam ao redor da medida de centralidade. Em outras palavras, indicam o quão longe podemos esperar que uma observação esteja do valor típico para aquela variável. Existem diversas medidas de variabilidade, algumas das quais apresentamos a seguir.</p>
+<div id="amplitude" class="section level3">
+<h3>Amplitude</h3>
+<p>A amplitude é a diferença entre o maior e o menor valor observados. Esta medida de variabilidade é fortemente influenciada por valores extremos nas observações, como outliers. O exemplo a seguir calcula a amplitude do valor da causa em ações cíveis:</p>
+<pre class="r"><code> max(data$valor_numerico, na.rm = TRUE) - min(data$valor_numerico, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 681545490</code></pre>
+<p>Observamos uma amplitude de quase 700 milhões. Esta amplitude pode ser causada por um único caso com valor da causa próximo a 700 milhões. De fato, apenas 3 casos tem valor superior a 100 milhões, 9 acima de 10 milhões, e 122 acima de 1 milhão:</p>
+<pre class="r"><code>sum(data$valor_numerico &gt; 10^8, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>sum(data$valor_numerico &gt; 10^7, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 9</code></pre>
+<pre class="r"><code>sum(data$valor_numerico &gt; 10^6, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 122</code></pre>
+</div>
+<div id="variância-e-desvio-padrão" class="section level3">
+<h3>Variância e desvio padrão</h3>
+<p>Intuitivamente, podemos imaginar uma medida de variabilidade que calcule a média do quanto os dados desviam do centro. Se tomarmos como centro das observações a média, então podemos pensar no desvio da i-ésima observação como <span class="math inline">\(D_i = X_i-\bar{X}\)</span>. Contudo, esta medida de desvio apresenta um problema. Por exemplo, considere os dados: 0, 10, 20. A média das observações é 10 e os desvios são: -10, 0, 10. Assim, se tomarmos a média dos desvios obteremos o valor 0.
+O problema é que, ainda que o desvio de 0 e 20 sejam -10 e 10, estas observações estão igualmente distantes da média. Para corrigir este problema, podemos tomar a média dos desvios ao quadrado, isto é, a média de <span class="math inline">\(D_i^2 = (X_i-\bar{X})^2\)</span>. No exemplo apresentado, os desvios ao quadrado são 100, 0 e 100 e a média destes valores é <span class="math inline">\(67\)</span>. Neste caso, as observações -10 e 10 contribuem igualmente para a variabilidade dos dados em relação à média. Formalmente a <strong>variância</strong>, <span class="math inline">\(S^2\)</span>, é definida como:</p>
+<p><span class="math display">\[
+S^2 = \frac{\sum_{i=1}^{n}{(X_i-\bar{X})^2}}{n}
+\]</span></p>
+<p>Note que a variância não está na mesma escala das observações. Quando os desvios são elevados ao quadrado, a unidade de medida é alterada para o quadrado da unidade de medida original.
+Assim, para obter uma medida mais interpretável de varibilidade, é comum tomar
+a raiz quadrada da variância. Esta medida é chamada de desvio padrão, <span class="math inline">\(S\)</span>, e é definida como:</p>
+<p><span class="math display">\[
+S = \sqrt{S^2}
+\]</span></p>
+<p>No <strong>R</strong> a variância e o desvio padrão são calculados usando, respectivamente, as funções <em>var()</em> e <em>sd()</em>. Para o valor da causa em ações cíveis, obtemos</p>
+<pre class="r"><code>c(var(data$valor_numerico, na.rm = TRUE), sd(data$valor_numerico, na.rm = TRUE))</code></pre>
+<pre><code>## [1] 1.330321e+14 1.153395e+07</code></pre>
+<p>Similarmente à média, a variância e o desvio padrão também são fortemente impactados por <strong>outliers</strong>. Isto explica o desvio padrão de 100 milhões encontrado no valor da causa.</p>
+<p>Para algumas variáveis, é comum que as observações se concentrem num intervalo de 2 desvios padrão para cada lado da média. Em outras palavras, é comum que a maior parte das observações
+esteja no intervalo <span class="math inline">\([\bar{X}-2S,\bar{X}+2S]\)</span>. Neste sentido, este intervalo indica a faixa
+de observações tipicamente observadas. A formalização deste raciocínio será estudada
+em aulas futuras.</p>
+</div>
+<div id="amplitude-interquartílica" class="section level3">
+<h3>Amplitude interquartílica</h3>
+<p>O percentil de ordem <span class="math inline">\(p\)</span> de uma variável é um número tal que a quantidade de observações
+menores e maiores do que este número segue a proporção <span class="math inline">\(p\)</span> e <span class="math inline">\(1-p\)</span>. Por exemplo, a mediana é o percentil de ordem <span class="math inline">\(0.5\)</span>. Dada a sua importância, os percentis de ordem 0.25, 0.5 e 0.75
+também são chamados de <span class="math inline">\(1^o\)</span>, <span class="math inline">\(2^o\)</span> e <span class="math inline">\(3^o\)</span> quartis.</p>
+<p>No <strong>R</strong>, é possível obter o percentil de ordem <span class="math inline">\(p\)</span> usando o comando <em>quantile(dados, p)</em>. Para obter os quartis do valor da causa, obtemos:</p>
+<pre class="r"><code>aux = quantile(data$valor_numerico, c(0.25, 0.5, 0.75), na.rm = TRUE)
+aux</code></pre>
+<pre><code>##      25%      50%      75% 
+##  9000.00 16149.46 41239.91</code></pre>
+<p>Por construção, metade dos dados estão entre o <span class="math inline">\(1^o\)</span> e o <span class="math inline">\(3^o\)</span> quartil. Isto é, este também pode ser interpretado como um intervalo de valores tipicamente assumidos pelas observações. Por exemplo, para o valor da causa, este intervalo é [9000, 16149].</p>
+<p>O tamanho da região em que as observações tipicamente caem é uma medida alternativa de variabilidade. Especificamente, a subtraindo o <span class="math inline">\(1^o\)</span> quartil do <span class="math inline">\(3^o\)</span> quartil obtém-se a medida chamada de <strong>amplitude interquartílica</strong>. No caso do comprimento das sépalas, a amplitude interquartílica é 32240.</p>
+<p>Alternativamente, podemos construir um intervalo mais conservador exigindo que 95% das observações estejam dentro dele. Este intervalo é obtido tomando os valores entre o percentil <span class="math inline">\(0.025\)</span> e <span class="math inline">\(0.975\)</span>. Para o valor da causa, obtemos o intervalo:</p>
+<pre class="r"><code>quantile(data$valor_numerico, c(0.025, 0.975), na.rm = TRUE)</code></pre>
+<pre><code>##       2.5%      97.5% 
+##    787.675 694093.688</code></pre>
+</div>
+</div>
+<div id="resumo-de-observações-no-r" class="section level2">
+<h2>Resumo de observações no R</h2>
+<p>No <strong>R</strong>, é possível obter diversas medidas resumo de uma variável usando a função <em>summary()</em>.
+Por exemplo, para valor da causa, obtemos:</p>
+<pre class="r"><code>summary(data$valor_numerico)</code></pre>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.      NA&#39;s 
+##        10      9000     16149    315132     41240 681545500         2</code></pre>
+</div>
+</div>
+<div id="gráficos" class="section level1">
+<h1>Gráficos</h1>
+<p>Além da apresentação de medidas resumo, também é possível resumir a informação
+nos dados por meio de gráficos. A seguir, discutimos alguns dos principais gráficos usados.</p>
+<p><em>Observação</em>: No <strong>R</strong>, em geral existem muitas opções para gerar o mesmo gráfico. A seguir,
+mostraremos como gerar gráficos simples usando as funções de base do <strong>R</strong> e, também, gráficos mais elegantes, usando o pacote <em>ggplot2</em>. Mais informações sobre este pacote estão
+disponíveis <a href="http://material.curso-r.com/ggplot/">aqui</a>.</p>
+<div id="visualizando-uma-variável" class="section level2">
+<h2>Visualizando uma variável</h2>
+<div id="strip-chart" class="section level3">
+<h3>Strip chart</h3>
+<p>O <strong>strip chart</strong> é um gráfico para uma variável que é representado em um único eixo e é tal que, cada ponto corresponde ao valor de uma observação. Ainda que para poucas observações este gráfico possa ser informativo, quando há muitas observações ele é de difícil interpretação.</p>
+<p>No <strong>R</strong>, o strip chart pode ser obtido pelo comando <em>stripchart()</em>. Para as primeiras <span class="math inline">\(20\)</span> observações de valor da causa, obtemos:</p>
+<pre class="r"><code>stripchart(data$valor_numerico[1:10], xlab=&quot;valor da causa&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Observamos que 5 das ações tem valor da causa abaixo de 100 mil, 2 tem valor próximo a 200 mil,
+1 a 300 mil, e 1 a 500 mil. O gráfico levanta uma pergunta: quais fatores diferenciam as ações com valor da causa abaixo de 100 mil daquelas com valor da causa mais alto?</p>
+<p>A utilidade do strip chart diminui muito à medida que o tamanho da amostra aumenta. Neste caso, fica mais difícil extrair informação devido ao agrupamento dos pontos. Note como é difícil interpretar o strip chart obtido da totalidade das observações:</p>
+<pre class="r"><code>stripchart(data$valor_numerico, xlab=&quot;valor da causa&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Enxergamos apenas os 3 casos em que o valor da causa é acima de 100 milhões e que há muitos casos em que o valor da causa não atinge este valor. Nestes casos, é necessário resumir
+as observações para obter mais informação.</p>
+</div>
+<div id="bar-plot-e-histograma" class="section level3">
+<h3>Bar plot e histograma</h3>
+<p>O <strong>bar plot</strong> e o <strong>histograma</strong>
+são gráficos que resumem uma variável mais do que o strip chart. Ao invés de apresentarem um ponto para cada observação, estes gráficos indicam a frequência com que cada valor ocorre para uma variável.</p>
+<p>O bar plot é usado para variáveis qualitativas e de contagem. Ele indica a contagem com que
+cada valor ocorre para esta variável. Para criar um barplot no <strong>R</strong>, utilizamos primeiramente o comando <em>table()</em>, que conta o número de ocorrências para cada observação. A seguir, a saída do comando table é usada no comando <em>barplot()</em>, que exibe o gráfico. Esta sequência é ilustrada para os principais <span class="math inline">\(10\)</span> assuntos processuais, a seguir:</p>
+<pre class="r"><code>contagens = sort(table(data$assunto_info), decreasing = TRUE)[1:10]
+tibble(assunto = names(contagens), contagens) %&gt;%
+  ggplot(aes(x = reorder(assunto, contagens, decreasing = TRUE), y = contagens)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;skyblue&quot;) +
+  labs(title = &quot;Gráfico de barras&quot;, x = &quot;Assunto&quot;, y = &quot;Contagem&quot;) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Por sua vez, o histograma é usado para variáveis quantitativas contínuas. Nestas variáveis, não esperamos encontrar duas observações que assumem o mesmo valor. Assim, o bar plot é pouco informativo. Uma alternativa é dividir os possíveis valores em faixas e contar a quantidade de observações em cada uma destas faixas. O gráfico que indica estas faixas se chama histograma.
+Este gráfico pode ser obtido no <strong>R</strong> pelo comando <em>hist()</em>. O gráfico abaixo é um histograma para o valor da causa em ações em que este valor é abaixo de 100 mil:</p>
+<pre class="r"><code>data %&gt;% 
+  filter(valor_numerico &lt; 10^5) %&gt;% 
+  select(valor_numerico) %&gt;% 
+  unlist() %&gt;% 
+  hist(xlab=&quot;valores&quot;, ylab=&quot;contagem&quot;, main = &quot;&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Ao contrário do strip chart, o histograma evidencia um decaimento rápido do número de casos em função do valor da causa.</p>
+<p>Às vezes o formato de “degraus” presente no histograma pode ser indesejável. Neste caso, podemos exibir um gráfico de densidade, que cria uma curva continua em que os degraus estão ausentes. Uma das vantagens desta curva é eliminar do histograma os vãos que são gerados por faixas sem observações. A curva de densidade para o valor da causa é apresentada em vermelha e sobreposta ao histograma para estas observações na figura a seguir:</p>
+<pre class="r"><code>data %&gt;% 
+  filter(valor_numerico &lt; 10^5) %&gt;% 
+  ggplot(aes(x = valor_numerico)) + 
+  geom_histogram(aes(y=..density..)) +
+  geom_density(color=&quot;red&quot;) +
+  xlab(&quot;valor da causa&quot;) + 
+  ylab(&quot;densidade&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Às vezes, o histograma também não resume suficientemente as observações. Por exemplo, a figura abaixo apresenta o histograma do valor da causa para a totalidade das ações:</p>
+<pre class="r"><code>data %&gt;% 
+  ggplot(aes(x = valor_numerico)) + 
+geom_histogram(aes(y=..density..)) +
+xlab(&quot;valor da causa&quot;) + ylab(&quot;densidade&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Para resolver este problema,
+veremos a seguir um gráfico que
+resume as observações ainda mais
+que o histograma.</p>
+</div>
+<div id="box-plot" class="section level3">
+<h3>Box plot</h3>
+<p>Um <strong>box plot</strong> <span class="citation">(<a href="#ref-Tukey1977">Tukey 1977</a>)</span> é
+um gráfico para visualizar
+uma única variável que
+consiste em apresentar visualmente
+5 medidas resumo.
+Antes de descrever estas medidas,
+é útil visualizar um boxplot.
+A seguir, obtemos no <strong>R</strong> um
+box plot para o comprimento das
+sépalas no banco de dados <em>iris</em>:</p>
+<pre class="r"><code>boxplot(iris$Sepal.Length, ylab = &quot;Comprimento da sépala&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>O box plot contém 5 traços principais.
+O traço em negrito dentro do retângulo indicam
+a mediana (Q2) das observações.
+Os traços nos limites do retângulo indicam
+o primeiro (Q1) e o terceiro (Q3) quartis.
+Assim, observamos que cerca de 50%
+das observações estão dentro do retângulo e
+que um valor típico para as observações é
+representado pelo traço em negrito.
+A seguir, lembre que o intervalo interquartílico
+(IQR) é definido como <span class="math inline">\(Q3-Q1\)</span>.
+Definimos o limite superior (LS) e inferior (LI) como,
+respectivamente, <span class="math inline">\(LS=Q3+1.5*IQR\)</span> e <span class="math inline">\(LI=Q1-1.5*IQR\)</span>.
+Os limites das linhas superior e inferior no boxplot
+são, respectivamente, a maior observação menor que LS e
+a menor observação maior que LI.
+Esta é uma faixa de valores tal que seria improvável
+obter uma observação fora dela.
+Observações fora destes limites são representadas
+no boxplot por asteriscos e são comumente chamadas de
+“outliers”.</p>
+<p>Muitas vezes, é útil separar as observações em grupos e
+construir boxplots para cada um destes.
+O exemplo a seguir, constrói boxplots para
+o efeito do adubo quando separamos as observações
+em 2 grupos: sem ou com nitrato.</p>
+<pre class="r"><code>#ggplot(aes(y = efeito, 
+#           x = nitrato, 
+#           color = nitrato), 
+#       data = adubo) + 
+#geom_boxplot()</code></pre>
+<p>Note que, ainda que a mediana no grupo com
+nitrato seja ligeiramente superior à mediana
+do grupo sem nitrato, a diferença entre
+estes valores é insignificante em relação
+à variabilidade dos dados.
+Esta conclusão é obtida visualmente vendo que
+os retângulos vermelho e azul estão praticamente sobrepostos.
+Este é um cenário em que esperamos que
+não exista diferença nos efeitos dos
+dois tipos de adubo.</p>
+<p>Por outro lado, podemos separar as
+observações nos grupos: sem e com fosfato.
+Neste caso, obtemos as figuras:</p>
+<pre class="r"><code>#ggplot(aes(y = efeito, 
+#           x = fosfato,
+#           color = fosfato), 
+#       data = adubo) + geom_boxplot()</code></pre>
+<p>Neste caso, observe que a diferença entre
+as medianas de cada grupo é grande em
+relação à variabilidade dos dados.
+Por exemplo, verificamos que
+os boxplots não tem sobreposição.
+Neste caso, é razoável esperar que
+os adubos com fosfato tenham um efeito maior
+do que os adubos sem fosfato.</p>
+</div>
+</div>
+<div id="visualizando-duas-variáveis" class="section level2">
+<h2>Visualizando duas variáveis</h2>
+<div id="scatter-plot" class="section level3">
+<h3>Scatter plot</h3>
+<p>Por vezes, estamos interessados em
+visualizar a relação entre duas variáveis contínuas.
+Neste caso, podemos designar um eixo para cada variável
+e desenhar um ponto para cada observação.
+Este tipo de gráfico é chamado de <strong>scatter plot</strong>.</p>
+<p>No <strong>R</strong> é possível obter o scatter plot
+usando o comando <em>plot()</em>.
+A seguir, ilustramos este comando no
+banco de dados <em>iris</em> usando como variáveis
+o comprimento e largura das pétalas.</p>
+<pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
+     xlab=&quot;Comprimento da petala&quot;,
+     ylab=&quot;Largura da petala&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Note que, em média,
+quanto maior o comprimento da pétala,
+maior será a sua largura.
+Mais do que isso, parece haver
+uma relação linear entre estas quantidades.
+É possível ajustar uma reta que aproxima
+esta relação linear entre as observações
+usando o seguinte comando no <strong>R</strong>:</p>
+<pre class="r"><code>ggplot(aes(x = Petal.Length , y = Petal.Width),
+       data = iris) +
+geom_point(color=&#39;blue&#39;) +
+geom_smooth(method=&#39;lm&#39;, color = &quot;red&quot;) +
+xlab(&quot;Comprimento da petala&quot;) +
+ylab(&quot;Largura da petala&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li><p>No banco de dados <em>iris</em>, calcule medidas resumo
+para o comprimento e largura das pétalas e para
+a largura das sépalas.</p></li>
+<li><p>Na definição da variância, usamos
+a média dos desvios quadrado. Esta é
+uma possível maneira de fazer com que
+desvios negativos e positivos fossem tratados como iguais.
+Você consegue pensar em outra forma
+de eliminar o sinal do desvio que
+não elevando-o ao quadrado?</p></li>
+<li><p>Para cada espécie no banco de dados <em>iris</em>,
+obtenha uma medida de centralidade e
+uma de variabilidade para o comprimento das sépalas.</p></li>
+<li><p>O comprimento das sépalas da espécie
+<em>Iris setosa</em> é consideravelmente menor que
+o da espécie <em>Iris versicolor</em> que, por sua vez,
+é menor do que o da espécie <em>Iris virginica</em>.
+Considere que em um banco de dados temos
+<span class="math inline">\(150\)</span> flores da espécie <em>Iris setosa</em> e, em outro,
+temos 50 exemplares de cada espécie.
+Qual banco de dados terá maior variabilidade
+em relação ao comprimento das sépalas?</p></li>
+<li><p>Construa um boxplot para os dados:
+2.3, 2000, 0.1, 1.5, 0.3, 0.7, 0.2, 1.7 e 1.2.</p></li>
+<li><p>Parece haver uma relação linear entre o
+comprimento e largura das sépalas
+no banco de dados <em>iris</em>?</p></li>
+<li><p>No banco de dados <em>iris</em>, parece
+haver diferença entre o comprimento das sépalas
+entre as 3 espécies observadas?</p></li>
+<li><p>Uma pesquisadora mediu as alturas de <span class="math inline">\(9\)</span> indivíduos,
+apresentadas a seguir:</p></li>
+</ol>
+<pre><code>## [1] 149 163 168 169 172 173 175 180 181</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li><p>Calcule a média e a variância das alturas.</p></li>
+<li><p>Verifique se há algum <em>outlier</em> neste
+banco de dados e descreva o significado
+deste termo.</p></li>
+</ol>
+<ol start="5" style="list-style-type: decimal">
+<li>Um pesquisador está interessado em estudar como
+varia o percentual de aproveitamento do petróleo em
+função da temperatura de alimentação do destilador.
+Foram consideradas duas diferentes temperaturas
+(150 ou 300 graus Celsius) e uma amostra de tamanho <span class="math inline">\(9\)</span>
+para cada uma destas.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li><p>Indique uma medida de centralidade e
+uma medida de dispersão para cada
+uma das temperaturas testadas e interprete-as.</p></li>
+<li><p>Esboce um boxplot para
+o aproveitamento de petróleo para
+cada temperatura testada.
+Interprete os boxplots e compare
+a diferença entre os aproveitamentos
+para cada temperatura.</p></li>
+</ol>
+<ol start="6" style="list-style-type: decimal">
+<li>O boxplot indica a mediana e
+o intervalo interquartílico de uma variável.
+Quais são possíveis vantagens destas
+medidas de centralidade e variabilidade em
+relação à média e ao desvio padrão?</li>
+</ol>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Correa2025" class="csl-entry">
+Corrêa, Fernando, and Rafael Stern. 2025. <span>“Another Note on the Censoring Problem: A State of the Art Assessment and a Review of Methods for Case Duration Analyses.”</span> <em>Available at SSRN 5340259</em>.
+</div>
+<div id="ref-Tukey1977" class="csl-entry">
+Tukey, John W. 1977. <em>Exploratory Data Analysis</em>. Addison-Wesley.
+</div>
+</div>
+</div>
