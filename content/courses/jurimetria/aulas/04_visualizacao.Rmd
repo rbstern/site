@@ -263,7 +263,7 @@ no boxplot por asteriscos e são comumente chamadas de *outliers*.
 ### Boxplot por categoria
 
 Muitas vezes, é útil separar as observações em grupos e construir boxplots para cada um destes.
-O exemplo a seguir, constrói boxplots para o valor dacausa quando separamos as observações por assunto.
+O exemplo a seguir, constrói boxplots para o valor da causa quando separamos as observações por assunto.
 
 ```{r}
 assuntos_freq = names(sort(table(data$assunto_info), decreasing = TRUE)[1:10])
@@ -292,7 +292,7 @@ Este tipo de gráfico é chamado de **scatter plot**.
 No **R** é possível obter o scatter plot
 usando o comando *plot()*.
 
-```{r}
+```{r warning = FALSE, message = FALSE}
 data %>% 
   filter(valor_numerico < 10^5) %>% 
   ggplot(aes(x = valor_numerico, y = Time)) +

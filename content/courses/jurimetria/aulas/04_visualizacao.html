@@ -91,6 +91,8 @@ Enquanto que a média de aproximadamente 1.000 é afetada pelo valor extremo, a 
 <p>A amplitude é a diferença entre o maior e o menor valor observados. Esta medida de variabilidade é fortemente influenciada por valores extremos nas observações, como outliers. O exemplo a seguir calcula a amplitude do valor da causa em ações cíveis:</p>
 <pre class="r"><code> max(data$valor_numerico, na.rm = TRUE) - min(data$valor_numerico, na.rm = TRUE)</code></pre>
 <pre><code>## [1] 681545490</code></pre>
+<pre class="r"><code>c(min(data$valor_numerico, na.rm = TRUE), max(data$valor_numerico, na.rm = TRUE))</code></pre>
+<pre><code>## [1]        10 681545500</code></pre>
 <p>Observamos uma amplitude de quase 700 milhões. Esta amplitude pode ser causada por um único caso com valor da causa próximo a 700 milhões. De fato, apenas 3 casos tem valor superior a 100 milhões, 9 acima de 10 milhões, e 122 acima de 1 milhão:</p>
 <pre class="r"><code>sum(data$valor_numerico &gt; 10^8, na.rm = TRUE)</code></pre>
 <pre><code>## [1] 3</code></pre>
@@ -137,6 +139,8 @@ aux</code></pre>
 <pre class="r"><code>quantile(data$valor_numerico, c(0.025, 0.975), na.rm = TRUE)</code></pre>
 <pre><code>##       2.5%      97.5% 
 ##    787.675 694093.688</code></pre>
+<pre class="r"><code>mean(data$valor_numerico &lt; 5*10^5, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 0.9663085</code></pre>
 </div>
 </div>
 <div id="resumo-de-observações-no-r" class="section level2">
@@ -177,7 +181,8 @@ as observações para obter mais informação.</p>
 são gráficos que resumem uma variável mais do que o strip chart. Ao invés de apresentarem um ponto para cada observação, estes gráficos indicam a frequência com que cada valor ocorre para uma variável.</p>
 <p>O bar plot é usado para variáveis qualitativas e de contagem. Ele indica a contagem com que
 cada valor ocorre para esta variável. Para criar um barplot no <strong>R</strong>, utilizamos primeiramente o comando <em>table()</em>, que conta o número de ocorrências para cada observação. A seguir, a saída do comando table é usada no comando <em>barplot()</em>, que exibe o gráfico. Esta sequência é ilustrada para os principais <span class="math inline">\(10\)</span> assuntos processuais, a seguir:</p>
-<pre class="r"><code>contagens = sort(table(data$assunto_info), decreasing = TRUE)[1:10]
+<pre class="r"><code># Colocar categorias outros
+contagens = sort(table(data$assunto_info), decreasing = TRUE)[1:10]
 tibble(assunto = names(contagens), contagens) %&gt;%
   ggplot(aes(x = reorder(assunto, contagens, decreasing = TRUE), y = contagens)) +
   geom_bar(stat = &quot;identity&quot;, fill = &quot;skyblue&quot;) +
@@ -187,7 +192,7 @@ tibble(assunto = names(contagens), contagens) %&gt;%
 <p>Por sua vez, o histograma é usado para variáveis quantitativas contínuas. Nestas variáveis, não esperamos encontrar duas observações que assumem o mesmo valor. Assim, o bar plot é pouco informativo. Uma alternativa é dividir os possíveis valores em faixas e contar a quantidade de observações em cada uma destas faixas. O gráfico que indica estas faixas se chama histograma.
 Este gráfico pode ser obtido no <strong>R</strong> pelo comando <em>hist()</em>. O gráfico abaixo é um histograma para o valor da causa em ações em que este valor é abaixo de 100 mil:</p>
 <pre class="r"><code>data %&gt;% 
-  filter(valor_numerico &lt; 10^5) %&gt;% 
+  filter(valor_numerico &lt; 5*10^5) %&gt;% 
   select(valor_numerico) %&gt;% 
   unlist() %&gt;% 
   hist(xlab=&quot;valores&quot;, ylab=&quot;contagem&quot;, main = &quot;&quot;)</code></pre>
@@ -218,8 +223,14 @@ que um valor típico para as observações é representado pelo traço em negrit
 a menor observação maior que LI. Esta é uma faixa de valores tal que seria improvável
 obter uma observação fora dela. Observações fora destes limites são representadas
 no boxplot por asteriscos e são comumente chamadas de <em>outliers</em>.</p>
+</div>
+</div>
+<div id="visualizando-duas-variáveis" class="section level2">
+<h2>Visualizando duas variáveis</h2>
+<div id="boxplot-por-categoria" class="section level3">
+<h3>Boxplot por categoria</h3>
 <p>Muitas vezes, é útil separar as observações em grupos e construir boxplots para cada um destes.
-O exemplo a seguir, constrói boxplots para o valor dacausa quando separamos as observações por assunto.</p>
+O exemplo a seguir, constrói boxplots para o valor da causa quando separamos as observações por assunto.</p>
 <pre class="r"><code>assuntos_freq = names(sort(table(data$assunto_info), decreasing = TRUE)[1:10])
 data %&gt;% 
   filter(valor_numerico &lt; 10^5) %&gt;% 
@@ -233,35 +244,7 @@ data %&gt;%
   theme(axis.text.x = element_blank()) +
   ylab(&quot;Valor da causa&quot;)</code></pre>
 <p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<p>Note que, ainda que a mediana no grupo com
-nitrato seja ligeiramente superior à mediana
-do grupo sem nitrato, a diferença entre
-estes valores é insignificante em relação
-à variabilidade dos dados.
-Esta conclusão é obtida visualmente vendo que
-os retângulos vermelho e azul estão praticamente sobrepostos.
-Este é um cenário em que esperamos que
-não exista diferença nos efeitos dos
-dois tipos de adubo.</p>
-<p>Por outro lado, podemos separar as
-observações nos grupos: sem e com fosfato.
-Neste caso, obtemos as figuras:</p>
-<pre class="r"><code>#ggplot(aes(y = efeito, 
-#           x = fosfato,
-#           color = fosfato), 
-#       data = adubo) + geom_boxplot()</code></pre>
-<p>Neste caso, observe que a diferença entre
-as medianas de cada grupo é grande em
-relação à variabilidade dos dados.
-Por exemplo, verificamos que
-os boxplots não tem sobreposição.
-Neste caso, é razoável esperar que
-os adubos com fosfato tenham um efeito maior
-do que os adubos sem fosfato.</p>
 </div>
-</div>
-<div id="visualizando-duas-variáveis" class="section level2">
-<h2>Visualizando duas variáveis</h2>
 <div id="scatter-plot" class="section level3">
 <h3>Scatter plot</h3>
 <p>Por vezes, estamos interessados em
@@ -270,30 +253,15 @@ Neste caso, podemos designar um eixo para cada variável
 e desenhar um ponto para cada observação.
 Este tipo de gráfico é chamado de <strong>scatter plot</strong>.</p>
 <p>No <strong>R</strong> é possível obter o scatter plot
-usando o comando <em>plot()</em>.
-A seguir, ilustramos este comando no
-banco de dados <em>iris</em> usando como variáveis
-o comprimento e largura das pétalas.</p>
-<pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
-     xlab=&quot;Comprimento da petala&quot;,
-     ylab=&quot;Largura da petala&quot;)</code></pre>
-<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
-<p>Note que, em média,
-quanto maior o comprimento da pétala,
-maior será a sua largura.
-Mais do que isso, parece haver
-uma relação linear entre estas quantidades.
-É possível ajustar uma reta que aproxima
-esta relação linear entre as observações
-usando o seguinte comando no <strong>R</strong>:</p>
-<pre class="r"><code>ggplot(aes(x = Petal.Length , y = Petal.Width),
-       data = iris) +
-geom_point(color=&#39;blue&#39;) +
-geom_smooth(method=&#39;lm&#39;, color = &quot;red&quot;) +
-xlab(&quot;Comprimento da petala&quot;) +
-ylab(&quot;Largura da petala&quot;)</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+usando o comando <em>plot()</em>.</p>
+<pre class="r"><code>data %&gt;% 
+  filter(valor_numerico &lt; 10^5) %&gt;% 
+  ggplot(aes(x = valor_numerico, y = Time)) +
+  geom_point(color=&#39;blue&#39;) +
+  geom_smooth(method=&#39;lm&#39;, color = &quot;red&quot;) +
+  xlab(&quot;Valor da causa&quot;) +
+  ylab(&quot;Tempo até sentença&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 </div>
 </div>
