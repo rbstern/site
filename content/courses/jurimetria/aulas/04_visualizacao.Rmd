@@ -279,7 +279,7 @@ data %>%
   theme(axis.text.x = element_blank()) +
   ylab("Valor da causa")
 ```
-
+Observamos que assuntos como "inclusão indevida em cadastro de inadimplentes" e "rescisão do contrato e devolução do dinheiro" apresentam alta variabilidade, sendo que em 50\% das observações o valor da causa varia de 12.500 a 50.000. Por outro lado, assuntos como "responsabilidade do fornecedor" tem variabilidade menor, com 50\% das vezes o valor da causa variando entre 10.000 e 15.000.
 
 ### Scatter plot
 

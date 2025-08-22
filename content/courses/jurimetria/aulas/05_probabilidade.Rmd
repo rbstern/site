@@ -1,0 +1,89 @@
+---
+title: "Probabilidade e quantificação de incerteza"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 50
+bibliography: refs.bib
+---
+
+# Variáveis aleatórias
+
+É comum que desejemos generalizar as conclusões que obtemos de um banco de dados para uma população. Por exemplo, no banco de dados de ações cíveis, casos com o assunto "inclusão indevida em cadastro de inadimplentes" em geral tem valor da causa superior àqueles com o assunto "bancários". É possível concluir a partir da amostra que este padrão está presente também na população?
+
+Para responder a questões como essa, é preciso desenvolver uma ferramenta que ligue as observações realizadas na amostra a observações futuras. Para realizar esta conexão a Estatística descreve o conhecimento existente antes da coleta do banco de dados. Neste contexto, havia incerteza sobre quais dados seriam observados. Por exemplo, considere que um experimento
+consiste em medir um objeto 10 vezes com um paquímetro. Devido aos erros de medição diversos valores serão observados. Cada medição tem um resultado incerto, com vários possíveis valores.
+
+Para fazer referência a observações incertas, usamos **variáveis aleatórias**. Em particular, lembre-se que um banco de dados é uma matriz em que as linhas são unidades amostrais e
+as colunas são variáveis. Designamos por $X_{i,j}$  o valor observado para a $j$-ésima variável da $i$-ésima unidade amostral. Como descrevemos nossa incerteza em um momento anterior à coleta do banco de dados, o valor de $X_{i,j}$ é incerto.
+
+## Proposições
+
+Utilizando variáveis aleatórias, é possível definir **proposições** de interesse. Proposições simples envolvem uma única variável e são, por exemplo, "$X_{1,3} = 5.2$",  "$X_{4,2} \geq 4$" ou "$X_{1,1} \leq 1$". Também é possível obter proposições complexas unindo proposições simples por meio de conjunções. Por exemplo, "$X_{1,1} = 2$ **e** $X_{2,1} = 2$" e  "$X_{1,3} = 5$ **ou** $X_{1,3} = 4$". A seguir, desenvolvemos uma medida de plausibilidade para proposições.
+
+# Probabilidade
+
+A probabilidade de uma proposição é uma medida de quão plausível esta proposição é. Seja $A$ uma proposição, designamos  sua probabilidade por $P(A)$. Por exemplo, seja $X_{1,1}$ o valor da causa da primeira ação na amostra. $P(X_{1,1} > 5000)$ designa a probabilidade de o valor da causa desta ação ser maior do que 5000. A probabilidade tem certas propriedades que
+ela deve satisfazer. Primeiramente, para toda proposição a sua probabilidade deve
+estar entre 0 e 1.  Se $P(A) = 0$, $A$ é impossível e se $P(A) = 1$, $A$ é certo. Para todo outro valor de $P(A)$, $A$ é incerto, sendo que, quanto maior o valor de $P(A)$, 
+mais plausível é $A$. Também, dizemos que duas proposições são **independentes** se
+aprender uma proposição não traz informação sobre a outra. Por exemplo, considere que
+$X_{1,1}$ e $X_{2,1}$ são os valores da causa em duas ações distintas. Se acreditamos que um não traz informação sobre o outro, podemos afirmar que $X_{1,1}$ e $X_{2,1}$ são independentes.
+
+## Interpretações da probabilidade.
+
+### Simetria 
+
+Os conceitos de probabilidade iniciaram seu desenvolvimento com  o estudo de jogos de azar. Isto ocorreu provavelmente porque nestes jogos lidamos com incertezas em um ambiente controlado. O funcionamento de um dado é  relativamente simples em relação ao objeto de pesquisas científicas modernas.
+
+Por exemplo, os possíveis resultados do lançamento de um dado (1, 2, 3, 4, 5 e 6) são **simétricos** e, assim,  todos são igualmente plausíveis. Neste caso, obtemos que a probabilidade de cada possibilidade é $1$ sobre o número total de possibilidades. Por exemplo, se $X$ é uma variável aleatória que designa o resultado do dado, então $P(X=1) = \frac{1}{6}$.
+
+Na maior parte de pesquisas científicas modernas, não é possível usar diretamente o juízo de simetria. Por exemplo, o resultado de uma ação pode ser procedente ou improcedente. Dada a complexidade existente em uma ação judicial, em geral não é possível justificar a existência de uma simetria entre estas ocorrências. Assim, é necessário desenvolver um conceito mais abrangente de probabilidade.
+
+### Frequência
+
+Imagine uma sequência de processos independentes de uma certa categoria. Podemos calcular a proporção de ações que foram julgadas procedentes. Quando o número o número de processos analisados é grande, a proporção concentra-se em um valor. Segundo a interpretação baseada em **frequências**, este valor designa a probabilidade procedência na categoria estudada. Isto é, a probabilidade de um evento é a frequência observada deste evento quando realizamos um número muito grande de observações independentes. 
+
+Por exemplo, a figura abaixo apresenta a proporção de vezes que um evento ocorre para vários possíveis números de  realizações de experimentos independentes. Qual a probabilidade de ocorrência do evento?
+
+```{r echo = FALSE}
+n <- 1000
+p <- 0.25
+props = cumsum(rbinom(n,1,p))/(1:n)
+plot(props, 
+     type='l',
+     xlab="Número de experimentos",
+     ylab="Proporção de vezes em que evento ocorreu")
+```
+
+### Subjetiva 
+
+Existem experimentos tais que não conseguimos imaginar repetições independentes. Por exemplo, imagine a próxima eleição presidencial como experimento. Existirá uma única próxima eleição presidencial e, assim, não conseguimos imaginar uma sequência de repetições independentes deste experimento. Assim, a interpretação frequentista não consegue responder a questões como: 
+"Qual a probabilidade de o candidato $A$ vencer a próxima eleição presidencial?"
+
+A interpretação **subjetiva** da probabilidade vê ela como o juízo de plausibilidade de um determinado indivíduo para proposições. Neste sentido, a probabilidade não é uma característica do experimento avaliado, mas do indivíduo que está estudando este experimento. Decorre que indivíduos diferentes podem atribuir probabilidades distintas para a mesma proposição.
+
+Para que um indivíduo reflita sobre suas probabilidades, uma abordagem é um experimento mental baseado em apostas. Considere uma aposta em que você ganha R\$1 se uma proposição, $A$, ocorrer e R\$0, caso contrário. Note que, caso você pague $p$ para participar desta aposta,
+então ganhará R\$(1-p) caso $A$ ocorra e perderá R\$p caso $A$ não ocorra. A probabilidade de $A$ pode ser imaginada como o maior valor que você estaria disposto a pagar para participar desta aposta.
+
+# Exercícios
+
+1. Descreva em suas próprias palavras o significado de "independentes". Apresente um exemplo de um par de proposições independentes.
+
+3. Considere as proposições: A = "Choverá hoje" e B = "Choverá amanhã". São independentes?
+
+4. Um dado de 6 faces é arremessado.cQual é a probabilidade de que, $A$, um número par seja sorteado?cQual é a probabilidade de que, $B$, o número 3 ou 6 seja sorteado? As duas proposições acima são independentes? Verifique se $P(A \textbf{ e } B) = P(A) \cdot P(B)$.
+
+5. Dividam-se em grupos e arremessem uma moeda várias vezes. Construam um banco de dados juntando todos os seus lançamentos. Para este banco de dados, esbocem como a proporção de caras
+varia de acordo com o número de lançamentos.
+
+6. Uma moeda de duas faces simétricas é arremessada duas vezes. 
+Seja $A$ a proposição de que o resultado do primeiro lançamento foi cara e $B$ a proposição de que em ambos os lançamentos ocorreu o mesmo resultado.
+
+a. Determine $P(A)$, $P(B)$, $P(A \textbf{ ou } B)$ e $P(A \textbf{ e } B)$.
+
+b. $A$ e $B$ são independentes?
+
+# Referências 
