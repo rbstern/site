@@ -202,62 +202,37 @@ Este gráfico pode ser obtido no <strong>R</strong> pelo comando <em>hist()</em>
   xlab(&quot;valor da causa&quot;) + 
   ylab(&quot;densidade&quot;)</code></pre>
 <p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<p>Às vezes, o histograma também não resume suficientemente as observações. Por exemplo, a figura abaixo apresenta o histograma do valor da causa para a totalidade das ações:</p>
-<pre class="r"><code>data %&gt;% 
-  ggplot(aes(x = valor_numerico)) + 
-geom_histogram(aes(y=..density..)) +
-xlab(&quot;valor da causa&quot;) + ylab(&quot;densidade&quot;)</code></pre>
-<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-<p>Para resolver este problema,
-veremos a seguir um gráfico que
-resume as observações ainda mais
-que o histograma.</p>
+<p>Às vezes desejamos um gráfico que resume os dados ainda mais do que um histograma. Este é o objetivo do box plot, que veremos a seguir:</p>
 </div>
 <div id="box-plot" class="section level3">
 <h3>Box plot</h3>
-<p>Um <strong>box plot</strong> <span class="citation">(<a href="#ref-Tukey1977">Tukey 1977</a>)</span> é
-um gráfico para visualizar
-uma única variável que
-consiste em apresentar visualmente
-5 medidas resumo.
-Antes de descrever estas medidas,
-é útil visualizar um boxplot.
-A seguir, obtemos no <strong>R</strong> um
-box plot para o comprimento das
-sépalas no banco de dados <em>iris</em>:</p>
-<pre class="r"><code>boxplot(iris$Sepal.Length, ylab = &quot;Comprimento da sépala&quot;)</code></pre>
+<p>Um <strong>box plot</strong> <span class="citation">(<a href="#ref-Tukey1977">Tukey 1977</a>)</span> é um gráfico para visualizar uma única variável que
+consiste em apresentar visualmente 5 medidas resumo. Antes de descrever estas medidas, é útil visualizar um boxplot. No <strong>R</strong>, o box plot pode ser obtido pelo comando <em>boxplot()</em>. Para o valor da ação quando esta é inferior a 100 mil, obtemos:</p>
+<pre class="r"><code>data %&gt;% 
+  filter(valor_numerico &lt; 10^5) %&gt;%
+  ggplot(aes(x = valor_numerico)) +
+  geom_boxplot()</code></pre>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>O box plot contém 5 traços principais. O traço em negrito dentro do retângulo indica a mediana (Q2) das observações. Os traços nos limites do retângulo indicam o primeiro (Q1) e o terceiro (Q3) quartis. Assim, observamos que cerca de 50% das observações estão dentro do retângulo e
+que um valor típico para as observações é representado pelo traço em negrito. A seguir, lembre que a amplitude interquartílica (IQR) é definida como <span class="math inline">\(IQR = Q3-Q1\)</span>. Definimos o limite superior (LS) e inferior (LI) como, respectivamente, <span class="math inline">\(LS=Q3+1.5*IQR\)</span> e <span class="math inline">\(LI=Q1-1.5*IQR\)</span>. Os limites das linhas superior e inferior no boxplot são, respectivamente, a maior observação menor que LS e
+a menor observação maior que LI. Esta é uma faixa de valores tal que seria improvável
+obter uma observação fora dela. Observações fora destes limites são representadas
+no boxplot por asteriscos e são comumente chamadas de <em>outliers</em>.</p>
+<p>Muitas vezes, é útil separar as observações em grupos e construir boxplots para cada um destes.
+O exemplo a seguir, constrói boxplots para o valor dacausa quando separamos as observações por assunto.</p>
+<pre class="r"><code>assuntos_freq = names(sort(table(data$assunto_info), decreasing = TRUE)[1:10])
+data %&gt;% 
+  filter(valor_numerico &lt; 10^5) %&gt;% 
+  mutate(
+    assunto_novo = ifelse(assunto_info %in% assuntos_freq,
+                          assunto_info,
+                          &quot;outros&quot;)
+  ) %&gt;% 
+  ggplot(aes(y = valor_numerico, x = assunto_novo, color = assunto_novo)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_blank()) +
+  ylab(&quot;Valor da causa&quot;)</code></pre>
 <p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<p>O box plot contém 5 traços principais.
-O traço em negrito dentro do retângulo indicam
-a mediana (Q2) das observações.
-Os traços nos limites do retângulo indicam
-o primeiro (Q1) e o terceiro (Q3) quartis.
-Assim, observamos que cerca de 50%
-das observações estão dentro do retângulo e
-que um valor típico para as observações é
-representado pelo traço em negrito.
-A seguir, lembre que o intervalo interquartílico
-(IQR) é definido como <span class="math inline">\(Q3-Q1\)</span>.
-Definimos o limite superior (LS) e inferior (LI) como,
-respectivamente, <span class="math inline">\(LS=Q3+1.5*IQR\)</span> e <span class="math inline">\(LI=Q1-1.5*IQR\)</span>.
-Os limites das linhas superior e inferior no boxplot
-são, respectivamente, a maior observação menor que LS e
-a menor observação maior que LI.
-Esta é uma faixa de valores tal que seria improvável
-obter uma observação fora dela.
-Observações fora destes limites são representadas
-no boxplot por asteriscos e são comumente chamadas de
-“outliers”.</p>
-<p>Muitas vezes, é útil separar as observações em grupos e
-construir boxplots para cada um destes.
-O exemplo a seguir, constrói boxplots para
-o efeito do adubo quando separamos as observações
-em 2 grupos: sem ou com nitrato.</p>
-<pre class="r"><code>#ggplot(aes(y = efeito, 
-#           x = nitrato, 
-#           color = nitrato), 
-#       data = adubo) + 
-#geom_boxplot()</code></pre>
 <p>Note que, ainda que a mediana no grupo com
 nitrato seja ligeiramente superior à mediana
 do grupo sem nitrato, a diferença entre
@@ -302,7 +277,7 @@ o comprimento e largura das pétalas.</p>
 <pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
      xlab=&quot;Comprimento da petala&quot;,
      ylab=&quot;Largura da petala&quot;)</code></pre>
-<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>Note que, em média,
 quanto maior o comprimento da pétala,
 maior será a sua largura.
@@ -318,7 +293,7 @@ geom_smooth(method=&#39;lm&#39;, color = &quot;red&quot;) +
 xlab(&quot;Comprimento da petala&quot;) +
 ylab(&quot;Largura da petala&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 </div>
 </div>
 </div>

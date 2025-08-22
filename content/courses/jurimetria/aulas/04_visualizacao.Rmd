@@ -88,6 +88,7 @@ A amplitude é a diferença entre o maior e o menor valor observados. Esta medid
 
 ```{r}
  max(data$valor_numerico, na.rm = TRUE) - min(data$valor_numerico, na.rm = TRUE)
+c(min(data$valor_numerico, na.rm = TRUE), max(data$valor_numerico, na.rm = TRUE))
 ```
 
 Observamos uma amplitude de quase 700 milhões. Esta amplitude pode ser causada por um único caso com valor da causa próximo a 700 milhões. De fato, apenas `r sum(data$valor_numerico > 10^8, na.rm = TRUE)` casos tem valor superior a 100 milhões, `r sum(data$valor_numerico > 10^7, na.rm = TRUE)` acima de 10 milhões, e `r sum(data$valor_numerico > 10^6, na.rm = TRUE)` acima de 1 milhão:
@@ -149,6 +150,7 @@ Alternativamente, podemos construir um intervalo mais conservador exigindo que 9
 
 ```{r}
 quantile(data$valor_numerico, c(0.025, 0.975), na.rm = TRUE)
+mean(data$valor_numerico < 5*10^5, na.rm = TRUE)
 ```
 
 ## Resumo de observações no R
@@ -202,6 +204,7 @@ O bar plot é usado para variáveis qualitativas e de contagem. Ele indica a con
 cada valor ocorre para esta variável. Para criar um barplot no **R**,  utilizamos primeiramente o comando *table()*, que conta o número de ocorrências para cada observação. A seguir, a saída do comando table é usada no comando *barplot()*, que exibe o gráfico. Esta sequência é ilustrada para os principais $10$ assuntos processuais, a seguir: 
 
 ```{r warning = FALSE, message = FALSE}
+# Colocar categorias outros
 contagens = sort(table(data$assunto_info), decreasing = TRUE)[1:10]
 tibble(assunto = names(contagens), contagens) %>%
   ggplot(aes(x = reorder(assunto, contagens, decreasing = TRUE), y = contagens)) +
@@ -215,11 +218,10 @@ Este gráfico pode ser obtido no **R** pelo comando *hist()*. O gráfico abaixo 
 
 ```{r}
 data %>% 
-  filter(valor_numerico < 10^5) %>% 
+  filter(valor_numerico < 5*10^5) %>% 
   select(valor_numerico) %>% 
   unlist() %>% 
   hist(xlab="valores", ylab="contagem", main = "")
-
 ```
 
 Ao contrário do strip chart, o histograma evidencia um decaimento rápido do número de casos em função do valor da causa.
@@ -236,105 +238,48 @@ data %>%
   ylab("densidade")
 ```
 
-Às vezes, o histograma também não resume suficientemente as observações. Por exemplo, a figura abaixo apresenta o histograma do valor da causa para a totalidade das ações:
-
-```{r, message = FALSE, warning = FALSE}
-data %>% 
-  ggplot(aes(x = valor_numerico)) + 
-geom_histogram(aes(y=..density..)) +
-xlab("valor da causa") + ylab("densidade")
-```
-
-Para resolver este problema,
-veremos a seguir um gráfico que
-resume as observações ainda mais
-que o histograma.
+Às vezes desejamos um gráfico que resume os dados ainda mais do que um histograma. Este é o objetivo do box plot, que veremos a seguir:
 
 ### Box plot
 
-Um **box plot** [@Tukey1977] é 
-um gráfico para visualizar 
-uma única variável que
-consiste em apresentar visualmente
-5 medidas resumo.
-Antes de descrever estas medidas,
-é útil visualizar um boxplot.
-A seguir, obtemos no **R** um
-box plot para o comprimento das
-sépalas no banco de dados *iris*:
+Um **box plot** [@Tukey1977] é um gráfico para visualizar uma única variável que
+consiste em apresentar visualmente 5 medidas resumo. Antes de descrever estas medidas, é útil visualizar um boxplot. No **R**, o box plot pode ser obtido pelo comando *boxplot()*. Para o valor da ação quando esta é inferior a 100 mil, obtemos:
 
 ```{r}
-boxplot(iris$Sepal.Length, ylab = "Comprimento da sépala")
+data %>% 
+  filter(valor_numerico < 10^5) %>%
+  ggplot(aes(x = valor_numerico)) +
+  geom_boxplot()
 ```
 
-O box plot contém 5 traços principais.
-O traço em negrito dentro do retângulo indicam
-a mediana (Q2) das observações.
-Os traços nos limites do retângulo indicam
-o primeiro (Q1) e o terceiro (Q3) quartis.
-Assim, observamos que cerca de 50\%
-das observações estão dentro do retângulo e
-que um valor típico para as observações é
-representado pelo traço em negrito.
-A seguir, lembre que o intervalo interquartílico
-(IQR) é definido como $Q3-Q1$.
-Definimos o limite superior (LS) e inferior (LI) como,
-respectivamente, $LS=Q3+1.5*IQR$ e $LI=Q1-1.5*IQR$.
-Os limites das linhas superior e inferior no boxplot
-são, respectivamente, a maior observação menor que LS e
-a menor observação maior que LI.
-Esta é uma faixa de valores tal que seria improvável
-obter uma observação fora dela.
-Observações fora destes limites são representadas
-no boxplot por asteriscos e são comumente chamadas de
-"outliers".
-
-Muitas vezes, é útil separar as observações em grupos e 
-construir boxplots para cada um destes.
-O exemplo a seguir, constrói boxplots para
-o efeito do adubo quando separamos as observações
-em 2 grupos: sem ou com nitrato.
-
-```{r}
-#ggplot(aes(y = efeito, 
-#           x = nitrato, 
-#           color = nitrato), 
-#       data = adubo) + 
-#geom_boxplot()
-```
-
-Note que, ainda que a mediana no grupo com
-nitrato seja ligeiramente superior à mediana
-do grupo sem nitrato, a diferença entre 
-estes valores é insignificante em relação
-à variabilidade dos dados.
-Esta conclusão é obtida visualmente vendo que
-os retângulos vermelho e azul estão praticamente sobrepostos.
-Este é um cenário em que esperamos que
-não exista diferença nos efeitos dos
-dois tipos de adubo.
-
-Por outro lado, podemos separar as
-observações nos grupos: sem e com fosfato.
-Neste caso, obtemos as figuras:
-
-```{r}
-#ggplot(aes(y = efeito, 
-#           x = fosfato,
-#           color = fosfato), 
-#       data = adubo) + geom_boxplot()
-```
-
-Neste caso, observe que a diferença entre
-as medianas de cada grupo é grande em
-relação à variabilidade dos dados.
-Por exemplo, verificamos que 
-os boxplots não tem sobreposição.
-Neste caso, é razoável esperar que
-os adubos com fosfato tenham um efeito maior
-do que os adubos sem fosfato.
+O box plot contém 5 traços principais. O traço em negrito dentro do retângulo indica a mediana (Q2) das observações. Os traços nos limites do retângulo indicam o primeiro (Q1) e o terceiro (Q3) quartis. Assim, observamos que cerca de 50\% das observações estão dentro do retângulo e
+que um valor típico para as observações é representado pelo traço em negrito. A seguir, lembre que a amplitude interquartílica (IQR) é definida como $IQR = Q3-Q1$. Definimos o limite superior (LS) e inferior (LI) como, respectivamente, $LS=Q3+1.5*IQR$ e $LI=Q1-1.5*IQR$. Os limites das linhas superior e inferior no boxplot são, respectivamente, a maior observação menor que LS e
+a menor observação maior que LI. Esta é uma faixa de valores tal que seria improvável
+obter uma observação fora dela. Observações fora destes limites são representadas
+no boxplot por asteriscos e são comumente chamadas de *outliers*.
 
 ## Visualizando duas variáveis
+
+### Boxplot por categoria
+
+Muitas vezes, é útil separar as observações em grupos e construir boxplots para cada um destes.
+O exemplo a seguir, constrói boxplots para o valor dacausa quando separamos as observações por assunto.
+
+```{r}
+assuntos_freq = names(sort(table(data$assunto_info), decreasing = TRUE)[1:10])
+data %>% 
+  filter(valor_numerico < 10^5) %>% 
+  mutate(
+    assunto_novo = ifelse(assunto_info %in% assuntos_freq,
+                          assunto_info,
+                          "outros")
+  ) %>% 
+  ggplot(aes(y = valor_numerico, x = assunto_novo, color = assunto_novo)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_blank()) +
+  ylab("Valor da causa")
+```
+
 
 ### Scatter plot
 
@@ -346,32 +291,15 @@ Este tipo de gráfico é chamado de **scatter plot**.
 
 No **R** é possível obter o scatter plot
 usando o comando *plot()*.
-A seguir, ilustramos este comando no
-banco de dados *iris* usando como variáveis
-o comprimento e largura das pétalas.
 
 ```{r}
-plot(iris$Petal.Length, iris$Petal.Width,
-     xlab="Comprimento da petala",
-     ylab="Largura da petala")
-```
-
-Note que, em média,
-quanto maior o comprimento da pétala,
-maior será a sua largura.
-Mais do que isso, parece haver
-uma relação linear entre estas quantidades.
-É possível ajustar uma reta que aproxima
-esta relação linear entre as observações
-usando o seguinte comando no **R**:
-
-```{r}
-ggplot(aes(x = Petal.Length , y = Petal.Width),
-       data = iris) +
-geom_point(color='blue') +
-geom_smooth(method='lm', color = "red") +
-xlab("Comprimento da petala") +
-ylab("Largura da petala")
+data %>% 
+  filter(valor_numerico < 10^5) %>% 
+  ggplot(aes(x = valor_numerico, y = Time)) +
+  geom_point(color='blue') +
+  geom_smooth(method='lm', color = "red") +
+  xlab("Valor da causa") +
+  ylab("Tempo até sentença")
 ```
 
 # Exercícios
