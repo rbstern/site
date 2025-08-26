@@ -9,3 +9,4 @@ type: book
 ---
 
 - [Notas de aula](https://www.overleaf.com/read/ndcxvbjgvkbx#a7baab)
+- [Lista 1](https://www.overleaf.com/read/wwspkcxvsfrq#270877)
