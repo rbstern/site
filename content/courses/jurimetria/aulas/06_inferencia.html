@@ -1,0 +1,182 @@
+---
+title: "Inferência Estatística"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+type: docs
+toc: true
+weight: 60
+bibliography: refs.bib
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="inferência-estatística-e-parâmetros" class="section level1">
+<h1>Inferência estatística e parâmetros</h1>
+<p>A inferência estatística consiste em fazer afirmações sobre características de uma população a partir de amostras desta. Estudaremos diversos métodos de inferência estatística.</p>
+<p>Para que seja possível fazer inferência estatística, a probabilidade descreve como a amostra se relaciona com a população. Por exemplo, considere uma população de processos similares em que a frequência de procedência da ação é uma quantidade desconhecida, <span class="math inline">\(\theta\)</span>. Tomando uma amostra de <span class="math inline">\(10\)</span> processos desta população, as indicadoras de procedência na amostra podem ser denotadas por <span class="math inline">\(X_1, \ldots, X_{10}\)</span>. Dizemos que a distribuição de uma variável com probabilidade <span class="math inline">\(\theta\)</span> de assumir o valor <span class="math inline">\(1\)</span> e <span class="math inline">\(1-\theta\)</span> de assumir o valor <span class="math inline">\(0\)</span> é uma <span class="math inline">\(\text{Bernoulli}(\theta)\)</span> e escrevemos <span class="math inline">\(X_i \sim \text{Bernoulli}(\theta)\)</span>. Nesta afirmação, note que <span class="math inline">\(X_i\)</span> refere-se à amostra e <span class="math inline">\(\theta\)</span> refere-se à população. Assim, a expressão “<span class="math inline">\(X_i \sim \text{Bernoulli}(\theta)\)</span>” tece a relação entre a amostra e a população.</p>
+<p>Existem duas abordagens distintas para a Inferência Estatística. Elas variam de acordo com a interpretação de probabilidade usada. Segundo a interpretação <strong>frequentista</strong>, <span class="math inline">\(\theta\)</span> é uma frequência populacional fixa e desconhecida. Neste sentido, afirmações probabilísticas referem-se somente à amostra. Por outro lado, segundo a interpretação <strong>subjetivista</strong>, como <span class="math inline">\(\theta\)</span> é um quantia desconhecida, há incerteza sobre ela. Neste sentido, é possível fazer afirmações probabilísticas relativas à incerteza sobre <span class="math inline">\(\theta\)</span>. Embora ambas as abordagens sejam úteis, este curso focará principalmente na abordagem <strong>frequentista</strong>.</p>
+</div>
+<div id="intervalos-de-confiança" class="section level1">
+<h1>Intervalos de Confiança</h1>
+<p>Em algumas situações, desejamos criar um intervalo pequeno tal que seja bastante plausível que o parâmetro esteja dentro dele. Por exemplo, considere que estamos estudando a frequência da procedência da ação em uma população de processos, <span class="math inline">\(\theta\)</span>. A frequência da procedência na amostra é uma estimativa plausível para <span class="math inline">\(\theta\)</span>. Contudo, é implausível que <span class="math inline">\(\theta\)</span> seja <strong>exatamente</strong> igual à frequência amostral. Assim, além desta estimativa, podemos considerar uma estimativa “conservadora” e outra “otimista” de <span class="math inline">\(\theta\)</span>. O conjunto de valores entre a estimativa conservadora e a otimista é um intervalo de valores plausíveis para <span class="math inline">\(\theta\)</span>. A seguir, veremos formalmente como operacionalizar esta ideia.</p>
+<p>O primeiro passo consiste em observar que um intervalo é constituído por um limite inferior, <span class="math inline">\(L_1\)</span>, e um limite superior <span class="math inline">\(L_2\)</span>. Assim, construir intervalos consiste em escolher <span class="math inline">\(l_1\)</span> e <span class="math inline">\(l_2\)</span> baseados na amostra. Para cumprir nossos objetivos, gostaríamos que <span class="math inline">\(L_2-L_1\)</span>, o comprimento do intervalo, fosse pequeno. Também gostaríamos que, antes de a amostra ser observada, a probabilidade de <span class="math inline">\(\theta\)</span> estar dentro do intervalo fosse grande, <span class="math inline">\(P(L_1 &lt; \theta &lt; L_2) &gt; 1-\alpha\)</span>, para um <span class="math inline">\(\alpha\)</span> pequeno. Após obtida a amostra, dizemos que o intervalo obtido tem confiança <span class="math inline">\(1-\alpha\)</span> para <span class="math inline">\(\theta\)</span>.</p>
+<p><strong>Atenção</strong>: A probabilidade de <span class="math inline">\(1-\alpha\)</span> refere-se ao <em>método</em> para a obtenção do intervalo, em um momento anterior à coleta da amostra. Em outras palavras, se coletarmos um número muito grande de amostras, em aproximadamente <span class="math inline">\(1-\alpha\)</span> destas <span class="math inline">\(\theta\)</span> estará dentro do intervalo de confiança obtido. Por outro lado, uma vez que uma particular amostra é obtida, não é mais verdade que a probabilidade de <span class="math inline">\(\theta\)</span> estar no intervalo é <span class="math inline">\(1-\alpha\)</span>. Podemos afirmar apenas que, ou <span class="math inline">\(\theta\)</span> está no intervalo, ou <span class="math inline">\(\theta\)</span> não está no intervalo (e não sabemos qual das afirmações é verdadeira). Por isso que dizemos que o intervalo obtido tem <em>confiança</em> <span class="math inline">\(1-\alpha\)</span>. A <em>confiança</em> refere-se ao método usado para construir o intervalo e não ao intervalo obtido.</p>
+<div id="amostra-bernoulli" class="section level2">
+<h2>Amostra Bernoulli</h2>
+<p>Considere que <span class="math inline">\(X_1, \ldots, X_n\)</span> são as indicadoras de procedência em ações independentes obtidas de uma população em que a proporção desconhecida de procedência é <span class="math inline">\(\theta\)</span>. Vimos que podemos escrever esta afirmação da seguinte forma compacta: <span class="math inline">\(X_1,\ldots,X_n\)</span> independentes e <span class="math inline">\(X_i \sim \text{Bernoulli}(\theta)\)</span>. Neste caso, considerando que <span class="math inline">\(\bar{X}\)</span> é a média amostral, o seguinte intervalo é comumente usado:</p>
+<p><span class="math display">\[IC_{1-\alpha} = \left[\bar{X} - \frac{z_{1-0.5\alpha}}{2\sqrt{n}};
+\bar{X} + \frac{z_{1-0.5\alpha}}{2\sqrt{n}} \right],\]</span></p>
+<p>onde <span class="math inline">\(z_{1-0.5\alpha}\)</span> é um valor tabelado que corresponde ao percentil <span class="math inline">\(1-0.5\alpha\)</span> da distribuição normal. Nesta fórmula o comprimento do intervalo é <span class="math inline">\(\frac{z_{1-0.5\alpha}}{\sqrt{n}}\)</span>. Também, o intervalo é centrado na frequência amostral. A distância entre a frequência amostral e os extremos do intervalo é chamada de “margem de erro” e tem o tamanho <span class="math inline">\(\frac{z_{1-0.5\alpha}}{2\sqrt{n}}\)</span>.</p>
+<div id="frequência-de-assunto-processual" class="section level3">
+<h3>Frequência de assunto processual</h3>
+<p>O código abaixo apresenta um intervalo de confiança 95% para a frequência de processos com o assunto “Práticas Abusivas”:</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+data = read_xlsx(&quot;./dados_civeis.xlsx&quot;) %&gt;% 
+  select(-processo_por_dependencia)
+
+X = data %&gt;% 
+  mutate(assunto_escolhido = assunto_info == &quot;Práticas Abusivas&quot;) %&gt;% 
+  select(assunto_escolhido) %&gt;% 
+  unlist()
+n = length(X)
+media = mean(X)
+margem = qnorm(0.975)/(2*sqrt(n))
+intervalo = c(mean(X)-margem, mean(X)+margem)
+print(&quot;Intervalo de Confiança:&quot;)</code></pre>
+<pre><code>## [1] &quot;Intervalo de Confiança:&quot;</code></pre>
+<pre class="r"><code>print(round(intervalo, 3))</code></pre>
+<pre><code>## [1] 0.103 0.126</code></pre>
+<p>A frequência amostral deste assunto é 0.115 e o tamanho da amostra é 6888. Aplicando a expressão apresentada acima, obtemos que a margem de erro é 0.012 e, assim, os limites inferior e superior do intervalo de confiança são 0.103 e 0.126. Note que é <strong>incorreto</strong> interpretar que há probabilidade de 95% de a frequência populacional estar entre 0.103 e 0.126. Podemos interpretar que, se gerarmos vários bancos de dados independentes da mesma população, então <span class="math inline">\(\theta\)</span> pertencerá a cerca de 95% dos intervalos gerados por meio destes bancos de dados. Contudo, após um particular banco de dados ser coletado, ou <span class="math inline">\(\theta\)</span> está dentro do intervalo calculado ou não está. A confiança de um particular intervalo gerado não é a probabilidade de que o parâmetro pertença a ele.</p>
+</div>
+<div id="taxa-de-reforma-em-câmaras-criminais" class="section level3">
+<h3>Taxa de reforma em câmaras criminais</h3>
+<p>Intervalos de confiança são comumente utilizados para comparar se grupos distintos apresentam o mesmo comportamento em relação a uma determinada variável. Para ilustrar este conceito, considere a taxa de reforma de sentenças criminais em recursos ajuizados pelo réu. O gráfico a seguir apresenta um intervalo de confiança para a taxa de reforma cada Câmara Criminal em São Paulo:</p>
+<pre class="r"><code>alpha = 0.05
+camaras = read_csv(&#39;./camaras.csv&#39;)
+aux = camaras %&gt;% 
+  filter(polo_mp == &quot;Passivo&quot;) %&gt;% 
+  mutate(reforma = decisao %in% c(&quot;Provido&quot;, &quot;Parcialmente&quot;)) %&gt;% 
+  group_by(camara) %&gt;% 
+  summarise(taxa_reforma = mean(reforma), n_dados = n()) %&gt;% 
+  ungroup() %&gt;% 
+  filter(n_dados &gt;= 100) %&gt;% 
+  mutate(
+    se = sqrt(taxa_reforma * (1 - taxa_reforma) / n_dados),
+    lower = taxa_reforma - qnorm(1-0.5*alpha) * se,
+    upper = taxa_reforma + qnorm(1-0.5*alpha) * se
+  ) %&gt;% 
+  mutate(camara = gsub(&quot;de Direito Criminal&quot;, &quot;&quot;, camara))
+
+aux %&gt;% 
+  ggplot(aes(x = camara, y = taxa_reforma)) +
+  geom_point(size = 3, color = &quot;blue&quot;) +  # Mean points
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, color = &quot;red&quot;) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+  ylab(&quot;Taxa de Reforma&quot;) +
+  xlab(&quot;Câmara de Direito Penal&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/06_inferencia_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Os pontos azuis indicam a taxa de reforma empírica que foi observada para cada Câmara. Existem duas possíveis explicações quando uma taxa de reforma é maior do que outra: ou uma Câmara sistematicamente reforma sentenças mais frequentemente do que outra, ou este padrão é observado na amostra por mera flutuação aleatória dos dados. Podemos utilizar os intervalos de confiança para diferenciar entre estes casos.</p>
+<p>Por um lado, podemos comparar as taxas de reforma da <span class="math inline">\(1^a\)</span> e da <span class="math inline">\(2^a\)</span> Câmaras. Na amostra, observamos que a taxa de reforma da <span class="math inline">\(1^a\)</span> Câmara é maior do que aquela da <span class="math inline">\(2^a\)</span>. Contudo, observamos que seus respectivos intervalos de confiança assumem valores em comum. Isto é, é plausível que as taxas de reforma populacionais de ambas as Câmaras sejam iguais. Assim, não encontramos indícios suficientemente fortes de que as taxas de reforma populacionais destas Câmaras sejam distintos.</p>
+<p>Por outro lado, podemos comparar as taxas de reforma da <span class="math inline">\(1^a\)</span> e da <span class="math inline">\(4^a\)</span> Câmaras. Novamente,
+a taxa de reforma da <span class="math inline">\(1^a\)</span> Câmara na amostra é maior do que aquela da <span class="math inline">\(4^a\)</span>. Além disso, neste caso, os intervalos de confiança para as taxas de reforma populacionais não assumem valores em comum. Isto é, não é plausível que as taxas de reforma populacionais de ambas as Câmaras sejam iguais. Assim, há indícios fortes de que a taxa de reforma populacional da <span class="math inline">\(1^a\)</span> Câmara é maior do que aquela da <span class="math inline">\(4^a\)</span>.</p>
+</div>
+</div>
+<div id="amostra-normal" class="section level2">
+<h2>Amostra Normal</h2>
+<p>Considere que <span class="math inline">\(X_1, \ldots, X_n\)</span> são variáveis quantitativas, como o valor da causa. Neste caso, é comum assumirmos que cada <span class="math inline">\(X_i\)</span> tem distribuição normal e escrevemos <span class="math inline">\(X_i \sim N(\mu, \sigma^2)\)</span>. Assim como no caso da amostra Bernoulli, esta expressão conecta a amostra à população. Decorre desta suposição que <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma^2\)</span> são, respectivamente, a média e a variância populacional desta variável quantitativa. Neste caso, obtemos o seguinte intervalo de confiança para <span class="math inline">\(\mu\)</span>:</p>
+<p><span class="math display">\[IC_{1-\alpha} = \left[\bar{X}-\frac{S\cdot qt(1-0.5\alpha,n-1)}{\sqrt{n-1}}, \bar{X}+\frac{S \cdot qt(1-0.5\alpha,n-1)}{\sqrt{n-1}}\right],\]</span></p>
+<p>onde <span class="math inline">\(qt(1-0.5\alpha,n-1)\)</span> é um valor tabelado referente ao quantil <span class="math inline">\(1-0.5\alpha\)</span> da distribuição <span class="math inline">\(T_{n-1}\)</span>.</p>
+<p>O gráfico a seguir apresenta intervalos de confiança para o valor da causa para os <span class="math inline">\(10\)</span> assuntos mais frequentes em ações cíveis:</p>
+<pre class="r"><code>library(readxl)
+data_civeis = read_xlsx(&quot;./dados_civeis.xlsx&quot;) %&gt;% 
+  select(-processo_por_dependencia)
+assuntos_freq = names(sort(table(data_civeis$assunto_info), decreasing = TRUE)[1:10])
+aux = data_civeis %&gt;% 
+  filter(valor_numerico &lt; 10^5) %&gt;% 
+  mutate(
+    assunto_novo = ifelse(assunto_info %in% assuntos_freq,
+                          assunto_info,
+                          &quot;outros&quot;)
+  ) %&gt;% 
+  group_by(assunto_novo) %&gt;% 
+  summarise(
+    media_vcausa = mean(valor_numerico),
+    var_vcausa = var(valor_numerico),
+    n_dados = n()
+  ) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(
+    se = sqrt(var_vcausa / n_dados),
+    lower = media_vcausa - qnorm(1-0.5*alpha) * se,
+    upper = media_vcausa + qnorm(1-0.5*alpha) * se
+  )
+
+aux %&gt;% 
+  filter(assunto_novo != &quot;outros&quot;) %&gt;% 
+  ggplot(aes(x = assunto_novo, y = media_vcausa)) +
+  geom_point(size = 3, color = &quot;blue&quot;) +  # Mean points
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, color = &quot;red&quot;) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+  ylab(&quot;Valor da Causa&quot;) +
+  xlab(&quot;Assunto&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/06_inferencia_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Estes intervalos podem ser interpretados similarmente àqueles obtidos para taxas de reforma em Câmaras Criminais. Quais conclusões você consegue tirar deste gráfico?</p>
+</div>
+<div id="a-interpretação-de-intervalos-de-confiança" class="section level2">
+<h2>A Interpretação de Intervalos de Confiança</h2>
+<pre class="r"><code>alpha = 0.05
+mu = 2
+sigma = 4
+n = 100
+num_experimentos = 10000
+sucessos = 0
+for(ii in 1:num_experimentos)
+{
+  dados = rnorm(n, mu, sigma)
+  l1 = mean(dados) - sigma/sqrt(n) * qnorm(1-0.5*alpha)
+  l2 = mean(dados) - sigma/sqrt(n) * qnorm(0.5*alpha)
+  sucessos = sucessos + (mu &gt; l1 &amp; mu &lt; l2)
+}
+sucessos/num_experimentos</code></pre>
+<pre><code>## [1] 0.9496</code></pre>
+</div>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li><p>Defina e interprete intervalo de confiança
+em suas próprias palavras.</p></li>
+<li><p>Um experimentalista experiente realizou <span class="math inline">\(9\)</span> medições da
+largura de um objeto usando um paquímetro.
+A média destas observações foi de <span class="math inline">\(1.2 mm\)</span>.
+O desvio padrão do experimentalista
+com o paquímetro é de <span class="math inline">\(0.2 mm\)</span>.
+Usando estas informações, construa intervalo com confiança
+90%, 95% e 99% para a largura do objeto.</p></li>
+<li><p>No exemplo da normal com variância conhecida, obtemos
+que o comprimento do intervalo de confiança é
+<span class="math inline">\(\frac{2\sigma_0 qnorm(1-0.5\alpha)}{\sqrt{n}}\)</span>.
+Isto ocorre pois <span class="math inline">\(qnorm(0.5\alpha)=1-qnorm(1-0.5\alpha)\)</span>.
+Interprete <span class="math inline">\(\sigma_0\)</span>, <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(n\)</span> e
+como estas quantidades inluenciam no
+tamanho do intervalo de confiança.</p></li>
+<li><p>O caso da normal com variância populacional conhecida é
+um caso especial do caso da normal com variância populacional desconhecida.
+Em particular, o intervalo de confiança obtido
+para a variância populacional desconhecida é válido
+mesmo quando ela é conhecida. Apesar disso, é indesejável
+usar este intervalo neste caso. Por quê?</p></li>
+<li><p>Obtenha a linha de raciocínio completa para obter
+o intervalo de confiança no caso da normal com variância desconhecida.</p></li>
+</ol>
+</div>
+<div id="referências" class="section level1">
+<h1>Referências</h1>
+</div>
