@@ -9,6 +9,9 @@ type: book
 ---
 
 - [Aula 1: O que é Jurimetria?](https://www.overleaf.com/read/tfpfckzxhfvg#39eb72)
+- Aula 4: Material Complementar
+  - [Remitting the Remittitur](https://heinonline.org/HOL/Page?handle=hein.journals/amjtrad31&id=537&collection=journals&index=)
+  - [Calculating remittiturs](https://academic.oup.com/lpr/article/8/2/125/940806?login=true)
 
 # Software para análise de dados.
 

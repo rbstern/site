@@ -249,7 +249,8 @@ consiste em apresentar visualmente 5 medidas resumo. Antes de descrever estas me
 data %>% 
   filter(valor_numerico < 10^5) %>%
   ggplot(aes(x = valor_numerico)) +
-  geom_boxplot()
+  geom_boxplot() +
+  xlab("Valor da causa")
 ```
 
 O box plot contém 5 traços principais. O traço em negrito dentro do retângulo indica a mediana (Q2) das observações. Os traços nos limites do retângulo indicam o primeiro (Q1) e o terceiro (Q3) quartis. Assim, observamos que cerca de 50\% das observações estão dentro do retângulo e

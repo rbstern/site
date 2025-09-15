@@ -216,7 +216,8 @@ consiste em apresentar visualmente 5 medidas resumo. Antes de descrever estas me
 <pre class="r"><code>data %&gt;% 
   filter(valor_numerico &lt; 10^5) %&gt;%
   ggplot(aes(x = valor_numerico)) +
-  geom_boxplot()</code></pre>
+  geom_boxplot() +
+  xlab(&quot;Valor da causa&quot;)</code></pre>
 <p><img src="/courses/jurimetria/aulas/04_visualizacao_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>O box plot contém 5 traços principais. O traço em negrito dentro do retângulo indica a mediana (Q2) das observações. Os traços nos limites do retângulo indicam o primeiro (Q1) e o terceiro (Q3) quartis. Assim, observamos que cerca de 50% das observações estão dentro do retângulo e
 que um valor típico para as observações é representado pelo traço em negrito. A seguir, lembre que a amplitude interquartílica (IQR) é definida como <span class="math inline">\(IQR = Q3-Q1\)</span>. Definimos o limite superior (LS) e inferior (LI) como, respectivamente, <span class="math inline">\(LS=Q3+1.5*IQR\)</span> e <span class="math inline">\(LI=Q1-1.5*IQR\)</span>. Os limites das linhas superior e inferior no boxplot são, respectivamente, a maior observação menor que LS e

@@ -11,6 +11,7 @@ bibliography: refs.bib
 
 # Variáveis aleatórias
 
+
 É comum que desejemos generalizar as conclusões que obtemos de um banco de dados para uma população. Por exemplo, no banco de dados de ações cíveis, casos com o assunto "inclusão indevida em cadastro de inadimplentes" em geral tem valor da causa superior àqueles com o assunto "bancários". É possível concluir a partir da amostra que este padrão está presente também na população?
 
 Para responder a questões como essa, é preciso desenvolver uma ferramenta que ligue as observações realizadas na amostra a observações futuras. Para realizar esta conexão a Estatística descreve o conhecimento existente antes da coleta do banco de dados. Neste contexto, havia incerteza sobre quais dados seriam observados. Por exemplo, considere que um experimento
@@ -67,6 +68,14 @@ A interpretação **subjetiva** da probabilidade vê ela como o juízo de plausi
 
 Para que um indivíduo reflita sobre suas probabilidades, uma abordagem é um experimento mental baseado em apostas. Considere uma aposta em que você ganha R\$1 se uma proposição, $A$, ocorrer e R\$0, caso contrário. Note que, caso você pague $p$ para participar desta aposta,
 então ganhará R\$(1-p) caso $A$ ocorra e perderá R\$p caso $A$ não ocorra. A probabilidade de $A$ pode ser imaginada como o maior valor que você estaria disposto a pagar para participar desta aposta.
+
+## Probabilidade Condicional
+
+### Falácia do Promotor
+
+- People v. Collins
+
+### Gatecrasher Paradox
 
 # Exercícios
 
