@@ -1,18 +1,15 @@
 ---
-title: "Inferência Estatística"
+title: "Intervalos de Confiança"
 author: "Rafael B. Stern"
 highlight: true
 date: ""
-type: docs
-toc: true
+output: html_document
+type: book
 weight: 60
 bibliography: refs.bib
 ---
 
 
-<div id="TOC">
-
-</div>
 
 <div id="inferência-estatística-e-parâmetros" class="section level1">
 <h1>Inferência estatística e parâmetros</h1>
@@ -80,7 +77,7 @@ aux %&gt;%
   theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
   ylab(&quot;Taxa de Reforma&quot;) +
   xlab(&quot;Câmara de Direito Penal&quot;)</code></pre>
-<p><img src="/courses/jurimetria/aulas/06_inferencia_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/courses/jurimetria/aulas/06_ic_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Os pontos azuis indicam a taxa de reforma empírica que foi observada para cada Câmara. Existem duas possíveis explicações quando uma taxa de reforma é maior do que outra: ou uma Câmara sistematicamente reforma sentenças mais frequentemente do que outra, ou este padrão é observado na amostra por mera flutuação aleatória dos dados. Podemos utilizar os intervalos de confiança para diferenciar entre estes casos.</p>
 <p>Por um lado, podemos comparar as taxas de reforma da <span class="math inline">\(1^a\)</span> e da <span class="math inline">\(2^a\)</span> Câmaras. Na amostra, observamos que a taxa de reforma da <span class="math inline">\(1^a\)</span> Câmara é maior do que aquela da <span class="math inline">\(2^a\)</span>. Contudo, observamos que seus respectivos intervalos de confiança assumem valores em comum. Isto é, é plausível que as taxas de reforma populacionais de ambas as Câmaras sejam iguais. Assim, não encontramos indícios suficientemente fortes de que as taxas de reforma populacionais destas Câmaras sejam distintos.</p>
 <p>Por outro lado, podemos comparar as taxas de reforma da <span class="math inline">\(1^a\)</span> e da <span class="math inline">\(4^a\)</span> Câmaras. Novamente,
@@ -126,14 +123,15 @@ aux %&gt;%
   theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
   ylab(&quot;Valor da Causa&quot;) +
   xlab(&quot;Assunto&quot;)</code></pre>
-<p><img src="/courses/jurimetria/aulas/06_inferencia_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/courses/jurimetria/aulas/06_ic_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Estes intervalos podem ser interpretados similarmente àqueles obtidos para taxas de reforma em Câmaras Criminais. Quais conclusões você consegue tirar deste gráfico?</p>
 </div>
 <div id="a-interpretação-de-intervalos-de-confiança" class="section level2">
 <h2>A Interpretação de Intervalos de Confiança</h2>
+<p>Para interpretar corretamente intervalos de confiança, um experimento mental pode ser útil. Considere cada um de <span class="math inline">\(10.000\)</span> pesquisadores coleta dados sobre <span class="math inline">\(100\)</span> processos distintos da mesma população. Se cada pesquisador construir um intervalo de confiança 95% para o valor da causa, então cerca de <span class="math inline">\(9.500\)</span> dos pesquisadores construirá um intervalo que cobre a média populacional para o valor da causa. Este experimento mental pode ser simulado da seguinte forma:</p>
 <pre class="r"><code>alpha = 0.05
-mu = 2
-sigma = 4
+mu = 20000
+sigma = 150
 n = 100
 num_experimentos = 10000
 sucessos = 0
@@ -145,7 +143,7 @@ for(ii in 1:num_experimentos)
   sucessos = sucessos + (mu &gt; l1 &amp; mu &lt; l2)
 }
 sucessos/num_experimentos</code></pre>
-<pre><code>## [1] 0.9496</code></pre>
+<pre><code>## [1] 0.9472</code></pre>
 </div>
 </div>
 <div id="exercícios" class="section level1">

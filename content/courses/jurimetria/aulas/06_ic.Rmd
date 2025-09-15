@@ -1,10 +1,10 @@
 ---
-title: "Inferência Estatística"
+title: "Intervalos de Confiança"
 author: "Rafael B. Stern"
 highlight: true
 date: ""
-type: docs
-toc: true
+output: html_document
+type: book
 weight: 60
 bibliography: refs.bib
 ---
@@ -146,10 +146,12 @@ Estes intervalos podem ser interpretados similarmente àqueles obtidos para taxa
 
 ## A Interpretação de Intervalos de Confiança
 
+Para interpretar corretamente intervalos de confiança, um experimento mental pode ser útil. Considere cada um de $10.000$ pesquisadores coleta dados sobre $100$ processos distintos da mesma população. Se cada pesquisador construir um intervalo de confiança 95\% para o valor da causa, então cerca de $9.500$ dos pesquisadores construirá um intervalo que cobre a média populacional para o valor da causa. Este experimento mental pode ser simulado da seguinte forma:
+
 ```{r}
 alpha = 0.05
-mu = 2
-sigma = 4
+mu = 20000
+sigma = 150
 n = 100
 num_experimentos = 10000
 sucessos = 0

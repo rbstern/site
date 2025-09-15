@@ -1,5 +1,5 @@
 ---
-title: "Visualização de Dados"
+title: "Visualização"
 author: "Rafael B. Stern"
 highlight: true
 date: ""

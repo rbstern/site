@@ -1,5 +1,5 @@
 ---
-title: "Probabilidade e quantificação de incerteza"
+title: "Probabilidade"
 author: "Rafael B. Stern"
 highlight: true
 date: ""
