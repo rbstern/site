@@ -52,7 +52,7 @@ O exemplo a seguir estuda a taxa de reforma de sentenças por Câmaras Criminais
 
 ```{r warning = FALSE, message = FALSE}
 library(tidyverse)
-aux = read_csv("./camaras.csv") %>% 
+read_csv("./camaras.csv") %>% 
   mutate(
     reforma = decisao %in% c("Parcialmente", "Provido"),
     camara = gsub(" de Direito Criminal", "", camara)

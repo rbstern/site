@@ -35,7 +35,7 @@ Como usualmente só somos capazes de observar a amostra, não somos capazes de d
 <strong>Observação</strong>: Verifique <span class="math inline">\(H_0\)</span> é rejeitado quando o intervalo de confiança 95% para <span class="math inline">\(\theta\)</span> não contém o valor <span class="math inline">\(0.5\)</span>.</p>
 <p>O exemplo a seguir estuda a taxa de reforma de sentenças por Câmaras Criminais em recursos nos quais o Ministério Público é polo passivo. Para cada Câmara, testa-se a hipótese que a taxa de reforma é 50%.</p>
 <pre class="r"><code>library(tidyverse)
-aux = read_csv(&quot;./camaras.csv&quot;) %&gt;% 
+read_csv(&quot;./camaras.csv&quot;) %&gt;% 
   mutate(
     reforma = decisao %in% c(&quot;Parcialmente&quot;, &quot;Provido&quot;),
     camara = gsub(&quot; de Direito Criminal&quot;, &quot;&quot;, camara)
@@ -58,6 +58,7 @@ aux = read_csv(&quot;./camaras.csv&quot;) %&gt;%
   ylab(&quot;Taxa de Reforma&quot;) +
   xlab(&quot;Câmara de Direito Penal&quot;) +
   labs(color = &quot;Rejeita Hipótese&quot;)</code></pre>
+<p><img src="/courses/jurimetria/aulas/07_testes_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
 <div id="exemplo-amostra-normal" class="section level2">
 <h2>Exemplo: Amostra Normal</h2>
