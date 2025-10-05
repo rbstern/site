@@ -33,6 +33,31 @@ Como usualmente só somos capazes de observar a amostra, não somos capazes de d
 <p>Considere que <span class="math inline">\(X_1, \ldots, X_n\)</span> indicam a procedência em processos independentes e que <span class="math inline">\(X_i \sim \text{Bernoulli}(\theta)\)</span>. Uma possível hipótese é a de que a taxa populacional de procedência é 50%, isto é <span class="math inline">\(H_0: \theta = 0.5\)</span>. Para controlar o erro tipo I em <span class="math inline">\(\alpha\)</span>, rejeitamos <span class="math inline">\(H_0\)</span> se</p>
 <p><span class="math display">\[|\bar{X}-0.5| &gt; \frac{0.5 \cdot qnorm(1-0.5\alpha)}{\sqrt{n}}.\]</span>
 <strong>Observação</strong>: Verifique <span class="math inline">\(H_0\)</span> é rejeitado quando o intervalo de confiança 95% para <span class="math inline">\(\theta\)</span> não contém o valor <span class="math inline">\(0.5\)</span>.</p>
+<p>O exemplo a seguir estuda a taxa de reforma de sentenças por Câmaras Criminais em recursos nos quais o Ministério Público é polo passivo. Para cada Câmara, testa-se a hipótese que a taxa de reforma é 50%.</p>
+<pre class="r"><code>library(tidyverse)
+aux = read_csv(&quot;./camaras.csv&quot;) %&gt;% 
+  mutate(
+    reforma = decisao %in% c(&quot;Parcialmente&quot;, &quot;Provido&quot;),
+    camara = gsub(&quot; de Direito Criminal&quot;, &quot;&quot;, camara)
+  ) %&gt;% 
+  group_by(camara, polo_mp) %&gt;% 
+  summarise(taxa_reforma = mean(reforma), n_dados = n()) %&gt;% 
+  filter(n_dados &gt; 100) %&gt;% 
+  mutate(
+    se = sqrt(taxa_reforma * (1 - taxa_reforma) / n_dados),
+    lower = taxa_reforma - qnorm(0.975) * se,
+    upper = taxa_reforma + qnorm(0.975) * se,
+    rejeita_h0 = abs(taxa_reforma-0.5) &gt; qnorm(0.975)* se
+  ) %&gt;% 
+  ggplot(aes(x = camara, y = taxa_reforma, color = rejeita_h0)) +
+  geom_point(size = 3) +  # Mean points
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, color = &quot;black&quot;) +
+  geom_hline(yintercept = 0.5, linetype = &quot;dashed&quot;, color = &quot;red&quot;) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylab(&quot;Taxa de Reforma&quot;) +
+  xlab(&quot;Câmara de Direito Penal&quot;) +
+  labs(color = &quot;Rejeita Hipótese&quot;)</code></pre>
 </div>
 <div id="exemplo-amostra-normal" class="section level2">
 <h2>Exemplo: Amostra Normal</h2>
@@ -43,34 +68,42 @@ Como usualmente só somos capazes de observar a amostra, não somos capazes de d
 </div>
 <div id="p-valor" class="section level1">
 <h1>P-valor</h1>
-<p>Na amostra estudada no exemplo anterior,
-verificamos que se fixássemos <span class="math inline">\(\alpha = 0.05\)</span>,
-então o teste rejeitaria a hipótese nula.
-Por outro lado, se fixássemos <span class="math inline">\(\alpha = 0.01\)</span>,
-o teste não rejeitaria a hipótese nula.
-Isto ocorre pois quanto menor o valor de <span class="math inline">\(\alpha\)</span>,
-mais o teste fica conservador em rejeitar <span class="math inline">\(H_0\)</span>.
-Decorre deste comportamento que,
-enquanto que para valores “grandes” de <span class="math inline">\(\alpha\)</span>,
-o teste rejeitará <span class="math inline">\(H_0\)</span>,
-para valores “pequenos” de <span class="math inline">\(\alpha\)</span>
-o teste não rejeitará <span class="math inline">\(H_0\)</span>.</p>
-<p>Um valor de interesse é o menor <span class="math inline">\(\alpha\)</span>
-tal que o teste rejeita <span class="math inline">\(H_0\)</span> para a amostra observada.
-Este <span class="math inline">\(\alpha^*\)</span> é comumente chamado de <strong>p-valor</strong>.
-Este valor pode ser muito útil
-para compartilhar resultados.
-Note que, para a amostra observada,
-se um pesquisador fixar um <span class="math inline">\(\alpha &gt; \alpha^*\)</span>,
-então ele rejeitará <span class="math inline">\(H_0\)</span>. Por outro lado,
-se ele fixar <span class="math inline">\(\alpha &lt; \alpha^*\)</span>,
-então não rejeitará <span class="math inline">\(H_0\)</span>. Assim,
-somente comparando o p-valor com o <span class="math inline">\(\alpha\)</span> fixado,
-é possível saber o resultado do teste.
-Portanto, mesmo pesquisadores fixando
-níveis de significância diferentes podem
-saber o resultado do teste de hipótese apenas
-observando o p-valor.</p>
+<p>Considere que se fixássemos <span class="math inline">\(\alpha = 0.05\)</span>, então o teste rejeitaria a hipótese nula.
+Por outro lado, se fixássemos <span class="math inline">\(\alpha = 0.01\)</span>, o teste não rejeitaria a hipótese nula. Em geral, quanto menor o valor de <span class="math inline">\(\alpha\)</span>, mais o teste fica conservador em rejeitar <span class="math inline">\(H_0\)</span>.
+Decorre deste comportamento que, enquanto que para valores “grandes” de <span class="math inline">\(\alpha\)</span>, o teste rejeitará <span class="math inline">\(H_0\)</span>, para valores “pequenos” de <span class="math inline">\(\alpha\)</span> o teste não rejeitará <span class="math inline">\(H_0\)</span>.</p>
+<p>Um valor de interesse é o menor <span class="math inline">\(\alpha\)</span> tal que o teste rejeita <span class="math inline">\(H_0\)</span> para a amostra observada.
+Este <span class="math inline">\(\alpha^*\)</span> é comumente chamado de <strong>p-valor</strong>. Este valor pode ser muito útil
+para compartilhar resultados. Note que, para a amostra observada, se um pesquisador fixar um <span class="math inline">\(\alpha &gt; \alpha^*\)</span>, então ele rejeitará <span class="math inline">\(H_0\)</span>. Por outro lado, se ele fixar <span class="math inline">\(\alpha &lt; \alpha^*\)</span>, então não rejeitará <span class="math inline">\(H_0\)</span>. Assim, somente comparando o p-valor com o <span class="math inline">\(\alpha\)</span> fixado, é possível saber o resultado do teste. Portanto, mesmo pesquisadores fixando níveis de significância diferentes podem saber o resultado do teste de hipótese apenas observando o p-valor.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li><p>Descreva em suas próprias palavras: teste de hipótese,
+erro tipo I, erro tipo II, nível de significância e p-valor.</p></li>
+<li><p>Um cientista mede um objeto <span class="math inline">\(9\)</span> vezes com um paquímetro e
+observa os valores em mm de:
+1.2, 1.4, 1.7, 1.3, 1.5, 1.1, 1.8, 1.4, 1.1.
+Se as medições com o paquímetro tem desvio padrão de 0.2 mm,
+o pesquisador consegue rejeitar a hipótese de que
+o comprimento do objeto é menor do que <span class="math inline">\(1.3 mm\)</span>?
+Qual o p-valor para esta hipótese na amostra observada?</p></li>
+<li><p>Considere o caso da normal com variância conhecida.
+Ou seja, cada observação é tal que <span class="math inline">\(X_{i} \sim N(\mu,\sigma_0^2)\)</span>.
+Considere que desejamos testar <span class="math inline">\(H_0: \mu \geq \mu_0\)</span>.
+Neste caso, faria sentido calcular como evidência contra <span class="math inline">\(H_0\)</span>
+o quanto <span class="math inline">\(\bar{X}\)</span> é menor que <span class="math inline">\(\mu_0\)</span>?
+Se sim, rejeitaríamos <span class="math inline">\(H_0\)</span> quando <span class="math inline">\(\bar{X}-\mu_0 &lt; c\)</span>.
+Utilizando passos análogos ao da seção da normal com variância conhecida,
+o valor de <span class="math inline">\(c\)</span> tal que
+a probabilidade de erro tipo I é controlada por <span class="math inline">\(\alpha\)</span>.
+Determine o p-valor deste teste.</p></li>
+<li><p>Considere novamente o caso da normal com variância conhecida,
+ou seja, cada observação é tal que <span class="math inline">\(X_{i} \sim N(\mu,\sigma_0^2)\)</span>.
+A medida <span class="math inline">\(|\bar{X}-\mu_0|\)</span> captura evidência contra <span class="math inline">\(H_0: \mu = \mu_0\)</span>?
+Se desejamos rejeitar <span class="math inline">\(H_0\)</span> quando <span class="math inline">\(|\bar{X}-\mu_0| &gt; c\)</span>,
+determine o valor de <span class="math inline">\(c\)</span> que controla o erro tipo I em <span class="math inline">\(\alpha\)</span>.
+Determine o p-valor deste teste.</p></li>
+</ol>
 </div>
 <div id="referências" class="section level1">
 <h1>Referências</h1>
