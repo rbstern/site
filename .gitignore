@@ -2,3 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Saida do build local do Hugo (o Netlify gera a sua propria copia)
+public/
+.hugo_build.lock
+
+# Ajustes de permissao especificos desta maquina
+.claude/settings.local.json

@@ -54,7 +54,7 @@ I am a member of the following research groups:
 
 <table>
   <tr>
-    <td valign="top"><a href = "http://www.small.ufscar.br/"><img src="https://www.small-lab.science/figures/logo.png" heigth="100"></a></td>
+    <td valign="top"><a href = "https://small-research.github.io/website/"><img src="https://small-research.github.io/website/small.png" heigth="100"></a></td>
     <td valign="top"><a href = "https://www.abj.org.br/"><img src="https://abj.org.br/assets/logo-home.png" heigth="100"></a></td>
     <td valign="top"><a href = "https://neuromat.numec.prp.usp.br/"><img src="https://neuromat.numec.prp.usp.br/static/img/neuromat.png" heigth="100"></a></td>
   </tr>

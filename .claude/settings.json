@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 300 Rscript -e 'blogdown::build_site\\(build_rmd = \"content/courses/nao_parametrica/syllabus/syllabus_nao_param.Rmd\"\\)')",
+      "Bash(Rscript -e 'x<-readLines\\(\"public/courses/nao_parametrica/syllabus/syllabus_nao_param/index.html\",warn=FALSE\\); cat\\(\"datas:\", length\\(grep\\(\"^[0-9]{2}/[0-9]{2}/26$\", trimws\\(x\\)\\)\\), \"| NA na tabela:\", sum\\(grepl\\(\"^NA$\", trimws\\(x\\)\\)\\), \"\\\\n\"\\); for\\(p in c\\(\"14h00-16h00\",\"Não-paramétrica\",\"Wasserman\",\"0.35\"\\)\\) cat\\(sprintf\\(\"  %-18s : %s\\\\n\", p, if\\(any\\(grepl\\(p,x,fixed=TRUE\\)\\)\\)\"ok\" else \"AUSENTE\"\\)\\)')",
+      "Bash(Rscript -e 'cat\\(grep\\(\"courses/\\(nao_parametrica|analise_bayesiana\\)\", readLines\\(\"public/courses/index.html\",warn=FALSE\\), value=TRUE\\), sep=\"\\\\n\"\\)')",
+      "Bash(Rscript -e 'x<-readLines\\(\"public/courses/index.html\",warn=FALSE\\); i<-grep\\(\"nao_parametrica\", x\\); cat\\(paste\\(trimws\\(x[sort\\(unique\\(c\\(i, i+1, i+2\\)\\)\\)]\\), collapse=\"\\\\n\"\\), \"\\\\n\"\\)')",
+      "Bash(Rscript -e ' *)",
+      "Bash(Rscript -e 'x<-readLines\\(\"public/courses/index.html\",warn=FALSE\\); cat\\(grep\\(\"MAE5919|MAE0524\", x, value=TRUE\\), sep=\"\\\\n\"\\)')",
+      "Bash(Rscript -e 'x<-readLines\\(\"public/courses/nao_parametrica/syllabus/syllabus_nao_param/index.html\",warn=FALSE\\); i<-grep\\(\"Nadaraya|Assouad\", x\\); cat\\(\"linhas com esses termos:\", paste\\(i, collapse=\",\"\\), \"\\\\n\"\\); cat\\(trimws\\(x[i]\\), sep=\"\\\\n\"\\); j<-grep\\(\"Calend\", x\\); cat\\(\"\\\\n\\(secao Calendario comeca na linha\", j[1], \"\\)\\\\n\"\\)')",
+      "Bash(Rscript -e 'x <- readLines\\(\"public/courses/nao_parametrica/syllabus/syllabus_nao_param/index.html\", warn=FALSE\\) *)"
+    ]
+  }
+}
