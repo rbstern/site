@@ -60,4 +60,4 @@ I am a member of the following research groups:
   </tr>
 </table>
 
-In case you are looking for Rafael Izbicki, his site is [here](http://www.rizbicki.ufscar.br/).
+In case you are looking for Rafael Izbicki, his site is [here](https://rafaelizbicki.com).
