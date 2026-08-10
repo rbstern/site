@@ -47,10 +47,11 @@ teste_tukey</code></pre>
 <pre class="r"><code>agua = read.csv(&quot;./data/agua.csv&quot;)
 agua = as.tibble(agua)</code></pre>
 <pre><code>## Warning: `as.tibble()` was deprecated in tibble 2.0.0.
-## Please use `as_tibble()` instead.
-## The signature and semantics have changed, see `?as_tibble`.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+## ℹ Please use `as_tibble()` instead.
+## ℹ The signature and semantics have changed, see `?as_tibble`.
+## This warning is displayed once per session.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
 <pre class="r"><code>teste_aov = aov(Tempo ~ Tipo, data = agua)
 teste_aov</code></pre>
 <pre><code>## Call:

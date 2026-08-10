@@ -29,7 +29,7 @@ tem densidade uniforme entre 0 e 1.</p>
 <pre class="r"><code>library(tidyverse)
 ggplot(data.frame(x = c(0, 1)), aes(x)) + 
 stat_function(fun = dunif, colour = &quot;red&quot;, n = 100)</code></pre>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Uma propriedade importante de uma função de densidade é que
 podemos obter a probabilidade de que <span class="math inline">\(X\)</span> esteja entre dois valores,
 <span class="math inline">\(x_1\)</span> e <span class="math inline">\(x_2\)</span>, calculando a área debaixo da densidade.
@@ -48,7 +48,7 @@ Portanto, como esperávamos, <span class="math inline">\(P(0 &lt; X &lt; 1) = 1\
 <pre class="r"><code>ggplot(data.frame(x = c(0, 1)), aes(x)) + 
 stat_function(fun = dunif, colour = &quot;red&quot;, n = 100) +
 stat_function(fun = dunif, xlim = c(0.25, 0.5), geom = &quot;area&quot;, alpha = 0.5) </code></pre>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>De forma geral, a área debaixo de uma curva é
 dada por uma integral.
 Neste curso não usaremos esta relação,
@@ -137,7 +137,7 @@ A figura abaixo exibe a densidade da <span class="math inline">\(N(0,1)\)</span>
 também conhecida por “normal padrão”.</p>
 <pre class="r"><code>ggplot(data.frame(x = c(-3, 3)), aes(x)) + 
 stat_function(fun = dnorm, colour=&quot;red&quot;, n = 100) </code></pre>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Note que a densidade tem um formato de sino com
 simetria ao redor do <span class="math inline">\(0\)</span>.
 Decorre que a normal padrão tem média <span class="math inline">\(0\)</span>.
@@ -155,7 +155,7 @@ stat_function(fun = function(x) dnorm(x, mean = -1),
 stat_function(fun = function(x) dnorm(x, mean = 1), 
               colour = &quot;green&quot;, n = 100) +
 ylab(&quot;densidade&quot;)</code></pre>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Semelhantemente, a figura abaixo apresenta
 nas curvas verde, vermelha e azul, respectivamente,
 as distribuições <span class="math inline">\(N(0, 0.25)\)</span>, <span class="math inline">\(N(0, 1)\)</span> e <span class="math inline">\(N(0, 4)\)</span>.
@@ -170,7 +170,7 @@ stat_function(fun = function(x) dnorm(x, sd = 2),
 stat_function(fun = function(x) dnorm(x, sd = 0.5), 
               colour = &quot;green&quot;, n = 100) +
 ylab(&quot;densidade&quot;)</code></pre>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Uma relação útil é que aproximadamente 95% da
 densidade de uma <span class="math inline">\(N(\mu,\sigma^2)\)</span> está
 concentrada entre <span class="math inline">\(\mu-2\sigma\)</span> e <span class="math inline">\(\mu+2\sigma\)</span>.
@@ -255,7 +255,7 @@ for(ii in 1:1000)
 ggplot(aes(x = medias), data = data.frame(medias)) +
 geom_histogram(aes(y = ..density..)) +
 geom_density(colour=&quot;red&quot;)</code></pre>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
 <div id="distribuição-chi-quadrado" class="section level1">
@@ -327,7 +327,7 @@ com distribuição uniforme entre <span class="math inline">\(0\)</span> e <span
 <li><p>Ache um intervalo tal que uma <span class="math inline">\(N(4,9)\)</span> e
 steja dentro deste com probabilidade aproximadamente <span class="math inline">\(95\%\)</span>.</p></li>
 <li><p>Se <span class="math inline">\(X \sim N(4,9)\)</span>, utilize o <strong>R</strong> para
-calcular <span class="math inline">\(P(-1 \leq X \leq 1)\)</span>.</p></li>
+calcular <span class="math inline">\(P(-1 \leq X  \leq 1)\)</span>.</p></li>
 <li><p>Se <span class="math inline">\(X \sim N(10, 100)\)</span>, indique
 uma transformação linear de <span class="math inline">\(X\)</span> que tem
 distribuição normal padrão.</p></li>
@@ -344,7 +344,7 @@ Este histograma se encontra abaixo.
 Com base no histograma, argumente se
 a medida resumo poderia ou não ser a média amostral.</p></li>
 </ol>
-<p><img src="/courses/intro_stat/06_distribuicoes_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/06_distribuicoes_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="referências" class="section level1">
 <h1>Referências</h1>

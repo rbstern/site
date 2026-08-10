@@ -52,7 +52,7 @@ há muitas observações ele é de difícil interpretação.</p>
 pelo comando <em>stripchart()</em>.
 Por exemplo, no banco de dados de adubos, obtemos:</p>
 <pre class="r"><code>stripchart(adubo$efeito, xlab=&quot;efeito&quot;)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Por exemplo, note que
 enquanto que 7 das 20 observações,
 estão concentradas próximo a 1.5,
@@ -72,7 +72,7 @@ interpretar um strip chart produzido
 com 10.000 observações:</p>
 <pre class="r"><code>normais = rnorm(10000)
 stripchart(normais)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Em casos como o acima, é
 necessário resumir
 as observações para obter informação.</p>
@@ -102,7 +102,7 @@ contagens</code></pre>
 ##     setosa versicolor  virginica 
 ##         50         50         50</code></pre>
 <pre class="r"><code>barplot(contagens, xlab = &quot;espécie&quot;, ylab = &quot;contagem&quot;)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Por sua vez, o histograma é
 usado para variáveis quantitativas contínuas.
 Nestas variáveis, não esperamos encontrar
@@ -117,7 +117,7 @@ Este gráfico pode ser obtido no <strong>R</strong>
 pelo comando <em>hist()</em>,
 conforme ilustrado a seguir:</p>
 <pre class="r"><code>hist(normais, xlab=&quot;valores&quot;, ylab=&quot;contagem&quot;)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Lembre que as 10.000 observações acima
 foram usadas para ilustrar as
 limitações do strip chart.
@@ -143,7 +143,7 @@ ggplot(aes(x = var1),
 geom_histogram(aes(y=..density..)) +
 geom_density(color=&quot;red&quot;) +
 xlab(&quot;valores&quot;) + ylab(&quot;densidade&quot;)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Às vezes, o histograma também não
 resume suficientemente as observações.
 Por exemplo, a figura abaixo apresenta
@@ -155,7 +155,7 @@ comparar o efeito de cada adubo.</p>
 <pre class="r"><code>ggplot(aes(x =  efeito, color = nitrato),
        data = adubo) +
 geom_histogram()</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Para resolver este problema,
 veremos a seguir um gráfico que
 resume as observações ainda mais
@@ -163,7 +163,7 @@ que o histograma.</p>
 </div>
 <div id="box-plot" class="section level3">
 <h3>Box plot</h3>
-<p>Um <strong>box plot</strong> <span class="citation">(<a href="#ref-Tukey1977" role="doc-biblioref">Tukey 1977</a>)</span> é
+<p>Um <strong>box plot</strong> <span class="citation">(<a href="#ref-Tukey1977">Tukey 1977</a>)</span> é
 um gráfico para visualizar
 uma única variável que
 consiste em apresentar visualmente
@@ -174,7 +174,7 @@ A seguir, obtemos no <strong>R</strong> um
 box plot para o comprimento das
 sépalas no banco de dados <em>iris</em>:</p>
 <pre class="r"><code>boxplot(iris$Sepal.Length, ylab = &quot;Comprimento da sépala&quot;)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>O box plot contém 5 traços principais.
 O traço em negrito dentro do retângulo indicam
 a mediana (Q2) das observações.
@@ -206,7 +206,7 @@ em 2 grupos: sem ou com nitrato.</p>
            color = nitrato), 
        data = adubo) + 
 geom_boxplot()</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Note que, ainda que a mediana no grupo com
 nitrato seja ligeiramente superior à mediana
 do grupo sem nitrato, a diferença entre
@@ -224,7 +224,7 @@ Neste caso, obtemos as figuras:</p>
            x = fosfato,
            color = fosfato), 
        data = adubo) + geom_boxplot()</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Neste caso, observe que a diferença entre
 as medianas de cada grupo é grande em
 relação à variabilidade dos dados.
@@ -252,7 +252,7 @@ o comprimento e largura das pétalas.</p>
 <pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
      xlab=&quot;Comprimento da petala&quot;,
      ylab=&quot;Largura da petala&quot;)</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Note que, em média,
 quanto maior o comprimento da pétala,
 maior será a sua largura.
@@ -267,8 +267,8 @@ geom_point(color=&#39;blue&#39;) +
 geom_smooth(method=&#39;lm&#39;, color = &quot;red&quot;) +
 xlab(&quot;Comprimento da petala&quot;) +
 ylab(&quot;Largura da petala&quot;)</code></pre>
-<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/intro_stat/03_visualizacao_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="/courses/intro_stat/aulas/03_visualizacao_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -322,7 +322,7 @@ relação à média e ao desvio padrão?</li>
 </div>
 <div id="referências" class="section level1 unnumbered">
 <h1>Referências</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Tukey1977" class="csl-entry">
 Tukey, John W. 1977. <em>Exploratory Data Analysis</em>. Addison-Wesley.
 </div>

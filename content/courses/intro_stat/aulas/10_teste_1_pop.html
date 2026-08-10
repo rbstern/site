@@ -9,6 +9,7 @@ weight: 100
 bibliography: refs.bib
 ---
 
+<link href="/rmarkdown-libs/htmltools-fill/fill.css" rel="stylesheet" />
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
 <script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
@@ -156,7 +157,7 @@ digitando diretamente</p>
        mu = 1.5, 
        conf.level = 1-alpha)</code></pre>
 <pre><code>## 
-##  One Sample t-test
+## 	One Sample t-test
 ## 
 ## data:  dados
 ## t = 0.84853, df = 8, p-value = 0.4208
@@ -189,8 +190,8 @@ Deseja-se testar se a água do rio e salubre.</li>
 <li>Teste a hipótese nula a um nível de significância de <span class="math inline">\(\alpha = 0.05\)</span>.</li>
 <li>Calcule o p-valor deste teste.</li>
 </ol>
-<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","vertical":false,"data":[[0.025,0.05,0.95,0.975],[-2.31,-1.86,1.86,2.31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>alpha<\/th>\n      <th>qt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-1" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","vertical":false,"data":[[0.025,0.05,0.95,0.975],[-2.31,-1.86,1.86,2.31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>alpha<\/th>\n      <th>qt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]},{"name":"alpha","targets":0},{"name":"qt","targets":1}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <ol start="2" style="list-style-type: decimal">
 <li>Considere que <span class="math inline">\(X_{1},\ldots,X_{n}\)</span> são independentes e
 <span class="math inline">\(X_{i} \sim N(\mu,\sigma_0^2)\)</span>, onde <span class="math inline">\(\sigma_0^2\)</span> é conhecido.
@@ -205,8 +206,8 @@ onde <span class="math inline">\(\sigma_0^2 = 1\)</span> e <span class="math inl
 para embasar a sua resposta considere que <span class="math inline">\(S = 1\)</span>.
 Os seguintes valores podem ser úteis:</li>
 </ol>
-<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","vertical":false,"data":[[0.025,0.05,0.95,0.975],[-1.96,-1.64,1.64,1.96]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>alpha<\/th>\n      <th>qnorm<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div id="htmlwidget-3" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"filter":"none","vertical":false,"data":[[0.025,0.05,0.95,0.975],[-2.31,-1.86,1.86,2.31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>alpha<\/th>\n      <th>qt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","vertical":false,"data":[[0.025,0.05,0.95,0.975],[-1.96,-1.64,1.64,1.96]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>alpha<\/th>\n      <th>qnorm<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]},{"name":"alpha","targets":0},{"name":"qnorm","targets":1}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"filter":"none","vertical":false,"data":[[0.025,0.05,0.95,0.975],[-2.31,-1.86,1.86,2.31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>alpha<\/th>\n      <th>qt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","columnDefs":[{"className":"dt-right","targets":[0,1]},{"name":"alpha","targets":0},{"name":"qt","targets":1}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
