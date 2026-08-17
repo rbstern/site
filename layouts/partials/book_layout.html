@@ -1,0 +1,78 @@
+{{/*
+  Cópia de themes/github.com/wowchemy/wowchemy-hugo-modules/wowchemy/v5/
+  layouts/partials/book_layout.html, com uma única alteração: quando a
+  página define `toc: false`, o conteúdo principal ocupa a largura que
+  seria reservada ao índice (col-xl-10 no lugar de col-xl-8).
+  Ao atualizar o tema, conferir se o original mudou.
+*/}}
+
+{{ $current_page := . }}
+
+{{/* Check whether to show breadcrumb navigation. */}}
+{{ $show_breadcrumb := .Params.show_breadcrumb }}
+
+{{/* Show ToC by default. */}}
+{{ $show_toc := ne .Params.toc false }}
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      {{ partial "book_sidebar" . }}
+    </div>
+
+    {{ if $show_toc }}
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      {{ partial "hooks/page_toc_start" . }}
+
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">{{ i18n "on_this_page" }}</a></li>
+      </ul>
+
+      {{ .TableOfContents }}
+
+      {{ partial "hooks/page_toc_end" . }}
+    </div>
+    {{ end }}
+
+    <main class="col-12 col-md-9 {{ if $show_toc }}col-xl-8{{ else }}col-xl-10{{ end }} py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container{{ if not $show_toc }} docs-article-wide{{ end }}">
+          {{ if $show_breadcrumb }}
+            {{ partial "components/breadcrumb" $current_page }}
+          {{ end }}
+
+          <h1>{{ .Title }}</h1>
+
+          <div class="article-style">
+            {{ .Content }}
+          </div>
+
+          {{ partial "tags.html" . }}
+
+          {{/* Show next/previous pages by default. */}}
+          {{ if ne site.Params.book_section_pager false }}
+          <div class="article-widget">
+            {{ partial "section_pager" . }}
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="body-footer">
+          <p>{{ i18n "last_updated" }} {{ $.Lastmod | time.Format site.Params.locale.date_format }}</p>
+
+          {{ partial "page_edit" . }}
+
+          {{ partial "comments" . }}
+
+          {{ partial "page_related" . }}
+        </div>
+
+      </article>
+
+      {{ partial "site_footer" . }}
+
+    </main>
+  </div>
+</div>

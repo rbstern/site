@@ -1,0 +1,12 @@
+{{/*
+  Gancho do tema para CSS/HTML extra no <head>.
+  O tema limita o texto das páginas do tipo `book` a
+  `.docs-article-container { max-width: 760px }`. Nas páginas sem índice
+  (`toc: false`), o parcial `book_layout.html` acrescenta a classe
+  `docs-article-wide`, e a regra abaixo libera essa largura para que o
+  texto ocupe a coluna inteira -- útil para as equações longas das aulas.
+  Para voltar a limitar, basta trocar `none` por um valor em pixels.
+*/}}
+<style>
+  .docs-article-container.docs-article-wide { max-width: none; }
+</style>
