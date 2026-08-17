@@ -1,0 +1,37 @@
+date,lecture
+11/08/26,Descrição do curso
+13/08/26,Revisão do paradigma bayesiano
+18/08/26,Revisão de Cadeias de Markov
+20/08/26,Metropolis-Hastings e Amostrador de Gibbs
+25/08/26,Monte Carlo Hamiltoniano (HMC)
+27/08/26,Introdução e Aplicações do Stan
+01/09/26,Regressão linear bayesiana: prioris de regularização e implementação em Stan
+03/09/26,Crítica de modelos: checagens preditivas a posteriori
+08/09/26,Semana da Pátria (não haverá aula)
+10/09/26,Semana da Pátria (não haverá aula)
+15/09/26,"Comparação e seleção de modelos: validação cruzada, LOO e WAIC"
+17/09/26,"Modelos lineares generalizados: logística, contagens e dados categóricos"
+22/09/26,Modelos robustos: verossimilhanças de cauda pesada
+24/09/26,Revisão
+29/09/26,Prova 1
+01/10/26,Modelos hierárquicos: shrinkage e pooling parcial
+06/10/26,Modelos multinível: interceptos e inclinações aleatórios
+08/10/26,Reparametrização não centrada e o funil de Neal
+13/10/26,Regressão não linear paramétrica
+15/10/26,Splines penalizadas e modelos aditivos
+20/10/26,Processos gaussianos: regressão e núcleos
+22/10/26,Processos gaussianos: hiperparâmetros e aproximações
+27/10/26,Séries temporais: modelos autorregressivos e estruturais
+29/10/26,Modelos lineares dinâmicos e filtro de Kalman
+03/11/26,Modelos de espaço de estados em Stan
+05/11/26,Modelos de mistura finita e variáveis latentes
+10/11/26,Misturas: label switching e número de componentes
+12/11/26,Inferência bayesiana não paramétrica: processo de Dirichlet
+17/11/26,Folga (a definir)
+19/11/26,Revisão
+24/11/26,Prova 2
+26/11/26,Seminários
+01/12/26,Seminários
+03/12/26,Seminários
+08/12/26,Prova Substitutiva
+10/12/26,Prova de Recuperação

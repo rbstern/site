@@ -1,0 +1,222 @@
+---
+date: "2026-08-03"
+title: "Programa do curso"
+highlight: true
+output: html_document
+type: book
+---
+
+# Contato
+
+```{r echo = FALSE, message = FALSE}
+library(magrittr)
+keys = c("nome", "email", "encontro")
+values_i = c("Rafael Bassi Stern", "rbstern@gmail.com", "a definir")
+values_m = c("Sil Bittencourt", "a definir", "a definir")
+tibble::tibble(variaveis = keys,
+               Instrutor = values_i,
+               Monitoria = values_m) %>%
+knitr::kable(escape = FALSE,
+             options = list(dom = 't'),
+             rownames = FALSE) %>%
+kableExtra::kable_styling()
+```
+
+- Aulas: 3as: 10h00-12h00 e 5as: 08h00-10h00
+
+- Instruções para o envio de e-mails:
+Por favor adicione ``[MAE0524]'' ao
+tópico de e-mails relacionados a este curso.
+O envio de e-mail deve ser tratado como uma comunicação profissional.
+Evite o uso de abreviações, acrônimos e gírias nos e-mails.
+**Não garanto que lerei e-mails fora destas especificações!**
+
+# Informações do Curso
+
+### Ementa
+
+Apresentar diversos modelos estatísticos para análise de dados
+sob a perspectiva bayesiana de inferência.
+Métodos de inferência bayesiana, comparação de modelos e
+técnicas de predição também serão desenvolvidos.
+Além disso, serão discutidas técnicas computacionais e
+pacotes atuais para implementação dos modelos estudados.
+
+<br/>
+
+### Objetivos do curso
+
+Apresentar técnicas de análise de dados utilizando
+a abordagem bayesiana para inferência estatística.
+Ao final do curso, espera-se que você seja capaz de:
+
+- Construir modelos bayesianos adequados a um problema aplicado
+- Obter e diagnosticar amostras da distribuição a posteriori
+- Criticar, comparar e selecionar modelos bayesianos
+- Implementar os modelos estudados em pacotes computacionais atuais
+
+<br/>
+
+### Conteúdo programático
+
+1. Revisão do método bayesiano.
+2. Computação bayesiana.
+3. Modelos de associação e classificação.
+4. Regressão linear normal e não normal. Modelos robustos.
+5. Regressão não linear.
+6. Modelos hierárquicos bayesianos.
+7. Modelos com dados correlacionados: séries temporais e modelos dinâmicos.
+8. Tópicos adicionais: modelos de variáveis latentes,
+   introdução a inferência bayesiana não paramétrica.
+
+O item 1 é tratado como uma breve revisão,
+uma vez que o curso MAE0302 - Inferência Bayesiana
+é cursado no semestre imediatamente anterior.
+
+<br/>
+
+### Material do curso
+
+- Notas de aula e listas de exercícios
+  estarão disponíveis online.
+
+- Os seguintes livros são opcionais e
+  fornecem explicações detalhadas,
+  tópicos extras, aplicações interessantes e
+  exercícios adicionais:
+
+    - Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian data analysis. CRC Press.
+
+    - McElreath, R. (2020). Statistical rethinking: A Bayesian course with examples in R and Stan. CRC Press.
+
+    - Gelman, A., Hill, J., & Vehtari, A. (2020). Regression and other stories. Cambridge University Press.
+
+    - Robert, C. P., & Casella, G. (2004). Monte Carlo statistical methods. Springer.
+
+    - West, M., & Harrison, J. (1997). Bayesian forecasting and dynamic models. Springer.
+
+    - Kruschke, J. K. (2015). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press.
+
+# Atividades do Curso
+
+Neste curso você fará
+listas de exercícios, resolverá exercícios em classe,
+participará das aulas, apresentará um seminário e
+realizará provas.
+O objetivo destas atividades é que você pratique
+as ideias e técnicas abordadas em aula.
+Desta forma, é essencial que você sempre indique claramente
+a sua linha de raciocínio.
+Utilizar o método adequado sempre será mais importante
+do que chegar à resposta final correta.
+Assim, uma resposta final correta
+sem a sua respectiva linha de raciocínio
+**terá nota final nula**.
+
+### Listas de exercícios
+
+- **Frequência**: quinzenal.
+
+- **Geral**: Os alunos são incentivados a
+discutir comigo e entre si as listas de exercícios.
+As listas não compõem diretamente a nota final,
+mas são a principal preparação para as provas e
+diversas questões das provas serão variações delas.
+
+### Participação
+
+- Para obter maestria dos conceitos vistos em aula,
+você deverá resolver exercícios.
+Durante a aula, você será regularmente instruído
+a resolver exercícios simples, individualmente ou em grupo.
+Estes exercícios são projetados para que você possa
+rapidamente identificar dúvidas sobre os conceitos aprendidos naquele dia.
+Participação em classe será determinada de acordo com
+a performance nestes exercícios.
+
+### Seminário
+
+Você deverá desenvolver um seminário
+em grupos de até 5 alunos a respeito
+de um tema de seu interesse em Análise Bayesiana de Dados.
+Espera-se que o seminário inclua a análise de um conjunto de dados real,
+com a especificação do modelo, o diagnóstico do ajuste e
+a crítica dos resultados obtidos.
+
+### Provas
+
+**Datas**: 29/09 e 24/11.
+
+**Política de re-avaliação**: Você poderá requerer uma nova correção
+de uma prova até 5 dias após a devolução desta.
+Se você estiver ausente no dia da devolução da prova,
+o prazo não será estendido.
+Para requerer avaliação informe as questões que
+você acredita que foram corrigidas erroneamente e
+a motivação para o seu raciocínio.
+As questões serão corrigidas novamente,
+levando em consideração os seus comentários,
+podendo sua nota aumentar ou diminuir.
+
+**Nota final**: Será calculada segundo os seguintes pesos:
+
+```{r echo = FALSE, message = FALSE}
+library(magrittr)
+keys = c("Prova 1", "Prova 2", "Seminário", "Participação")
+values = c("0.3", "0.3", "0.35", "0.05")
+pesos = tibble::tibble(Avaliacao = keys,
+                       Peso = values)
+knitr::kable(pesos,
+              escape = FALSE,
+              options = list(dom = 't'),
+              rownames = FALSE) %>%
+kableExtra::kable_styling()
+```
+
+# Atitude esperada
+
+As seguintes atitudes são esperadas de todos os alunos durante as aulas.
+Falhas em segui-las poderão acarretar perda de nota de participação.
+
+- **Perguntas em classe**:
+Se você tiver perguntas relativas ao material atual ou pretérito,
+elas serão sempre bem-vindas e encorajadas.
+Perguntas relativas ao material atual receberão prioridade.
+Faça perguntas sobre material futuro ou
+tópicos adicionais após a aula ou durante o período de atendimento.
+
+- **Computadores**: Espera-se que vocês participem das aulas.
+Vocês podem utilizar notebooks ou tablets para
+tomar notas ou durante laboratórios de computação.
+Do contrário, o uso destes aparelhos é proibido,
+exceto se você tiver necessidades especiais que
+exijam o suporte destes equipamentos.
+Contate-me se você acredita que este é o seu caso.
+
+- **Celulares e outros aparelhos eletrônicos**:
+Durante as aulas, você deverá silenciar ou desligar
+quaisquer aparelhos eletrônicos que façam barulho.
+Espera-se que vocês participem das aulas e,
+em particular, o uso de celulares é expressamente proibido.
+Isto inclui, por exemplo, o envio de mensagens ou checar o e-mail.
+
+- **Integridade Acadêmica**:
+Você deverá agir com ética em todas as atividades da classe.
+Em particular, é **expressamente proibido** copiar listas de exercícios ou
+trapacear durante provas.
+Caso você realize estas atividades, poderá sofrer consequências severas,
+como reprovação automática e encaminhamento do seu caso a uma Comissão Disciplinar.
+
+# Calendário
+
+```{r echo = FALSE, message = FALSE}
+`%>%` = magrittr::`%>%`
+calendar_table = readr::read_csv("calendar_bayes_dados.csv") %>%
+  dplyr::rename(aula = lecture, data = date) %>%
+  dplyr::mutate(aula = dplyr::coalesce(aula, ""))
+knitr::kable(calendar_table,
+              escape = FALSE,
+              options = list(dom = 't'),
+              rownames = FALSE) %>%
+kableExtra::kable_styling()
+```

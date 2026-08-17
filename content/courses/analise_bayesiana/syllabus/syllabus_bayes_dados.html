@@ -1,0 +1,584 @@
+---
+date: "2026-08-03"
+title: "Programa do curso"
+highlight: true
+output: html_document
+type: book
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<div id="contato" class="section level1">
+<h1>Contato</h1>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+variaveis
+</th>
+<th style="text-align:left;">
+Instrutor
+</th>
+<th style="text-align:left;">
+Monitoria
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+nome
+</td>
+<td style="text-align:left;">
+Rafael Bassi Stern
+</td>
+<td style="text-align:left;">
+Sil Bittencourt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+email
+</td>
+<td style="text-align:left;">
+<a href="mailto:rbstern@gmail.com" class="email">rbstern@gmail.com</a>
+</td>
+<td style="text-align:left;">
+a definir
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+encontro
+</td>
+<td style="text-align:left;">
+a definir
+</td>
+<td style="text-align:left;">
+a definir
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Aulas: 3as: 10h00-12h00 e 5as: 08h00-10h00</p></li>
+<li><p>Instruções para o envio de e-mails:
+Por favor adicione ``[MAE0524]’’ ao
+tópico de e-mails relacionados a este curso.
+O envio de e-mail deve ser tratado como uma comunicação profissional.
+Evite o uso de abreviações, acrônimos e gírias nos e-mails.
+<strong>Não garanto que lerei e-mails fora destas especificações!</strong></p></li>
+</ul>
+</div>
+<div id="informações-do-curso" class="section level1">
+<h1>Informações do Curso</h1>
+<div id="ementa" class="section level3">
+<h3>Ementa</h3>
+<p>Apresentar diversos modelos estatísticos para análise de dados
+sob a perspectiva bayesiana de inferência.
+Métodos de inferência bayesiana, comparação de modelos e
+técnicas de predição também serão desenvolvidos.
+Além disso, serão discutidas técnicas computacionais e
+pacotes atuais para implementação dos modelos estudados.</p>
+<p><br/></p>
+</div>
+<div id="objetivos-do-curso" class="section level3">
+<h3>Objetivos do curso</h3>
+<p>Apresentar técnicas de análise de dados utilizando
+a abordagem bayesiana para inferência estatística.
+Ao final do curso, espera-se que você seja capaz de:</p>
+<ul>
+<li>Construir modelos bayesianos adequados a um problema aplicado</li>
+<li>Obter e diagnosticar amostras da distribuição a posteriori</li>
+<li>Criticar, comparar e selecionar modelos bayesianos</li>
+<li>Implementar os modelos estudados em pacotes computacionais atuais</li>
+</ul>
+<p><br/></p>
+</div>
+<div id="conteúdo-programático" class="section level3">
+<h3>Conteúdo programático</h3>
+<ol style="list-style-type: decimal">
+<li>Revisão do método bayesiano.</li>
+<li>Computação bayesiana.</li>
+<li>Modelos de associação e classificação.</li>
+<li>Regressão linear normal e não normal. Modelos robustos.</li>
+<li>Regressão não linear.</li>
+<li>Modelos hierárquicos bayesianos.</li>
+<li>Modelos com dados correlacionados: séries temporais e modelos dinâmicos.</li>
+<li>Tópicos adicionais: modelos de variáveis latentes,
+introdução a inferência bayesiana não paramétrica.</li>
+</ol>
+<p>O item 1 é tratado como uma breve revisão,
+uma vez que o curso MAE0302 - Inferência Bayesiana
+é cursado no semestre imediatamente anterior.</p>
+<p><br/></p>
+</div>
+<div id="material-do-curso" class="section level3">
+<h3>Material do curso</h3>
+<ul>
+<li><p>Notas de aula e listas de exercícios
+estarão disponíveis online.</p></li>
+<li><p>Os seguintes livros são opcionais e
+fornecem explicações detalhadas,
+tópicos extras, aplicações interessantes e
+exercícios adicionais:</p>
+<ul>
+<li><p>Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., &amp; Rubin, D. B. (2013). Bayesian data analysis. CRC Press.</p></li>
+<li><p>McElreath, R. (2020). Statistical rethinking: A Bayesian course with examples in R and Stan. CRC Press.</p></li>
+<li><p>Gelman, A., Hill, J., &amp; Vehtari, A. (2020). Regression and other stories. Cambridge University Press.</p></li>
+<li><p>Robert, C. P., &amp; Casella, G. (2004). Monte Carlo statistical methods. Springer.</p></li>
+<li><p>West, M., &amp; Harrison, J. (1997). Bayesian forecasting and dynamic models. Springer.</p></li>
+<li><p>Kruschke, J. K. (2015). Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan. Academic Press.</p></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="atividades-do-curso" class="section level1">
+<h1>Atividades do Curso</h1>
+<p>Neste curso você fará
+listas de exercícios, resolverá exercícios em classe,
+participará das aulas, apresentará um seminário e
+realizará provas.
+O objetivo destas atividades é que você pratique
+as ideias e técnicas abordadas em aula.
+Desta forma, é essencial que você sempre indique claramente
+a sua linha de raciocínio.
+Utilizar o método adequado sempre será mais importante
+do que chegar à resposta final correta.
+Assim, uma resposta final correta
+sem a sua respectiva linha de raciocínio
+<strong>terá nota final nula</strong>.</p>
+<div id="listas-de-exercícios" class="section level3">
+<h3>Listas de exercícios</h3>
+<ul>
+<li><p><strong>Frequência</strong>: quinzenal.</p></li>
+<li><p><strong>Geral</strong>: Os alunos são incentivados a
+discutir comigo e entre si as listas de exercícios.
+As listas não compõem diretamente a nota final,
+mas são a principal preparação para as provas e
+diversas questões das provas serão variações delas.</p></li>
+</ul>
+</div>
+<div id="participação" class="section level3">
+<h3>Participação</h3>
+<ul>
+<li>Para obter maestria dos conceitos vistos em aula,
+você deverá resolver exercícios.
+Durante a aula, você será regularmente instruído
+a resolver exercícios simples, individualmente ou em grupo.
+Estes exercícios são projetados para que você possa
+rapidamente identificar dúvidas sobre os conceitos aprendidos naquele dia.
+Participação em classe será determinada de acordo com
+a performance nestes exercícios.</li>
+</ul>
+</div>
+<div id="seminário" class="section level3">
+<h3>Seminário</h3>
+<p>Você deverá desenvolver um seminário
+em grupos de até 5 alunos a respeito
+de um tema de seu interesse em Análise Bayesiana de Dados.
+Espera-se que o seminário inclua a análise de um conjunto de dados real,
+com a especificação do modelo, o diagnóstico do ajuste e
+a crítica dos resultados obtidos.</p>
+</div>
+<div id="provas" class="section level3">
+<h3>Provas</h3>
+<p><strong>Datas</strong>: 29/09 e 24/11.</p>
+<p><strong>Política de re-avaliação</strong>: Você poderá requerer uma nova correção
+de uma prova até 5 dias após a devolução desta.
+Se você estiver ausente no dia da devolução da prova,
+o prazo não será estendido.
+Para requerer avaliação informe as questões que
+você acredita que foram corrigidas erroneamente e
+a motivação para o seu raciocínio.
+As questões serão corrigidas novamente,
+levando em consideração os seus comentários,
+podendo sua nota aumentar ou diminuir.</p>
+<p><strong>Nota final</strong>: Será calculada segundo os seguintes pesos:</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Avaliacao
+</th>
+<th style="text-align:left;">
+Peso
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Prova 1
+</td>
+<td style="text-align:left;">
+0.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Prova 2
+</td>
+<td style="text-align:left;">
+0.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Seminário
+</td>
+<td style="text-align:left;">
+0.35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Participação
+</td>
+<td style="text-align:left;">
+0.05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="atitude-esperada" class="section level1">
+<h1>Atitude esperada</h1>
+<p>As seguintes atitudes são esperadas de todos os alunos durante as aulas.
+Falhas em segui-las poderão acarretar perda de nota de participação.</p>
+<ul>
+<li><p><strong>Perguntas em classe</strong>:
+Se você tiver perguntas relativas ao material atual ou pretérito,
+elas serão sempre bem-vindas e encorajadas.
+Perguntas relativas ao material atual receberão prioridade.
+Faça perguntas sobre material futuro ou
+tópicos adicionais após a aula ou durante o período de atendimento.</p></li>
+<li><p><strong>Computadores</strong>: Espera-se que vocês participem das aulas.
+Vocês podem utilizar notebooks ou tablets para
+tomar notas ou durante laboratórios de computação.
+Do contrário, o uso destes aparelhos é proibido,
+exceto se você tiver necessidades especiais que
+exijam o suporte destes equipamentos.
+Contate-me se você acredita que este é o seu caso.</p></li>
+<li><p><strong>Celulares e outros aparelhos eletrônicos</strong>:
+Durante as aulas, você deverá silenciar ou desligar
+quaisquer aparelhos eletrônicos que façam barulho.
+Espera-se que vocês participem das aulas e,
+em particular, o uso de celulares é expressamente proibido.
+Isto inclui, por exemplo, o envio de mensagens ou checar o e-mail.</p></li>
+<li><p><strong>Integridade Acadêmica</strong>:
+Você deverá agir com ética em todas as atividades da classe.
+Em particular, é <strong>expressamente proibido</strong> copiar listas de exercícios ou
+trapacear durante provas.
+Caso você realize estas atividades, poderá sofrer consequências severas,
+como reprovação automática e encaminhamento do seu caso a uma Comissão Disciplinar.</p></li>
+</ul>
+</div>
+<div id="calendário" class="section level1">
+<h1>Calendário</h1>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+data
+</th>
+<th style="text-align:left;">
+aula
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+11/08/26
+</td>
+<td style="text-align:left;">
+Descrição do curso
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13/08/26
+</td>
+<td style="text-align:left;">
+Revisão do paradigma bayesiano
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+18/08/26
+</td>
+<td style="text-align:left;">
+Revisão de Cadeias de Markov
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+20/08/26
+</td>
+<td style="text-align:left;">
+Metropolis-Hastings e Amostrador de Gibbs
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+25/08/26
+</td>
+<td style="text-align:left;">
+Monte Carlo Hamiltoniano (HMC)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+27/08/26
+</td>
+<td style="text-align:left;">
+Introdução e Aplicações do Stan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+01/09/26
+</td>
+<td style="text-align:left;">
+Regressão linear bayesiana: prioris de regularização e implementação em Stan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+03/09/26
+</td>
+<td style="text-align:left;">
+Crítica de modelos: checagens preditivas a posteriori
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+08/09/26
+</td>
+<td style="text-align:left;">
+Semana da Pátria (não haverá aula)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10/09/26
+</td>
+<td style="text-align:left;">
+Semana da Pátria (não haverá aula)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15/09/26
+</td>
+<td style="text-align:left;">
+Comparação e seleção de modelos: validação cruzada, LOO e WAIC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17/09/26
+</td>
+<td style="text-align:left;">
+Modelos lineares generalizados: logística, contagens e dados categóricos
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+22/09/26
+</td>
+<td style="text-align:left;">
+Modelos robustos: verossimilhanças de cauda pesada
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+24/09/26
+</td>
+<td style="text-align:left;">
+Revisão
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+29/09/26
+</td>
+<td style="text-align:left;">
+Prova 1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+01/10/26
+</td>
+<td style="text-align:left;">
+Modelos hierárquicos: shrinkage e pooling parcial
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+06/10/26
+</td>
+<td style="text-align:left;">
+Modelos multinível: interceptos e inclinações aleatórios
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+08/10/26
+</td>
+<td style="text-align:left;">
+Reparametrização não centrada e o funil de Neal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+13/10/26
+</td>
+<td style="text-align:left;">
+Regressão não linear paramétrica
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+15/10/26
+</td>
+<td style="text-align:left;">
+Splines penalizadas e modelos aditivos
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+20/10/26
+</td>
+<td style="text-align:left;">
+Processos gaussianos: regressão e núcleos
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+22/10/26
+</td>
+<td style="text-align:left;">
+Processos gaussianos: hiperparâmetros e aproximações
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+27/10/26
+</td>
+<td style="text-align:left;">
+Séries temporais: modelos autorregressivos e estruturais
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+29/10/26
+</td>
+<td style="text-align:left;">
+Modelos lineares dinâmicos e filtro de Kalman
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+03/11/26
+</td>
+<td style="text-align:left;">
+Modelos de espaço de estados em Stan
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+05/11/26
+</td>
+<td style="text-align:left;">
+Modelos de mistura finita e variáveis latentes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10/11/26
+</td>
+<td style="text-align:left;">
+Misturas: label switching e número de componentes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+12/11/26
+</td>
+<td style="text-align:left;">
+Inferência bayesiana não paramétrica: processo de Dirichlet
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+17/11/26
+</td>
+<td style="text-align:left;">
+Folga (a definir)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+19/11/26
+</td>
+<td style="text-align:left;">
+Revisão
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+24/11/26
+</td>
+<td style="text-align:left;">
+Prova 2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+26/11/26
+</td>
+<td style="text-align:left;">
+Seminários
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+01/12/26
+</td>
+<td style="text-align:left;">
+Seminários
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+03/12/26
+</td>
+<td style="text-align:left;">
+Seminários
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+08/12/26
+</td>
+<td style="text-align:left;">
+Prova Substitutiva
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+10/12/26
+</td>
+<td style="text-align:left;">
+Prova de Recuperação
+</td>
+</tr>
+</tbody>
+</table>
+</div>
