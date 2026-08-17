@@ -1,0 +1,192 @@
+---
+title: "Aula 1: Descrição do curso e histograma"
+linkTitle: "Aula 1: Histograma"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 10
+bibliography: refs.bib
+---
+
+
+
+<!--
+Modelo de resumo de aula.
+Para criar a Aula 2, copie este arquivo para `aula_02.Rmd`,
+atualize `title`, `linkTitle` e `weight` (10 por aula:
+Aula 1 = 10, Aula 2 = 20, ...) e substitua o conteúdo.
+As seções abaixo são um roteiro; apague as que não forem usadas.
+-->
+<p><strong>Data</strong>: 06/08/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">Tsybakov (<a href="#ref-Tsybakov2009">2009</a>)</span>, Seção 1.1.</p>
+<div id="histograma" class="section level1">
+<h1>Histograma</h1>
+<p><strong>Definição</strong> (Histograma).
+Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> observações i.i.d. com densidade <span class="math inline">\(f\)</span> em <span class="math inline">\([0,1]\)</span>.
+Considere a partição de <span class="math inline">\([0,1]\)</span> em <span class="math inline">\(m\)</span> intervalos de comprimento
+<span class="math inline">\(h = m^{-1}\)</span>, <span class="math inline">\(B_1, \ldots, B_m\)</span>. O histograma é definido por</p>
+<p><span class="math display">\[\hat{f}_n(x) = \frac{1}{nh} \sum_{i=1}^{n} \mathbb{I}(X_i \in B_j),
+  \qquad \text{se } x \in B_j.\]</span></p>
+<p><strong>Suposição</strong> (A1).
+<span class="math inline">\(f\)</span> é diferenciável em <span class="math inline">\([0,1]\)</span> e existe <span class="math inline">\(L &gt; 0\)</span> tal que
+<span class="math inline">\(|f&#39;(x)| \leq L\)</span>, para todo <span class="math inline">\(x \in [0,1]\)</span>.
+Em particular, decorre do Teorema do Valor Médio que
+<span class="math inline">\(|f(u) - f(x)| \leq L|u-x|\)</span>, para todos <span class="math inline">\(u, x \in [0,1]\)</span>.</p>
+<p><strong>Lema 1</strong> (Viés).
+Sob (A1), para todo <span class="math inline">\(x \in [0,1]\)</span>,</p>
+<p><span class="math display">\[\left|\mathbb{E}[\hat{f}_n(x)] - f(x)\right| \leq Lh.\]</span></p>
+<p><em>Prova</em>. Seja <span class="math inline">\(B_j\)</span> o intervalo que contém <span class="math inline">\(x\)</span> e
+<span class="math inline">\(p_j = \mathbb{P}(X_1 \in B_j) = \int_{B_j} f(u) du\)</span>.
+Como <span class="math inline">\(\sum_{i=1}^{n} \mathbb{I}(X_i \in B_j)\)</span> é uma soma de <span class="math inline">\(n\)</span> indicadoras
+com a mesma esperança, <span class="math inline">\(p_j\)</span>,</p>
+<p><span class="math display">\[\mathbb{E}[\hat{f}_n(x)] = \frac{n p_j}{nh} = \frac{p_j}{h}.\]</span></p>
+<p>Como <span class="math inline">\(B_j\)</span> tem comprimento <span class="math inline">\(h\)</span>, <span class="math inline">\(f(x) = h^{-1}\int_{B_j} f(x) du\)</span>. Portanto,</p>
+<p><span class="math display">\[\mathbb{E}[\hat{f}_n(x)] - f(x)
+  = \frac{1}{h}\int_{B_j} \left(f(u) - f(x)\right) du.\]</span></p>
+<p>Como <span class="math inline">\(u\)</span> e <span class="math inline">\(x\)</span> pertencem a <span class="math inline">\(B_j\)</span>, <span class="math inline">\(|u - x| \leq h\)</span>. Assim,
+decorre de (A1) que <span class="math inline">\(|f(u)-f(x)| \leq Lh\)</span> e</p>
+<p><span class="math display">\[\left|\mathbb{E}[\hat{f}_n(x)] - f(x)\right|
+  \leq \frac{1}{h}\int_{B_j} |f(u) - f(x)| du
+  \leq \frac{1}{h} \cdot h \cdot Lh = Lh. \qquad \blacksquare\]</span></p>
+<p><strong>Lema 2</strong> (Cota superior para <span class="math inline">\(f\)</span>).
+Sob (A1), para todo <span class="math inline">\(x \in [0,1]\)</span>,</p>
+<p><span class="math display">\[f(x) \leq 1 + \frac{L}{2}.\]</span></p>
+<p><em>Prova</em>. Decorre de (A1) que, para todos <span class="math inline">\(x, y \in [0,1]\)</span>,
+<span class="math inline">\(f(x) \leq f(y) + L|x-y|\)</span>. Integrando esta desigualdade em <span class="math inline">\(y \in [0,1]\)</span>
+e usando que <span class="math inline">\(\int_0^1 f(y) dy = 1\)</span>,</p>
+<p><span class="math display">\[f(x) \leq \int_0^1 f(y) dy + L\int_0^1 |x - y| dy
+  = 1 + L \cdot \frac{x^2 + (1-x)^2}{2}.\]</span></p>
+<p>Como <span class="math inline">\(x^2 + (1-x)^2 \leq 1\)</span> para todo <span class="math inline">\(x \in [0,1]\)</span>,
+segue que <span class="math inline">\(f(x) \leq 1 + L/2\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 3</strong> (Variância).
+Sob (A1), para todo <span class="math inline">\(x \in [0,1]\)</span>,</p>
+<p><span class="math display">\[\mathbb{V}[\hat{f}_n(x)] \leq \frac{f(x) + Lh}{nh}
+  \leq \frac{1 + L/2 + Lh}{nh}.\]</span></p>
+<p><em>Prova</em>. Sejam <span class="math inline">\(B_j\)</span> o intervalo que contém <span class="math inline">\(x\)</span>, <span class="math inline">\(p_j = \int_{B_j} f(u) du\)</span> e
+<span class="math inline">\(N_j = \sum_{i=1}^{n} \mathbb{I}(X_i \in B_j)\)</span>.
+Como <span class="math inline">\(X_1, \ldots, X_n\)</span> são i.i.d., <span class="math inline">\(N_j \sim \text{Binomial}(n, p_j)\)</span>.
+Como <span class="math inline">\(\hat{f}_n(x) = (nh)^{-1} N_j\)</span>,</p>
+<p><span class="math display">\[\mathbb{V}[\hat{f}_n(x)] = \frac{n p_j (1-p_j)}{n^2h^2}
+  = \frac{p_j(1-p_j)}{nh^2} \leq \frac{p_j}{nh^2}.\]</span></p>
+<p>Também, decorre de (A1) que, para todo <span class="math inline">\(u \in B_j\)</span>,
+<span class="math inline">\(f(u) \leq f(x) + L|u-x| \leq f(x) + Lh\)</span>. Portanto,
+<span class="math inline">\(p_j = \int_{B_j} f(u) du \leq h(f(x) + Lh)\)</span> e</p>
+<p><span class="math display">\[\mathbb{V}[\hat{f}_n(x)] \leq \frac{h(f(x) + Lh)}{nh^2}
+  = \frac{f(x) + Lh}{nh}.\]</span></p>
+<p>A segunda desigualdade decorre do Lema 2. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 4</strong> (Escolha ótima da banda).
+Sejam <span class="math inline">\(C &gt; 0\)</span> e <span class="math inline">\(g_C(h) = L^2h^2 + C(nh)^{-1}\)</span>, para <span class="math inline">\(h &gt; 0\)</span>.
+Então <span class="math inline">\(g_C\)</span> é minimizada em <span class="math inline">\(h_C = \left(C(2L^2n)^{-1}\right)^{1/3}\)</span> e</p>
+<p><span class="math display">\[g_C(h_C) = 3 \cdot 2^{-2/3} (LC)^{2/3} n^{-2/3}.\]</span></p>
+<p><em>Prova</em>. Como <span class="math inline">\(g_C&#39;&#39;(h) = 2L^2 + 2C(nh^3)^{-1} &gt; 0\)</span>, <span class="math inline">\(g_C\)</span> é convexa em
+<span class="math inline">\(h &gt; 0\)</span>. Também, <span class="math inline">\(g_C&#39;(h) = 2L^2h - C(nh^2)^{-1}\)</span> se anula se e somente se
+<span class="math inline">\(h^3 = C(2L^2n)^{-1}\)</span>, isto é, em <span class="math inline">\(h_C\)</span>. Para este valor de <span class="math inline">\(h\)</span>,</p>
+<p><span class="math display">\[L^2h_C^2 = 2^{-2/3}(LC)^{2/3}n^{-2/3}
+  \quad \text{e} \quad
+  \frac{C}{nh_C} = 2^{1/3}(LC)^{2/3}n^{-2/3}.\]</span></p>
+<p>Como <span class="math inline">\(2^{-2/3} + 2^{1/3} = 2^{-2/3}(1 + 2) = 3 \cdot 2^{-2/3}\)</span>,
+segue a conclusão. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Teorema 1</strong> (Risco quadrático pontual).
+Sob (A1), para todo <span class="math inline">\(x \in [0,1]\)</span>,</p>
+<p><span class="math display">\[\text{MSE}(\hat{f}_n(x))
+  := \mathbb{E}\left[\left(\hat{f}_n(x)-f(x)\right)^2\right]
+  \leq L^2h^2 + \frac{1 + L/2}{nh} + \frac{L}{n}.\]</span></p>
+<p>Em particular, tomando <span class="math inline">\(h = \left((1 + L/2)(2L^2n)^{-1}\right)^{1/3}\)</span>,</p>
+<p><span class="math display">\[\sup_{x \in [0,1]} \text{MSE}(\hat{f}_n(x))
+  \leq 3 \cdot 2^{-2/3} \left(L + \frac{L^2}{2}\right)^{2/3} n^{-2/3}
+       + \frac{L}{n}
+  = O\left(n^{-2/3}\right).\]</span></p>
+<p><em>Prova</em>. Pela decomposição viés-variância e pelos Lemas 1 e 3,</p>
+<p><span class="math display">\[\text{MSE}(\hat{f}_n(x))
+  = \left(\mathbb{E}[\hat{f}_n(x)] - f(x)\right)^2 + \mathbb{V}[\hat{f}_n(x)]
+  \leq L^2h^2 + \frac{1 + L/2 + Lh}{nh}
+  = L^2h^2 + \frac{1 + L/2}{nh} + \frac{L}{n}.\]</span></p>
+<p>Como esta cota não depende de <span class="math inline">\(x\)</span>, ela também vale para
+<span class="math inline">\(\sup_{x \in [0,1]} \text{MSE}(\hat{f}_n(x))\)</span>.
+A conclusão decorre do Lema 4 com <span class="math inline">\(C = 1 + L/2\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div id="risco-quadrático-integrado" class="section level1">
+<h1>Risco quadrático integrado</h1>
+<p><strong>Teorema 2</strong> (MISE).
+Sob (A1),</p>
+<p><span class="math display">\[\text{MISE}(\hat{f}_n)
+  := \int_0^1 \mathbb{E}\left[\left(\hat{f}_n(x)-f(x)\right)^2\right] dx
+  \leq L^2h^2 + \frac{1}{nh} + \frac{L}{n}.\]</span></p>
+<p>Em particular, tomando <span class="math inline">\(h = (2L^2n)^{-1/3}\)</span>,</p>
+<p><span class="math display">\[\text{MISE}(\hat{f}_n) \leq 3 \cdot 2^{-2/3} L^{2/3} n^{-2/3} + \frac{L}{n}
+  = O\left(n^{-2/3}\right).\]</span></p>
+<p><em>Prova</em>. Pela decomposição viés-variância e pelos Lemas 1 e 3,
+para todo <span class="math inline">\(x \in [0,1]\)</span>,</p>
+<p><span class="math display">\[\mathbb{E}\left[\left(\hat{f}_n(x)-f(x)\right)^2\right]
+  \leq L^2h^2 + \frac{f(x) + Lh}{nh}.\]</span></p>
+<p>Integrando esta desigualdade em <span class="math inline">\(x \in [0,1]\)</span>
+e usando que <span class="math inline">\(\int_0^1 f(x) dx = 1\)</span>,</p>
+<p><span class="math display">\[\text{MISE}(\hat{f}_n)
+  \leq L^2h^2 + \frac{1 + Lh}{nh}
+  = L^2h^2 + \frac{1}{nh} + \frac{L}{n}.\]</span></p>
+<p>A conclusão decorre do Lema 4 com <span class="math inline">\(C = 1\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. Os Teoremas 1 e 2 diferem apenas pela constante <span class="math inline">\(C\)</span>
+do Lema 4: <span class="math inline">\(C = 1 + L/2\)</span> no caso pontual e <span class="math inline">\(C = 1\)</span> no caso integrado.
+A integração substitui a cota uniforme <span class="math inline">\(f(x) \leq 1 + L/2\)</span> do Lema 2
+pelo valor exato <span class="math inline">\(\int_0^1 f(x) dx = 1\)</span>, o que melhora a constante,
+mas não a taxa.</p>
+<p><strong>Observação</strong>. Como <span class="math inline">\(h = m^{-1}\)</span>, as escolhas acima correspondem a tomar
+<span class="math inline">\(m \asymp n^{1/3}\)</span> intervalos. Também, <span class="math inline">\(Ln^{-1} = o(n^{-2/3})\)</span>,
+isto é, o termo <span class="math inline">\(Ln^{-1}\)</span> é desprezível em relação aos demais.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-histograma-em-classes-de-hölder" class="section level2">
+<h2>Exercício 1 (Histograma em classes de Hölder)</h2>
+<p><strong>Definição</strong> (Classe de Hölder).
+Sejam <span class="math inline">\(\beta &gt; 0\)</span>, <span class="math inline">\(L &gt; 0\)</span> e <span class="math inline">\(\ell\)</span> o maior inteiro estritamente menor que
+<span class="math inline">\(\beta\)</span>. A classe de Hölder <span class="math inline">\(\Sigma(\beta, L)\)</span> é o conjunto das densidades
+<span class="math inline">\(f\)</span> em <span class="math inline">\([0,1]\)</span> que são <span class="math inline">\(\ell\)</span> vezes diferenciáveis e tais que</p>
+<p><span class="math display">\[\left|f^{(\ell)}(u) - f^{(\ell)}(x)\right| \leq L|u-x|^{\beta - \ell},
+  \qquad \text{para todos } u, x \in [0,1].\]</span></p>
+<p>Em particular, se <span class="math inline">\(\beta \in (0,1]\)</span>, então <span class="math inline">\(\ell = 0\)</span> e a condição
+se reduz a <span class="math inline">\(|f(u) - f(x)| \leq L|u-x|^{\beta}\)</span>.</p>
+<p>Considere <span class="math inline">\(\beta \in (0,1]\)</span> e <span class="math inline">\(f \in \Sigma(\beta, L)\)</span> nos itens (a)–(e).</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, se <span class="math inline">\(f\)</span> satisfaz (A1), então <span class="math inline">\(f \in \Sigma(1, L)\)</span>.
+A recíproca é verdadeira?</p></li>
+<li><p>Enuncie e prove a versão do Lema 1 para <span class="math inline">\(\Sigma(\beta,L)\)</span>,
+obtendo <span class="math inline">\(\left|\mathbb{E}[\hat{f}_n(x)] - f(x)\right| \leq Lh^{\beta}\)</span>.</p></li>
+<li><p>Enuncie e prove a versão do Lema 2 para <span class="math inline">\(\Sigma(\beta,L)\)</span>.
+Verifique que a cota obtida é <span class="math inline">\(f(x) \leq 1 + L(\beta+1)^{-1}\)</span>
+e que ela recupera o Lema 2 quando <span class="math inline">\(\beta = 1\)</span>.</p></li>
+<li><p>Enuncie e prove a versão do Lema 4 para <span class="math inline">\(g_{C,\beta}(h) =
+L^2h^{2\beta} + C(nh)^{-1}\)</span>, mostrando que o mínimo ocorre em
+<span class="math inline">\(h = \left(C(2\beta L^2 n)^{-1}\right)^{1/(2\beta+1)}\)</span>.</p></li>
+<li><p>Combine (b), (c) e (d) para enunciar e provar as versões dos
+Teoremas 1 e 2 para <span class="math inline">\(\Sigma(\beta,L)\)</span>, concluindo que</p></li>
+</ol>
+<p><span class="math display">\[\sup_{x \in [0,1]} \text{MSE}(\hat{f}_n(x)) = O\left(n^{-\frac{2\beta}{2\beta+1}}\right)
+  \quad \text{e} \quad
+  \text{MISE}(\hat{f}_n) = O\left(n^{-\frac{2\beta}{2\beta+1}}\right).\]</span></p>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Seja <span class="math inline">\(a \in [-2,2]\)</span> e <span class="math inline">\(f(x) = 1 + a(x - 2^{-1})\)</span>.
+Verifique que <span class="math inline">\(f\)</span> é uma densidade em <span class="math inline">\([0,1]\)</span> e que
+<span class="math inline">\(f \in \Sigma(\beta, L)\)</span> para todo <span class="math inline">\(\beta &gt; 0\)</span> e algum <span class="math inline">\(L\)</span>.
+Mostre que <span class="math inline">\(\mathbb{E}[\hat{f}_n(x)] = f(c_j)\)</span>, em que <span class="math inline">\(c_j\)</span> é o ponto
+médio do intervalo que contém <span class="math inline">\(x\)</span>, e conclua que</li>
+</ol>
+<p><span class="math display">\[\int_0^1 \left(\mathbb{E}[\hat{f}_n(x)] - f(x)\right)^2 dx
+  = \frac{a^2h^2}{12}.\]</span></p>
+<ol start="7" style="list-style-type: lower-alpha">
+<li>Use (f) para mostrar que existe <span class="math inline">\(c &gt; 0\)</span> tal que,
+para todo <span class="math inline">\(h \in (0,1)\)</span>, <span class="math inline">\(\text{MISE}(\hat{f}_n) \geq cn^{-2/3}\)</span>.
+Interprete: a taxa do histograma não melhora quando <span class="math inline">\(\beta &gt; 1\)</span>.</li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Tsybakov2009" class="csl-entry">
+Tsybakov, Alexandre B. 2009. <em>Introduction to Nonparametric Estimation</em>. Springer.
+</div>
+</div>
+</div>

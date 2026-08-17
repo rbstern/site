@@ -1,0 +1,244 @@
+---
+title: "Aula 1: Descrição do curso e histograma"
+linkTitle: "Aula 1: Histograma"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 10
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Modelo de resumo de aula.
+Para criar a Aula 2, copie este arquivo para `aula_02.Rmd`,
+atualize `title`, `linkTitle` e `weight` (10 por aula:
+Aula 1 = 10, Aula 2 = 20, ...) e substitua o conteúdo.
+As seções abaixo são um roteiro; apague as que não forem usadas.
+-->
+
+**Data**: 06/08/2026.
+
+**Leitura**: @Tsybakov2009, Seção 1.1.
+
+# Histograma
+
+**Definição** (Histograma).
+Sejam $X_1, \ldots, X_n$ observações i.i.d. com densidade $f$ em $[0,1]$.
+Considere a partição de $[0,1]$ em $m$ intervalos de comprimento
+$h = m^{-1}$, $B_1, \ldots, B_m$. O histograma é definido por
+
+$$\hat{f}_n(x) = \frac{1}{nh} \sum_{i=1}^{n} \mathbb{I}(X_i \in B_j),
+  \qquad \text{se } x \in B_j.$$
+
+**Suposição** (A1).
+$f$ é diferenciável em $[0,1]$ e existe $L > 0$ tal que
+$|f'(x)| \leq L$, para todo $x \in [0,1]$.
+Em particular, decorre do Teorema do Valor Médio que
+$|f(u) - f(x)| \leq L|u-x|$, para todos $u, x \in [0,1]$.
+
+**Lema 1** (Viés).
+Sob (A1), para todo $x \in [0,1]$,
+
+$$\left|\mathbb{E}[\hat{f}_n(x)] - f(x)\right| \leq Lh.$$
+
+*Prova*. Seja $B_j$ o intervalo que contém $x$ e
+$p_j = \mathbb{P}(X_1 \in B_j) = \int_{B_j} f(u) du$.
+Como $\sum_{i=1}^{n} \mathbb{I}(X_i \in B_j)$ é uma soma de $n$ indicadoras
+com a mesma esperança, $p_j$,
+
+$$\mathbb{E}[\hat{f}_n(x)] = \frac{n p_j}{nh} = \frac{p_j}{h}.$$
+
+Como $B_j$ tem comprimento $h$, $f(x) = h^{-1}\int_{B_j} f(x) du$. Portanto,
+
+$$\mathbb{E}[\hat{f}_n(x)] - f(x)
+  = \frac{1}{h}\int_{B_j} \left(f(u) - f(x)\right) du.$$
+
+Como $u$ e $x$ pertencem a $B_j$, $|u - x| \leq h$. Assim,
+decorre de (A1) que $|f(u)-f(x)| \leq Lh$ e
+
+$$\left|\mathbb{E}[\hat{f}_n(x)] - f(x)\right|
+  \leq \frac{1}{h}\int_{B_j} |f(u) - f(x)| du
+  \leq \frac{1}{h} \cdot h \cdot Lh = Lh. \qquad \blacksquare$$
+
+**Lema 2** (Cota superior para $f$).
+Sob (A1), para todo $x \in [0,1]$,
+
+$$f(x) \leq 1 + \frac{L}{2}.$$
+
+*Prova*. Decorre de (A1) que, para todos $x, y \in [0,1]$,
+$f(x) \leq f(y) + L|x-y|$. Integrando esta desigualdade em $y \in [0,1]$
+e usando que $\int_0^1 f(y) dy = 1$,
+
+$$f(x) \leq \int_0^1 f(y) dy + L\int_0^1 |x - y| dy
+  = 1 + L \cdot \frac{x^2 + (1-x)^2}{2}.$$
+
+Como $x^2 + (1-x)^2 \leq 1$ para todo $x \in [0,1]$,
+segue que $f(x) \leq 1 + L/2$. $\blacksquare$
+
+**Lema 3** (Variância).
+Sob (A1), para todo $x \in [0,1]$,
+
+$$\mathbb{V}[\hat{f}_n(x)] \leq \frac{f(x) + Lh}{nh}
+  \leq \frac{1 + L/2 + Lh}{nh}.$$
+
+*Prova*. Sejam $B_j$ o intervalo que contém $x$, $p_j = \int_{B_j} f(u) du$ e
+$N_j = \sum_{i=1}^{n} \mathbb{I}(X_i \in B_j)$.
+Como $X_1, \ldots, X_n$ são i.i.d., $N_j \sim \text{Binomial}(n, p_j)$.
+Como $\hat{f}_n(x) = (nh)^{-1} N_j$,
+
+$$\mathbb{V}[\hat{f}_n(x)] = \frac{n p_j (1-p_j)}{n^2h^2}
+  = \frac{p_j(1-p_j)}{nh^2} \leq \frac{p_j}{nh^2}.$$
+
+Também, decorre de (A1) que, para todo $u \in B_j$,
+$f(u) \leq f(x) + L|u-x| \leq f(x) + Lh$. Portanto,
+$p_j = \int_{B_j} f(u) du \leq h(f(x) + Lh)$ e
+
+$$\mathbb{V}[\hat{f}_n(x)] \leq \frac{h(f(x) + Lh)}{nh^2}
+  = \frac{f(x) + Lh}{nh}.$$
+
+A segunda desigualdade decorre do Lema 2. $\blacksquare$
+
+**Lema 4** (Escolha ótima da banda).
+Sejam $C > 0$ e $g_C(h) = L^2h^2 + C(nh)^{-1}$, para $h > 0$.
+Então $g_C$ é minimizada em $h_C = \left(C(2L^2n)^{-1}\right)^{1/3}$ e
+
+$$g_C(h_C) = 3 \cdot 2^{-2/3} (LC)^{2/3} n^{-2/3}.$$
+
+*Prova*. Como $g_C''(h) = 2L^2 + 2C(nh^3)^{-1} > 0$, $g_C$ é convexa em
+$h > 0$. Também, $g_C'(h) = 2L^2h - C(nh^2)^{-1}$ se anula se e somente se
+$h^3 = C(2L^2n)^{-1}$, isto é, em $h_C$. Para este valor de $h$,
+
+$$L^2h_C^2 = 2^{-2/3}(LC)^{2/3}n^{-2/3}
+  \quad \text{e} \quad
+  \frac{C}{nh_C} = 2^{1/3}(LC)^{2/3}n^{-2/3}.$$
+
+Como $2^{-2/3} + 2^{1/3} = 2^{-2/3}(1 + 2) = 3 \cdot 2^{-2/3}$,
+segue a conclusão. $\blacksquare$
+
+**Teorema 1** (Risco quadrático pontual).
+Sob (A1), para todo $x \in [0,1]$,
+
+$$\text{MSE}(\hat{f}_n(x))
+  := \mathbb{E}\left[\left(\hat{f}_n(x)-f(x)\right)^2\right]
+  \leq L^2h^2 + \frac{1 + L/2}{nh} + \frac{L}{n}.$$
+
+Em particular, tomando $h = \left((1 + L/2)(2L^2n)^{-1}\right)^{1/3}$,
+
+$$\sup_{x \in [0,1]} \text{MSE}(\hat{f}_n(x))
+  \leq 3 \cdot 2^{-2/3} \left(L + \frac{L^2}{2}\right)^{2/3} n^{-2/3}
+       + \frac{L}{n}
+  = O\left(n^{-2/3}\right).$$
+
+*Prova*. Pela decomposição viés-variância e pelos Lemas 1 e 3,
+
+$$\text{MSE}(\hat{f}_n(x))
+  = \left(\mathbb{E}[\hat{f}_n(x)] - f(x)\right)^2 + \mathbb{V}[\hat{f}_n(x)]
+  \leq L^2h^2 + \frac{1 + L/2 + Lh}{nh}
+  = L^2h^2 + \frac{1 + L/2}{nh} + \frac{L}{n}.$$
+
+Como esta cota não depende de $x$, ela também vale para
+$\sup_{x \in [0,1]} \text{MSE}(\hat{f}_n(x))$.
+A conclusão decorre do Lema 4 com $C = 1 + L/2$. $\blacksquare$
+
+# Risco quadrático integrado
+
+**Teorema 2** (MISE).
+Sob (A1),
+
+$$\text{MISE}(\hat{f}_n)
+  := \int_0^1 \mathbb{E}\left[\left(\hat{f}_n(x)-f(x)\right)^2\right] dx
+  \leq L^2h^2 + \frac{1}{nh} + \frac{L}{n}.$$
+
+Em particular, tomando $h = (2L^2n)^{-1/3}$,
+
+$$\text{MISE}(\hat{f}_n) \leq 3 \cdot 2^{-2/3} L^{2/3} n^{-2/3} + \frac{L}{n}
+  = O\left(n^{-2/3}\right).$$
+
+*Prova*. Pela decomposição viés-variância e pelos Lemas 1 e 3,
+para todo $x \in [0,1]$,
+
+$$\mathbb{E}\left[\left(\hat{f}_n(x)-f(x)\right)^2\right]
+  \leq L^2h^2 + \frac{f(x) + Lh}{nh}.$$
+
+Integrando esta desigualdade em $x \in [0,1]$
+e usando que $\int_0^1 f(x) dx = 1$,
+
+$$\text{MISE}(\hat{f}_n)
+  \leq L^2h^2 + \frac{1 + Lh}{nh}
+  = L^2h^2 + \frac{1}{nh} + \frac{L}{n}.$$
+
+A conclusão decorre do Lema 4 com $C = 1$. $\blacksquare$
+
+**Observação**. Os Teoremas 1 e 2 diferem apenas pela constante $C$
+do Lema 4: $C = 1 + L/2$ no caso pontual e $C = 1$ no caso integrado.
+A integração substitui a cota uniforme $f(x) \leq 1 + L/2$ do Lema 2
+pelo valor exato $\int_0^1 f(x) dx = 1$, o que melhora a constante,
+mas não a taxa.
+
+**Observação**. Como $h = m^{-1}$, as escolhas acima correspondem a tomar
+$m \asymp n^{1/3}$ intervalos. Também, $Ln^{-1} = o(n^{-2/3})$,
+isto é, o termo $Ln^{-1}$ é desprezível em relação aos demais.
+
+# Exercícios
+
+## Exercício 1 (Histograma em classes de Hölder)
+
+**Definição** (Classe de Hölder).
+Sejam $\beta > 0$, $L > 0$ e $\ell$ o maior inteiro estritamente menor que
+$\beta$. A classe de Hölder $\Sigma(\beta, L)$ é o conjunto das densidades
+$f$ em $[0,1]$ que são $\ell$ vezes diferenciáveis e tais que
+
+$$\left|f^{(\ell)}(u) - f^{(\ell)}(x)\right| \leq L|u-x|^{\beta - \ell},
+  \qquad \text{para todos } u, x \in [0,1].$$
+
+Em particular, se $\beta \in (0,1]$, então $\ell = 0$ e a condição
+se reduz a $|f(u) - f(x)| \leq L|u-x|^{\beta}$.
+
+Considere $\beta \in (0,1]$ e $f \in \Sigma(\beta, L)$ nos itens (a)–(e).
+
+(a) Mostre que, se $f$ satisfaz (A1), então $f \in \Sigma(1, L)$.
+    A recíproca é verdadeira?
+
+(b) Enuncie e prove a versão do Lema 1 para $\Sigma(\beta,L)$,
+    obtendo $\left|\mathbb{E}[\hat{f}_n(x)] - f(x)\right| \leq Lh^{\beta}$.
+
+(c) Enuncie e prove a versão do Lema 2 para $\Sigma(\beta,L)$.
+    Verifique que a cota obtida é $f(x) \leq 1 + L(\beta+1)^{-1}$
+    e que ela recupera o Lema 2 quando $\beta = 1$.
+
+(d) Enuncie e prove a versão do Lema 4 para $g_{C,\beta}(h) =
+    L^2h^{2\beta} + C(nh)^{-1}$, mostrando que o mínimo ocorre em
+    $h = \left(C(2\beta L^2 n)^{-1}\right)^{1/(2\beta+1)}$.
+
+(e) Combine (b), (c) e (d) para enunciar e provar as versões dos
+    Teoremas 1 e 2 para $\Sigma(\beta,L)$, concluindo que
+
+$$\sup_{x \in [0,1]} \text{MSE}(\hat{f}_n(x)) = O\left(n^{-\frac{2\beta}{2\beta+1}}\right)
+  \quad \text{e} \quad
+  \text{MISE}(\hat{f}_n) = O\left(n^{-\frac{2\beta}{2\beta+1}}\right).$$
+
+(f) Seja $a \in [-2,2]$ e $f(x) = 1 + a(x - 2^{-1})$.
+    Verifique que $f$ é uma densidade em $[0,1]$ e que
+    $f \in \Sigma(\beta, L)$ para todo $\beta > 0$ e algum $L$.
+    Mostre que $\mathbb{E}[\hat{f}_n(x)] = f(c_j)$, em que $c_j$ é o ponto
+    médio do intervalo que contém $x$, e conclua que
+
+$$\int_0^1 \left(\mathbb{E}[\hat{f}_n(x)] - f(x)\right)^2 dx
+  = \frac{a^2h^2}{12}.$$
+
+(g) Use (f) para mostrar que existe $c > 0$ tal que,
+    para todo $h \in (0,1)$, $\text{MISE}(\hat{f}_n) \geq cn^{-2/3}$.
+    Interprete: a taxa do histograma não melhora quando $\beta > 1$.
+
+# Referências

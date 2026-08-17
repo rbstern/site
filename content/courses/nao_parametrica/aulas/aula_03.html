@@ -1,0 +1,473 @@
+---
+title: "Aula 3: Teoria VC"
+linkTitle: "Aula 3: Teoria VC"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 30
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 e 2:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Lema n**, **Teorema n**, **Corolário n**, **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com & antes do
+  relacional em todas as linhas.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 13/08/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">van der Vaart and Wellner (<a href="#ref-vanderVaartWellner1996">1996</a>)</span>, Capítulo 2.</p>
+<div id="revisão-de-classe-de-glivenko-cantelli" class="section level1">
+<h1>Revisão de Classe de Glivenko-Cantelli</h1>
+<p>Sejam <span class="math inline">\(P\)</span> uma probabilidade em <span class="math inline">\((\mathcal{X}, \mathcal{A})\)</span> e
+<span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. com distribuição <span class="math inline">\(P\)</span>.</p>
+<p><strong>Definição</strong> (Medida empírica).
+A medida empírica de <span class="math inline">\(X_1, \ldots, X_n\)</span> é definida por</p>
+<p><span class="math display">\[P_n(A) = \frac{1}{n}\sum_{i=1}^{n}\mathbb{I}(X_i \in A),
+  \qquad A \in \mathcal{A}.\]</span></p>
+<p><strong>Definição</strong> (Classe de Glivenko-Cantelli).
+Seja <span class="math inline">\(\mathcal{C} \subseteq \mathcal{A}\)</span>. Dizemos que <span class="math inline">\(\mathcal{C}\)</span> é
+uma classe de Glivenko-Cantelli para <span class="math inline">\(P\)</span> se</p>
+<p><span class="math display">\[\|P_n - P\|_{\mathcal{C}} := \sup_{C \in \mathcal{C}}
+  \left|P_n(C) - P(C)\right| \longrightarrow 0
+  \qquad \text{quase certamente}.\]</span></p>
+<p>Se <span class="math inline">\(\mathcal{C}\)</span> é uma classe de Glivenko-Cantelli para toda
+probabilidade <span class="math inline">\(P\)</span>, dizemos que <span class="math inline">\(\mathcal{C}\)</span> é universal.</p>
+<p><strong>Observação</strong>. Para cada <span class="math inline">\(C \in \mathcal{A}\)</span> fixo,
+<span class="math inline">\(P_n(C) \to P(C)\)</span> quase certamente, pela Lei Forte dos Grandes
+Números. O conteúdo da definição está em o mesmo evento de
+probabilidade <span class="math inline">\(1\)</span> servir simultaneamente a todos os <span class="math inline">\(C \in
+\mathcal{C}\)</span>. Também, <span class="math inline">\(\|P_n - P\|_{\mathcal{C}} \leq 1\)</span> sempre,
+de modo que a definição só exclui classes em que o erro máximo
+não se anula.</p>
+<p><strong>Exemplo 1</strong> (Semirretas).
+Sejam <span class="math inline">\(\mathcal{X} = \mathbb{R}\)</span> e
+<span class="math inline">\(\mathcal{C} = \{(-\infty,x]: x \in \mathbb{R}\}\)</span>. Então
+<span class="math inline">\(P_n((-\infty,x]) = \hat{F}_n(x)\)</span> e <span class="math inline">\(P((-\infty,x]) = F(x)\)</span>,
+de modo que</p>
+<p><span class="math display">\[\|P_n - P\|_{\mathcal{C}} = \sup_{x \in \mathbb{R}}
+  \left|\hat{F}_n(x) - F(x)\right| = D_n.\]</span></p>
+<p>Decorre do Teorema de Glivenko-Cantelli, o Teorema 2 da Aula 2,
+que <span class="math inline">\(D_n \to 0\)</span> quase certamente. Portanto, <span class="math inline">\(\mathcal{C}\)</span> é uma
+classe de Glivenko-Cantelli universal.</p>
+<p><strong>Exemplo 2</strong> (Todos os borelianos).
+Sejam <span class="math inline">\(\mathcal{X} = [0,1]\)</span>, <span class="math inline">\(P\)</span> a distribuição Uniforme<span class="math inline">\((0,1)\)</span> e
+<span class="math inline">\(\mathcal{C} = \mathcal{B}([0,1])\)</span> a classe de todos os subconjuntos
+borelianos de <span class="math inline">\([0,1]\)</span>. Tomando <span class="math inline">\(C = \{X_1, \ldots, X_n\}\)</span>, tem-se
+<span class="math inline">\(P_n(C) = 1\)</span>, pois todos os <span class="math inline">\(X_i\)</span> pertencem a <span class="math inline">\(C\)</span>, e <span class="math inline">\(P(C) = 0\)</span>,
+pois <span class="math inline">\(C\)</span> é finito e <span class="math inline">\(P\)</span> é contínua. Logo,</p>
+<p><span class="math display">\[\|P_n - P\|_{\mathcal{C}} \geq \left|P_n(C) - P(C)\right| = 1,\]</span></p>
+<p>para todo <span class="math inline">\(n\)</span>, e <span class="math inline">\(\mathcal{C}\)</span> não é uma classe de Glivenko-Cantelli.
+Note que o argumento usa apenas os subconjuntos finitos de <span class="math inline">\([0,1]\)</span>:
+já a subclasse <span class="math inline">\(\mathcal{C}&#39; \subseteq \mathcal{C}\)</span> dos conjuntos
+finitos não é de Glivenko-Cantelli.</p>
+<p><strong>Observação</strong>. Os Exemplos 1 e 2 delimitam o problema desta aula.
+As semirretas formam uma classe pequena, e o erro máximo sobre elas se
+anula; os borelianos formam uma classe grande demais, e o erro máximo
+sobre eles é sempre <span class="math inline">\(1\)</span>. A pergunta é o que significa “pequena” aqui,
+isto é, que propriedade de <span class="math inline">\(\mathcal{C}\)</span> decide entre os dois
+comportamentos. A resposta, dada na próxima seção, não depende de
+<span class="math inline">\(P\)</span> nem da estrutura de <span class="math inline">\(\mathcal{X}\)</span>: é combinatória.</p>
+</div>
+<div id="dimensão-de-vapnik-chervonenkis" class="section level1">
+<h1>Dimensão de Vapnik-Chervonenkis</h1>
+<p>Ao longo desta aula, <span class="math inline">\(\mathcal{X}\)</span> é um conjunto e <span class="math inline">\(\mathcal{C}\)</span> é uma
+classe de subconjuntos de <span class="math inline">\(\mathcal{X}\)</span>.</p>
+<p><strong>Definição</strong> (Traço e fragmentação).
+Se <span class="math inline">\(A \subseteq \mathcal{X}\)</span> é finito, o traço de <span class="math inline">\(\mathcal{C}\)</span> em <span class="math inline">\(A\)</span> é</p>
+<p><span class="math display">\[\mathcal{C}_A = \{C \cap A: C \in \mathcal{C}\}.\]</span></p>
+<p>Dizemos que <span class="math inline">\(\mathcal{C}\)</span> fragmenta <span class="math inline">\(A\)</span> se <span class="math inline">\(\mathcal{C}_A = 2^{A}\)</span>,
+isto é, se todo subconjunto de <span class="math inline">\(A\)</span> pode ser obtido interceptando-se
+<span class="math inline">\(A\)</span> com algum elemento de <span class="math inline">\(\mathcal{C}\)</span>.</p>
+<p><strong>Definição</strong> (Coeficiente de fragmentação).
+O coeficiente de fragmentação de <span class="math inline">\(\mathcal{C}\)</span> é</p>
+<p><span class="math display">\[s(\mathcal{C}, n) = \max\left\{\left|\mathcal{C}_A\right|:
+  A \subseteq \mathcal{X}, |A| = n\right\}.\]</span></p>
+<p><strong>Definição</strong> (Dimensão de Vapnik-Chervonenkis).
+A dimensão VC de <span class="math inline">\(\mathcal{C}\)</span> é</p>
+<p><span class="math display">\[\text{VC}(\mathcal{C}) =
+  \sup\left\{n \in \mathbb{N}: s(\mathcal{C}, n) = 2^n\right\}.\]</span></p>
+<p><strong>Observação</strong>. Como <span class="math inline">\(\left|\mathcal{C}_A\right| \leq 2^{|A|}\)</span> sempre,
+<span class="math inline">\(s(\mathcal{C},n) \leq 2^n\)</span>. Assim, <span class="math inline">\(\text{VC}(\mathcal{C}) \geq n\)</span> se
+e somente se existe algum <span class="math inline">\(A\)</span> com <span class="math inline">\(|A| = n\)</span> fragmentado por
+<span class="math inline">\(\mathcal{C}\)</span>. Para mostrar que <span class="math inline">\(\text{VC}(\mathcal{C}) = d\)</span>, portanto,
+basta exibir <strong>um</strong> conjunto de <span class="math inline">\(d\)</span> pontos que é fragmentado e mostrar
+que <strong>nenhum</strong> conjunto de <span class="math inline">\(d+1\)</span> pontos o é.</p>
+<p><strong>Exemplo 3</strong> (Intervalos).
+Se <span class="math inline">\(\mathcal{X} = \mathbb{R}\)</span> e
+<span class="math inline">\(\mathcal{C} = \{[a,b]: a \leq b\}\)</span>, então <span class="math inline">\(\text{VC}(\mathcal{C}) = 2\)</span>.</p>
+<p><em>Prova</em>. Sejam <span class="math inline">\(x_1 &lt; x_2\)</span> e <span class="math inline">\(A = \{x_1, x_2\}\)</span>. Tomando
+<span class="math inline">\([a,b]\)</span> igual a <span class="math inline">\([x_1 - 1, x_1 - 1]\)</span>, <span class="math inline">\([x_1, x_1]\)</span>, <span class="math inline">\([x_2, x_2]\)</span> e
+<span class="math inline">\([x_1, x_2]\)</span>, obtêm-se, respectivamente,
+<span class="math inline">\(\emptyset\)</span>, <span class="math inline">\(\{x_1\}\)</span>, <span class="math inline">\(\{x_2\}\)</span> e <span class="math inline">\(\{x_1,x_2\}\)</span>.
+Logo, <span class="math inline">\(\mathcal{C}\)</span> fragmenta <span class="math inline">\(A\)</span> e <span class="math inline">\(\text{VC}(\mathcal{C}) \geq 2\)</span>.</p>
+<p>Sejam <span class="math inline">\(x_1 &lt; x_2 &lt; x_3\)</span> e <span class="math inline">\(A = \{x_1,x_2,x_3\}\)</span>. Se
+<span class="math inline">\(x_1, x_3 \in [a,b]\)</span>, então <span class="math inline">\(a \leq x_1\)</span> e <span class="math inline">\(x_3 \leq b\)</span>. Como
+<span class="math inline">\(a \leq x_1 &lt; x_2 &lt; x_3 \leq b\)</span>, decorre que <span class="math inline">\(x_2 \in [a,b]\)</span>.
+Portanto, <span class="math inline">\(\{x_1,x_3\} \notin \mathcal{C}_A\)</span>, isto é, nenhum conjunto
+com <span class="math inline">\(3\)</span> elementos é fragmentado. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. O mesmo argumento mostra que a classe das semirretas,
+<span class="math inline">\(\mathcal{C} = \{(-\infty,t]: t \in \mathbb{R}\}\)</span>, tem
+<span class="math inline">\(\text{VC}(\mathcal{C}) = 1\)</span>: ela fragmenta <span class="math inline">\(\{x_1\}\)</span>, mas, se
+<span class="math inline">\(x_1 &lt; x_2\)</span>, então <span class="math inline">\(x_2 \in (-\infty,t]\)</span> implica <span class="math inline">\(x_1 \in (-\infty,t]\)</span>,
+de modo que <span class="math inline">\(\{x_2\} \notin \mathcal{C}_{\{x_1,x_2\}}\)</span>.
+Esta é a classe que gera a distribuição empírica da Aula 2.</p>
+<p><strong>Exemplo 4</strong> (Retângulos).
+Se <span class="math inline">\(\mathcal{X} = \mathbb{R}^2\)</span> e <span class="math inline">\(\mathcal{C}\)</span> é a classe dos
+retângulos com lados paralelos aos eixos,
+<span class="math inline">\(\mathcal{C} = \{[a_1,b_1] \times [a_2,b_2]\}\)</span>,
+então <span class="math inline">\(\text{VC}(\mathcal{C}) = 4\)</span>.</p>
+<p><em>Prova</em>. Seja <span class="math inline">\(A = \{(0,1), (0,-1), (-1,0), (1,0)\}\)</span> e <span class="math inline">\(S \subseteq A\)</span>.
+Tomando <span class="math inline">\(R\)</span> como o menor retângulo que contém <span class="math inline">\(S\)</span>, tem-se
+<span class="math inline">\(R \cap A = S\)</span>. Por exemplo, se <span class="math inline">\(S = \{(0,1),(0,-1)\}\)</span>, então
+<span class="math inline">\(R = \{0\} \times [-1,1]\)</span>, que não contém <span class="math inline">\((\pm 1, 0)\)</span>.
+Logo, <span class="math inline">\(\mathcal{C}\)</span> fragmenta <span class="math inline">\(A\)</span> e <span class="math inline">\(\text{VC}(\mathcal{C}) \geq 4\)</span>.</p>
+<p>Seja <span class="math inline">\(A\)</span> com <span class="math inline">\(|A| = 5\)</span> e escolha em <span class="math inline">\(A\)</span> um ponto de primeira
+coordenada máxima, um de primeira coordenada mínima, um de segunda
+coordenada máxima e um de segunda coordenada mínima, desempatando
+arbitrariamente. Se <span class="math inline">\(S\)</span> é o conjunto dos pontos escolhidos, então
+<span class="math inline">\(|S| \leq 4\)</span> e existe <span class="math inline">\(y \in A - S\)</span>. Como <span class="math inline">\(S\)</span> contém os extremos de
+<span class="math inline">\(A\)</span> em cada coordenada, o menor retângulo que contém <span class="math inline">\(S\)</span> é o menor
+retângulo que contém <span class="math inline">\(A\)</span>. Assim, todo <span class="math inline">\(R \in \mathcal{C}\)</span> com
+<span class="math inline">\(S \subseteq R\)</span> satisfaz <span class="math inline">\(y \in R\)</span>, isto é,
+<span class="math inline">\(S \notin \mathcal{C}_A\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Os dois exemplos anteriores são de classes com dimensão VC obtida
+por inspeção direta. O exemplo a seguir requer um resultado auxiliar
+de geometria convexa.</p>
+<p><strong>Lema 1</strong> (Radon).
+Se <span class="math inline">\(x_1, \ldots, x_{d+2} \in \mathbb{R}^d\)</span>, então existe uma partição
+de <span class="math inline">\(\{1,\ldots,d+2\}\)</span> em <span class="math inline">\(I\)</span> e <span class="math inline">\(J\)</span> tal que</p>
+<p><span class="math display">\[\text{conv}\left(\{x_i\}_{i \in I}\right) \cap
+  \text{conv}\left(\{x_j\}_{j \in J}\right) \neq \emptyset.\]</span></p>
+<p><em>Prova</em>. O sistema <span class="math inline">\(\sum_{i=1}^{d+2}\lambda_i x_i = 0\)</span> e
+<span class="math inline">\(\sum_{i=1}^{d+2}\lambda_i = 0\)</span> tem <span class="math inline">\(d+1\)</span> equações e <span class="math inline">\(d+2\)</span> incógnitas.
+Portanto, admite solução <span class="math inline">\(\lambda \neq 0\)</span>. Sejam
+<span class="math inline">\(I = \{i: \lambda_i &gt; 0\}\)</span> e <span class="math inline">\(J = \{i: \lambda_i \leq 0\}\)</span>.
+Como <span class="math inline">\(\lambda \neq 0\)</span> e <span class="math inline">\(\sum_i \lambda_i = 0\)</span>, <span class="math inline">\(I \neq \emptyset\)</span> e
+<span class="math inline">\(S = \sum_{i \in I}\lambda_i = -\sum_{j \in J}\lambda_j &gt; 0\)</span>. Assim,</p>
+<p><span class="math display">\[z = \sum_{i \in I}\frac{\lambda_i}{S}x_i
+    = \sum_{j \in J}\frac{-\lambda_j}{S}x_j\]</span></p>
+<p>é combinação convexa de <span class="math inline">\(\{x_i\}_{i \in I}\)</span> e de
+<span class="math inline">\(\{x_j\}_{j \in J}\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Exemplo 5</strong> (Semiespaços).
+Se <span class="math inline">\(\mathcal{X} = \mathbb{R}^d\)</span> e <span class="math inline">\(\mathcal{C}\)</span> é a classe dos
+semiespaços, <span class="math inline">\(\mathcal{C} = \{\{x: \langle w,x \rangle \geq b\}:
+w \in \mathbb{R}^d, b \in \mathbb{R}\}\)</span>, então
+<span class="math inline">\(\text{VC}(\mathcal{C}) = d+1\)</span>.</p>
+<p><em>Prova</em>. Sejam <span class="math inline">\(x_0 = 0\)</span>, <span class="math inline">\(x_i = e_i\)</span> para <span class="math inline">\(1 \leq i \leq d\)</span>, e
+<span class="math inline">\(A = \{x_0, \ldots, x_d\}\)</span>. Dado <span class="math inline">\(S \subseteq A\)</span>, tome <span class="math inline">\(w\)</span> tal que
+<span class="math inline">\(w_i = 1\)</span> se <span class="math inline">\(x_i \in S\)</span> e <span class="math inline">\(w_i = -1\)</span> caso contrário, e tome
+<span class="math inline">\(b = -2^{-1}\)</span> se <span class="math inline">\(x_0 \in S\)</span> e <span class="math inline">\(b = 2^{-1}\)</span> caso contrário.
+Como <span class="math inline">\(\langle w, x_i \rangle = w_i\)</span> para <span class="math inline">\(i \geq 1\)</span> e
+<span class="math inline">\(\langle w, x_0 \rangle = 0\)</span>, tem-se
+<span class="math inline">\(\{x: \langle w,x \rangle \geq b\} \cap A = S\)</span>.
+Logo, <span class="math inline">\(\mathcal{C}\)</span> fragmenta <span class="math inline">\(A\)</span> e <span class="math inline">\(\text{VC}(\mathcal{C}) \geq d+1\)</span>.</p>
+<p>Seja <span class="math inline">\(A = \{x_1, \ldots, x_{d+2}\}\)</span> e sejam <span class="math inline">\(I\)</span> e <span class="math inline">\(J\)</span> como no Lema 1,
+com <span class="math inline">\(z\)</span> na interseção dos fechos convexos. Tome
+<span class="math inline">\(S = \{x_i\}_{i \in I}\)</span> e suponha que exista <span class="math inline">\(C = \{x: \langle w,x
+\rangle \geq b\}\)</span> tal que <span class="math inline">\(C \cap A = S\)</span>. Como <span class="math inline">\(C\)</span> é convexo e
+<span class="math inline">\(S \subseteq C\)</span>, <span class="math inline">\(z \in C\)</span> e <span class="math inline">\(\langle w,z \rangle \geq b\)</span>.
+Como <span class="math inline">\(C^c = \{x: \langle w,x \rangle &lt; b\}\)</span> é convexo e
+<span class="math inline">\(\{x_j\}_{j \in J} \subseteq C^c\)</span>, <span class="math inline">\(z \in C^c\)</span> e
+<span class="math inline">\(\langle w,z \rangle &lt; b\)</span>, uma contradição.
+Portanto, <span class="math inline">\(S \notin \mathcal{C}_A\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. A dimensão VC dos semiespaços é o número de parâmetros
+que os descrevem, <span class="math inline">\(d+1\)</span>. Esta coincidência não é acidental:
+classes definidas pelo sinal de funções em um espaço vetorial de
+dimensão <span class="math inline">\(d\)</span> têm dimensão VC no máximo <span class="math inline">\(d\)</span>. Ela também não é uma regra:
+a classe <span class="math inline">\(\{\{x: \text{sen}(wx) \geq 0\}: w \in \mathbb{R}\}\)</span>
+tem um único parâmetro e dimensão VC infinita.</p>
+</div>
+<div id="classes-vc-e-classes-de-glivenko-cantelli" class="section level1">
+<h1>Classes VC e classes de Glivenko-Cantelli</h1>
+<p>Dizemos que <span class="math inline">\(\mathcal{C}\)</span> é uma classe VC se
+<span class="math inline">\(\text{VC}(\mathcal{C}) &lt; \infty\)</span>. Esta seção mostra que toda classe VC
+é de Glivenko-Cantelli universal, no sentido da Aula 2.</p>
+<p><strong>Lema 2</strong> (Sauer-Shelah, <span class="citation">Sauer (<a href="#ref-Sauer1972">1972</a>)</span>; <span class="citation">Shelah (<a href="#ref-Shelah1972">1972</a>)</span>).
+Se <span class="math inline">\(\text{VC}(\mathcal{C}) = d &lt; \infty\)</span>, então, para todo
+<span class="math inline">\(n \in \mathbb{N}\)</span>,</p>
+<p><span class="math display">\[s(\mathcal{C},n) \leq \sum_{i=0}^{d}\binom{n}{i} \leq (n+1)^d.\]</span></p>
+<p>O Lema 2 exibe uma dicotomia: ou <span class="math inline">\(s(\mathcal{C},n) = 2^n\)</span> para todo
+<span class="math inline">\(n\)</span>, ou <span class="math inline">\(s(\mathcal{C},n)\)</span> é limitado por um polinômio de grau
+<span class="math inline">\(\text{VC}(\mathcal{C})\)</span>. Não há comportamento intermediário.
+É esta transição que torna a dimensão VC útil: ela troca uma classe
+uma quantidade que pode ser exponencial por uma contagem polinomial.
+O próximo Teorema usa esta troca para mostrar que um supremo sobre uma classe não-enumerável pode ser controlado por uma classe de tamanho polinomial, similarmente ao que foi feito na Aula 2.</p>
+<p><strong>Teorema 1</strong> (Desigualdade de Vapnik-Chervonenkis, <span class="citation">Vapnik and Chervonenkis (<a href="#ref-VC1971">1971</a>)</span>).
+Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. com distribuição <span class="math inline">\(P\)</span> e <span class="math inline">\(P_n\)</span> a medida
+empírica. Para todo <span class="math inline">\(\varepsilon &gt; 0\)</span>,</p>
+<p><span class="math display">\[\mathbb{P}\left(\|P_n - P\|_{\mathcal{C}} &gt; \varepsilon\right)
+  \leq 8\,s(\mathcal{C},n)\exp\left(-\frac{n\varepsilon^2}{32}\right).\]</span></p>
+<p><strong>Observação</strong>. As constantes do Teorema 1 variam conforme a
+referência: a forma original de <span class="citation">Vapnik and Chervonenkis (<a href="#ref-VC1971">1971</a>)</span> é
+<span class="math inline">\(4\,s(\mathcal{C},2n)\exp(-8^{-1}n\varepsilon^2)\)</span>. Nenhuma delas é
+ótima, e nenhuma importa para as consequências assintóticas abaixo.
+Compare com o Teorema 5 da Aula 2, em que a constante <span class="math inline">\(2\)</span> do DKW é
+exata: o preço da generalidade é a perda das constantes.</p>
+<p><strong>Corolário 1</strong>.
+Toda classe VC é de Glivenko-Cantelli universal.</p>
+<p><em>Prova</em>. Sejam <span class="math inline">\(d = \text{VC}(\mathcal{C}) &lt; \infty\)</span>, <span class="math inline">\(P\)</span> uma
+probabilidade qualquer e <span class="math inline">\(\varepsilon &gt; 0\)</span>. Decorre do Lema 2 e do
+Teorema 1 que</p>
+<p><span class="math display">\[\mathbb{P}\left(\|P_n - P\|_{\mathcal{C}} &gt; \varepsilon\right)
+  \leq 8(n+1)^d\exp\left(-\frac{n\varepsilon^2}{32}\right).\]</span></p>
+<p>Usando o lado direito, decorre que <span class="math inline">\(\|P_n - P\|_{\mathcal{C}}\)</span> converge quase-certamente para <span class="math inline">\(0\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Corolário 2</strong>.
+Quase certamente,
+<span class="math inline">\(\sup_{x \in \mathbb{R}}\left|\hat{F}_n(x) - F(x)\right| \to 0\)</span>.</p>
+<p><em>Prova</em>. Decorre da Observação do Exemplo 3 que a classe das
+semirretas tem dimensão VC igual a <span class="math inline">\(1\)</span>. A conclusão decorre do
+Corolário 1 e de <span class="math inline">\(P_n((-\infty,x]) = \hat{F}_n(x)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. O Corolário 2 é o Teorema 2 da Aula 2,
+Glivenko-Cantelli, obtido agora sem nenhum argumento específico
+sobre funções de distribuição. Em compensação, a prova da Aula 2 é
+elementar, ao passo que esta depende do Lema 2 e do Teorema 1.
+O ganho está em que o mesmo argumento fornece, sem trabalho adicional,
+a convergência uniforme sobre retângulos, semiespaços e qualquer outra
+classe VC.</p>
+<p><strong>Observação</strong>. O supremo que define
+<span class="math inline">\(\|P_n - P\|_{\mathcal{C}}\)</span> é tomado sobre uma classe possivelmente
+não-enumerável e, em geral, exige cuidado com mensurabilidade.
+Nos exemplos desta aula, o supremo é atingido em uma subclasse
+enumerável e a dificuldade não aparece. O tratamento geral está em
+<span class="citation">van der Vaart and Wellner (<a href="#ref-vanderVaartWellner1996">1996</a>)</span>.</p>
+</div>
+<div id="demonstração-da-desigualdade-de-vapnik-chervonenkis" class="section level1">
+<h1>Demonstração da Desigualdade de Vapnik-Chervonenkis</h1>
+<p>A prova do Teorema 1 tem três passos. O primeiro substitui <span class="math inline">\(P\)</span>, que
+não é observável, por uma segunda amostra independente. O segundo
+observa que, feita esta substituição, trocar os papéis das duas
+amostras não altera a distribuição, o que permite introduzir sinais
+aleatórios. O terceiro condiciona nas amostras: fixados os pontos
+observados, a classe <span class="math inline">\(\mathcal{C}\)</span> é indistinguível de uma classe
+finita, com no máximo <span class="math inline">\(s(\mathcal{C},n)\)</span> elementos, e o Lema 2 se
+aplica. É apenas neste último passo que a dimensão VC entra.</p>
+<p>Ao longo desta seção, <span class="math inline">\(X_1&#39;, \ldots, X_n&#39;\)</span> são i.i.d. com distribuição
+<span class="math inline">\(P\)</span> e independentes de <span class="math inline">\(X_1, \ldots, X_n\)</span>, e <span class="math inline">\(P_n&#39;\)</span> é a medida empírica
+de <span class="math inline">\(X_1&#39;, \ldots, X_n&#39;\)</span>. Também, <span class="math inline">\(\sigma_1, \ldots, \sigma_n\)</span> são
+i.i.d. e independentes das demais variáveis, com
+<span class="math inline">\(\mathbb{P}(\sigma_i = 1) = \mathbb{P}(\sigma_i = -1) = 2^{-1}\)</span>.</p>
+<p>Os dois lemas a seguir preparam o primeiro passo. Ao longo deles,
+<span class="math inline">\(A = \left\{\|P_n - P\|_{\mathcal{C}} &gt; \varepsilon\right\}\)</span> e, em <span class="math inline">\(A\)</span>,
+<span class="math inline">\(C^*\)</span> é um elemento de <span class="math inline">\(\mathcal{C}\)</span> tal que
+<span class="math inline">\(|P_n(C^*) - P(C^*)| &gt; \varepsilon\)</span>. Note que tanto <span class="math inline">\(A\)</span> quanto <span class="math inline">\(C^*\)</span>
+são funções de <span class="math inline">\(X_1, \ldots, X_n\)</span>. Também,</p>
+<p><span class="math display">\[B = \left\{\left|P_n&#39;(C^*) - P(C^*)\right|
+  \leq \frac{\varepsilon}{2}\right\}.\]</span></p>
+<p><strong>Lema 3</strong> (Transferência).
+<span class="math inline">\(A \cap B \subseteq \left\{\|P_n - P_n&#39;\|_{\mathcal{C}}
+&gt; 2^{-1}\varepsilon\right\}\)</span>.</p>
+<p><em>Prova</em>. Em <span class="math inline">\(A \cap B\)</span>, decorre da desigualdade triangular que</p>
+<p><span class="math display">\[\begin{align*}
+\left|P_n(C^*) - P_n&#39;(C^*)\right|
+&amp;\geq \left|P_n(C^*) - P(C^*)\right|
+     - \left|P(C^*) - P_n&#39;(C^*)\right| \\
+&amp;&gt; \varepsilon - \frac{\varepsilon}{2} = \frac{\varepsilon}{2}.
+\end{align*}\]</span></p>
+<p>A conclusão decorre de <span class="math inline">\(C^* \in \mathcal{C}\)</span> e da definição de
+<span class="math inline">\(\|P_n - P_n&#39;\|_{\mathcal{C}}\)</span> como supremo em <span class="math inline">\(\mathcal{C}\)</span>.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 4</strong> (Simetrização).
+Se <span class="math inline">\(n\varepsilon^2 \geq 2\)</span>, então</p>
+<p><span class="math display">\[\mathbb{P}\left(\|P_n - P\|_{\mathcal{C}} &gt; \varepsilon\right)
+  \leq 2\,\mathbb{P}\left(\|P_n - P_n&#39;\|_{\mathcal{C}}
+  &gt; \frac{\varepsilon}{2}\right).\]</span></p>
+<p><em>Prova</em>. A prova usa dois fatos sobre <span class="math inline">\(B\)</span>.</p>
+<p>O primeiro é que
+<span class="math inline">\(\mathbb{P}\left(B \mid X_1,\ldots,X_n\right) \geq 2^{-1}\)</span>.
+De fato, como <span class="math inline">\(C^*\)</span> é função de <span class="math inline">\(X_1, \ldots, X_n\)</span> e <span class="math inline">\(P_n&#39;\)</span> é
+independente destas, decorre do Lema 1 da Aula 2 que, dado
+<span class="math inline">\(X_1,\ldots,X_n\)</span>, <span class="math inline">\(nP_n&#39;(C^*) \sim \text{Binomial}(n, P(C^*))\)</span> e
+<span class="math inline">\(\mathbb{V}\left[P_n&#39;(C^*) \mid X_1,\ldots,X_n\right] \leq (4n)^{-1}\)</span>.
+Assim, pela desigualdade de Chebyshev e por <span class="math inline">\(n\varepsilon^2 \geq 2\)</span>,</p>
+<p><span class="math display">\[\mathbb{P}\left(B^c \,\middle|\, X_1,\ldots,X_n\right)
+  \leq \frac{4}{\varepsilon^2}\cdot\frac{1}{4n}
+  = \frac{1}{n\varepsilon^2} \leq \frac{1}{2}.\]</span></p>
+<p>O segundo é que <span class="math inline">\(\mathbb{P}(A) \leq 2\,\mathbb{P}(A \cap B)\)</span>.
+De fato,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{P}(A \cap B)
+&amp;= \mathbb{E}\left[\mathbb{E}\left[\mathbb{I}_A\mathbb{I}_B
+    \mid X_1,\ldots,X_n\right]\right] \\
+&amp;= \mathbb{E}\left[\mathbb{I}_A\,
+    \mathbb{P}\left(B \mid X_1,\ldots,X_n\right)\right] \\
+&amp;\geq \frac{1}{2}\mathbb{E}\left[\mathbb{I}_A\right]
+    = \frac{1}{2}\mathbb{P}(A),
+\end{align*}\]</span></p>
+<p>em que a primeira igualdade é a lei da esperança total, a segunda
+decorre de <span class="math inline">\(\mathbb{I}_A\)</span> ser função de <span class="math inline">\(X_1,\ldots,X_n\)</span>, o que permite
+retirá-la da esperança condicional, e a desigualdade decorre do
+primeiro fato.</p>
+<p>Combinando o segundo fato com o Lema 3,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{P}\left(\|P_n - P\|_{\mathcal{C}} &gt; \varepsilon\right)
+&amp;= \mathbb{P}(A) \\
+&amp;\leq 2\,\mathbb{P}(A \cap B) \\
+&amp;\leq 2\,\mathbb{P}\left(\|P_n - P_n&#39;\|_{\mathcal{C}}
+    &gt; \frac{\varepsilon}{2}\right).
+\end{align*}\]</span></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 5</strong> (Aleatorização por sinais).
+Para todo <span class="math inline">\(\varepsilon &gt; 0\)</span>,</p>
+<p><span class="math display">\[\mathbb{P}\left(\|P_n - P_n&#39;\|_{\mathcal{C}}
+  &gt; \frac{\varepsilon}{2}\right)
+  \leq 2\,\mathbb{P}\left(\sup_{C \in \mathcal{C}}
+  \left|\frac{1}{n}\sum_{i=1}^{n}\sigma_i \mathbb{I}(X_i \in C)\right|
+  &gt; \frac{\varepsilon}{4}\right).\]</span></p>
+<p><em>Prova</em>. Os pares <span class="math inline">\((X_i, X_i&#39;)\)</span> são i.i.d. e, como <span class="math inline">\(X_i\)</span> e <span class="math inline">\(X_i&#39;\)</span> têm
+a mesma distribuição e são independentes, <span class="math inline">\((X_i, X_i&#39;)\)</span> e
+<span class="math inline">\((X_i&#39;, X_i)\)</span> têm a mesma distribuição. Trocar <span class="math inline">\(X_i\)</span> por <span class="math inline">\(X_i&#39;\)</span> nos
+índices em que <span class="math inline">\(\sigma_i = -1\)</span>, portanto, não altera a distribuição
+conjunta. Como esta troca equivale a multiplicar a <span class="math inline">\(i\)</span>-ésima parcela
+por <span class="math inline">\(\sigma_i\)</span>,</p>
+<p><span class="math display">\[\|P_n - P_n&#39;\|_{\mathcal{C}}
+  \stackrel{d}{=} \sup_{C \in \mathcal{C}}\left|\frac{1}{n}
+  \sum_{i=1}^{n}\sigma_i\left(\mathbb{I}(X_i \in C)
+  - \mathbb{I}(X_i&#39; \in C)\right)\right|.\]</span></p>
+<p>Pela desigualdade triangular, se o lado direito excede
+<span class="math inline">\(2^{-1}\varepsilon\)</span>, então ao menos um dos dois supremos</p>
+<p><span class="math display">\[\sup_{C \in \mathcal{C}}\left|\frac{1}{n}\sum_{i=1}^{n}
+  \sigma_i \mathbb{I}(X_i \in C)\right|
+  \qquad \text{e} \qquad
+  \sup_{C \in \mathcal{C}}\left|\frac{1}{n}\sum_{i=1}^{n}
+  \sigma_i \mathbb{I}(X_i&#39; \in C)\right|\]</span></p>
+<p>excede <span class="math inline">\(4^{-1}\varepsilon\)</span>. Como ambos têm a mesma distribuição,
+a conclusão decorre da subaditividade. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 6</strong> (Contagem e Hoeffding).
+Para todo <span class="math inline">\(\varepsilon &gt; 0\)</span>,</p>
+<p><span class="math display">\[\mathbb{P}\left(\sup_{C \in \mathcal{C}}
+  \left|\frac{1}{n}\sum_{i=1}^{n}\sigma_i \mathbb{I}(X_i \in C)\right|
+  &gt; \frac{\varepsilon}{4}\right)
+  \leq 2\,s(\mathcal{C},n)
+  \exp\left(-\frac{n\varepsilon^2}{32}\right).\]</span></p>
+<p><em>Prova</em>. Condicione em <span class="math inline">\(X_1, \ldots, X_n\)</span> e seja
+<span class="math inline">\(A = \{X_1, \ldots, X_n\}\)</span>. A aplicação que leva <span class="math inline">\(C\)</span> em
+<span class="math inline">\(\left(\mathbb{I}(X_1 \in C), \ldots, \mathbb{I}(X_n \in C)\right)\)</span>
+assume no máximo <span class="math inline">\(\left|\mathcal{C}_A\right| \leq s(\mathcal{C},n)\)</span>
+valores distintos. Portanto, o supremo em <span class="math inline">\(\mathcal{C}\)</span> é um máximo
+sobre um conjunto <span class="math inline">\(V \subseteq \{0,1\}^n\)</span> com
+<span class="math inline">\(|V| \leq s(\mathcal{C},n)\)</span>.</p>
+<p>Fixe <span class="math inline">\(a \in V\)</span> e defina <span class="math inline">\(Z_i = 2^{-1}(\sigma_i a_i + 1)\)</span>. As variáveis
+<span class="math inline">\(Z_1, \ldots, Z_n\)</span> são independentes, <span class="math inline">\(\mathbb{P}(Z_i \in [0,1]) = 1\)</span> e
+<span class="math inline">\(\mathbb{E}[Z_i] = 2^{-1}\)</span>. Como
+<span class="math inline">\(n^{-1}\sum_{i=1}^{n}\sigma_i a_i = 2(\bar{Z} - 2^{-1})\)</span>,</p>
+<p><span class="math display">\[\left\{\left|\frac{1}{n}\sum_{i=1}^{n}\sigma_i a_i\right|
+  &gt; \frac{\varepsilon}{4}\right\}
+  = \left\{\left|\bar{Z} - \mathbb{E}[\bar{Z}]\right|
+  &gt; \frac{\varepsilon}{8}\right\}.\]</span></p>
+<p>Decorre do Teorema 3 da Aula 2, a desigualdade de Hoeffding, que esta
+probabilidade é no máximo
+<span class="math inline">\(2\exp(-2n(8^{-1}\varepsilon)^2) = 2\exp(-32^{-1}n\varepsilon^2)\)</span>.
+A conclusão decorre da subaditividade sobre os no máximo
+<span class="math inline">\(s(\mathcal{C},n)\)</span> elementos de <span class="math inline">\(V\)</span> e de se tomar a esperança em
+<span class="math inline">\(X_1, \ldots, X_n\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><em>Prova do Teorema 1</em>. Se <span class="math inline">\(n\varepsilon^2 &lt; 2\)</span>, então</p>
+<p><span class="math display">\[8\,s(\mathcal{C},n)\exp\left(-\frac{n\varepsilon^2}{32}\right)
+  \geq 8\exp\left(-\frac{1}{16}\right) &gt; 1,\]</span></p>
+<p>pois <span class="math inline">\(s(\mathcal{C},n) \geq 1\)</span>, e a desigualdade é trivial.
+Se <span class="math inline">\(n\varepsilon^2 \geq 2\)</span>, a conclusão decorre da composição dos
+Lemas 4, 5 e 6, cujos fatores <span class="math inline">\(2\)</span> produzem a constante <span class="math inline">\(8\)</span>.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. O Lema 6 é o análogo do Lema 2 da Aula 2: em ambos,
+um supremo sobre uma família não-enumerável é reduzido a um máximo
+sobre uma família finita, ao qual se aplica a desigualdade de
+Hoeffding. A diferença está em como a família finita é obtida.
+Na Aula 2, ela vem de discretizar <span class="math inline">\(\mathbb{R}\)</span> em <span class="math inline">\(k\)</span> pontos, ao custo
+do erro <span class="math inline">\(k^{-1}\)</span>; aqui, ela vem de condicionar na amostra, sem custo
+algum, e o seu tamanho é controlado pelo Lema 2 desta aula.
+Os dois fatores <span class="math inline">\(2\)</span> dos Lemas 4 e 5, e o <span class="math inline">\(\varepsilon\)</span> que se torna
+<span class="math inline">\(4^{-1}\varepsilon\)</span>, são o preço da simetrização.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-dimensão-vc-de-classes-simples" class="section level2">
+<h2>Exercício 1 (Dimensão VC de classes simples)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, se <span class="math inline">\(\mathcal{C} \subseteq \mathcal{D}\)</span>, então
+<span class="math inline">\(\text{VC}(\mathcal{C}) \leq \text{VC}(\mathcal{D})\)</span>.</p></li>
+<li><p>Mostre que <span class="math inline">\(\mathcal{C}\)</span> e <span class="math inline">\(\{C^c : C \in \mathcal{C}\}\)</span> têm a
+mesma dimensão VC.</p></li>
+<li><p>Seja <span class="math inline">\(\mathcal{C}\)</span> a classe de todos os subconjuntos finitos de
+<span class="math inline">\(\mathbb{R}\)</span>. Mostre que <span class="math inline">\(\text{VC}(\mathcal{C}) = \infty\)</span>.
+Relacione com o Exemplo 2.</p></li>
+<li><p>Mostre que a recíproca do Corolário 1 é falsa, isto é, exiba
+uma classe de Glivenko-Cantelli com dimensão VC infinita.
+Sugestão: em (c), tome <span class="math inline">\(P\)</span> discreta.</p></li>
+</ol>
+</div>
+<div id="exercício-2-bolas-e-elipsoides" class="section level2">
+<h2>Exercício 2 (Bolas e elipsoides)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que a classe das bolas fechadas de <span class="math inline">\(\mathbb{R}^d\)</span> tem
+dimensão VC igual a <span class="math inline">\(d+1\)</span>. Sugestão: a bola de centro <span class="math inline">\(c\)</span> e raio
+<span class="math inline">\(r\)</span> é o conjunto dos <span class="math inline">\(x\)</span> tais que
+<span class="math inline">\(\|x\|^2 - 2\langle c,x \rangle + \|c\|^2 - r^2 \leq 0\)</span>;
+associe a cada <span class="math inline">\(x \in \mathbb{R}^d\)</span> o ponto
+<span class="math inline">\((x, \|x\|^2) \in \mathbb{R}^{d+1}\)</span> e use o Exemplo 5.</p></li>
+<li><p>Obtenha uma cota superior para a dimensão VC da classe dos
+conjuntos <span class="math inline">\(\{x : p(x) \geq 0\}\)</span>, em que <span class="math inline">\(p\)</span> percorre os polinômios
+de grau no máximo <span class="math inline">\(k\)</span> em <span class="math inline">\(\mathbb{R}^d\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-3-lema-de-sauer-shelah" class="section level2">
+<h2>Exercício 3 (Lema de Sauer-Shelah)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Prove o Lema 2 por indução em <span class="math inline">\(n + d\)</span>.
+Sugestão: para <span class="math inline">\(A = \{x_1,\ldots,x_n\}\)</span> e <span class="math inline">\(A&#39; = A - \{x_n\}\)</span>,
+relacione <span class="math inline">\(\left|\mathcal{C}_A\right|\)</span> com
+<span class="math inline">\(\left|\mathcal{C}_{A&#39;}\right|\)</span> e com o traço da subclasse dos
+<span class="math inline">\(C\)</span> tais que <span class="math inline">\(C\)</span> e <span class="math inline">\(C \cup \{x_n\}\)</span> produzem o mesmo traço em <span class="math inline">\(A&#39;\)</span>.</p></li>
+<li><p>Verifique que <span class="math inline">\(\sum_{i=0}^{d}\binom{n}{i} \leq (n+1)^d\)</span> e que,
+para <span class="math inline">\(n \geq d \geq 1\)</span>,
+<span class="math inline">\(\sum_{i=0}^{d}\binom{n}{i} \leq \left(en d^{-1}\right)^{d}\)</span>.</p></li>
+<li><p>Mostre que a cota do Lema 2 é atingida, exibindo uma classe com
+<span class="math inline">\(\text{VC}(\mathcal{C}) = d\)</span> e
+<span class="math inline">\(s(\mathcal{C},n) = \sum_{i=0}^{d}\binom{n}{i}\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-4-velocidade-de-convergência" class="section level2">
+<h2>Exercício 4 (Velocidade de convergência)</h2>
+<p>Seja <span class="math inline">\(\mathcal{C}\)</span> uma classe VC com <span class="math inline">\(\text{VC}(\mathcal{C}) = d\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Use o Teorema 1 e o Lema 2 para mostrar que existe <span class="math inline">\(c &gt; 0\)</span>,
+que não depende de <span class="math inline">\(P\)</span>, tal que</li>
+</ol>
+<p><span class="math display">\[\mathbb{E}\left[\|P_n - P\|_{\mathcal{C}}\right]
+  \leq c\sqrt{\frac{d\log n}{n}}.\]</span></p>
+<pre><code>Sugestão: proceda como no Exercício 5 da Aula 2.</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Compare, no caso das semirretas, a cota de (a) com a cota
+<span class="math inline">\(\mathbb{E}[D_n] \leq \sqrt{\pi(2n)^{-1}}\)</span> obtida do DKW na
+Aula 2. Qual é o fator excedente e de onde ele vem?</p></li>
+<li><p>Explique por que a resposta de (b) não torna o Teorema 1 inútil.</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Sauer1972" class="csl-entry">
+Sauer, Norbert. 1972. <span>“On the Density of Families of Sets.”</span> <em>Journal of Combinatorial Theory, Series A</em> 13 (1): 145–47.
+</div>
+<div id="ref-Shelah1972" class="csl-entry">
+Shelah, Saharon. 1972. <span>“A Combinatorial Problem; Stability and Order for Models and Theories in Infinitary Languages.”</span> <em>Pacific Journal of Mathematics</em> 41 (1): 247–61.
+</div>
+<div id="ref-vanderVaartWellner1996" class="csl-entry">
+van der Vaart, Aad W., and Jon A. Wellner. 1996. <em>Weak Convergence and Empirical Processes: With Applications to Statistics</em>. Springer.
+</div>
+<div id="ref-VC1971" class="csl-entry">
+Vapnik, Vladimir N., and Alexey Ya. Chervonenkis. 1971. <span>“On the Uniform Convergence of Relative Frequencies of Events to Their Probabilities.”</span> <em>Theory of Probability and Its Applications</em> 16 (2): 264–80.
+</div>
+</div>
+</div>
