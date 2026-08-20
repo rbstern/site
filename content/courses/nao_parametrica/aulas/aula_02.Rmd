@@ -136,11 +136,15 @@ $D_n \leq \Delta_{n,k} + k^{-1}$. $\blacksquare$
 **Teorema 2** (Glivenko-Cantelli).
 Quase certamente, $\lim_{n \to \infty} D_n = 0$.
 
-*Prova*. Fixe $\eps > 0$ e tome $k$ tal que $k^{-1} < .5\eps$. Decorre do Lema 2 que, 
+*Prova*. Fixe $\varepsilon > 0$ e tome $k$ tal que $k^{-1} < .5\varepsilon$. Decorre do Lema 2 que, 
 \begin{align*}
- P(\limsup_{n \to \infty} D_n > \eps) 
- &\leq P(\limsup_{n \to \infty} D_n > \eps) \\ 
- &\leq P(\limsup_{n \to \infty} \Delta_{n,k} + k^{-1} > \eps) &\leq P(\limsup_{n \to \infty} \Delta_{n,k} > .5\eps) = 0,
+ P\left(\limsup_{n \to \infty} D_n > \varepsilon\right)
+ &\leq P\left(\limsup_{n \to \infty}
+    \left(\Delta_{n,k} + k^{-1}\right) > \varepsilon\right) \\
+ &= P\left(\limsup_{n \to \infty} \Delta_{n,k}
+    > \varepsilon - k^{-1}\right) \\
+ &\leq P\left(\limsup_{n \to \infty} \Delta_{n,k}
+    > .5\varepsilon\right) = 0,
 \end{align*}
 onde a última igualdade decorre do Teorema 1, já que cada uma das no máximo $2(k+1)$ parcelas que definem $\Delta_{n,k}$ converge a $0$ quase certamente. Como a interseção de um número finito de eventos de probabilidade $1$ tem probabilidade $1$, $\Delta_{n,k}$ converge quase-certamente a $0$. 
 

@@ -100,11 +100,15 @@ Analogamente, <span class="math inline">\(\hat{F}_n(x) \geq \hat{F}_n(x_{j-1})\)
 <span class="math inline">\(D_n \leq \Delta_{n,k} + k^{-1}\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
 <p><strong>Teorema 2</strong> (Glivenko-Cantelli).
 Quase certamente, <span class="math inline">\(\lim_{n \to \infty} D_n = 0\)</span>.</p>
-<p><em>Prova</em>. Fixe <span class="math inline">\(\eps &gt; 0\)</span> e tome <span class="math inline">\(k\)</span> tal que <span class="math inline">\(k^{-1} &lt; .5\eps\)</span>. Decorre do Lema 2 que,
+<p><em>Prova</em>. Fixe <span class="math inline">\(\varepsilon &gt; 0\)</span> e tome <span class="math inline">\(k\)</span> tal que <span class="math inline">\(k^{-1} &lt; .5\varepsilon\)</span>. Decorre do Lema 2 que,
 <span class="math display">\[\begin{align*}
-P(\limsup_{n \to \infty} D_n &gt; \eps)
-&amp;\leq P(\limsup_{n \to \infty} D_n &gt; \eps) \\
-&amp;\leq P(\limsup_{n \to \infty} \Delta_{n,k} + k^{-1} &gt; \eps) &amp;\leq P(\limsup_{n \to \infty} \Delta_{n,k} &gt; .5\eps) = 0,
+P\left(\limsup_{n \to \infty} D_n &gt; \varepsilon\right)
+&amp;\leq P\left(\limsup_{n \to \infty}
+    \left(\Delta_{n,k} + k^{-1}\right) &gt; \varepsilon\right) \\
+&amp;= P\left(\limsup_{n \to \infty} \Delta_{n,k}
+    &gt; \varepsilon - k^{-1}\right) \\
+&amp;\leq P\left(\limsup_{n \to \infty} \Delta_{n,k}
+    &gt; .5\varepsilon\right) = 0,
 \end{align*}\]</span>
 onde a última igualdade decorre do Teorema 1, já que cada uma das no máximo <span class="math inline">\(2(k+1)\)</span> parcelas que definem <span class="math inline">\(\Delta_{n,k}\)</span> converge a <span class="math inline">\(0\)</span> quase certamente. Como a interseção de um número finito de eventos de probabilidade <span class="math inline">\(1\)</span> tem probabilidade <span class="math inline">\(1\)</span>, <span class="math inline">\(\Delta_{n,k}\)</span> converge quase-certamente a <span class="math inline">\(0\)</span>.</p>
 <p><strong>Teorema 3</strong> (Desigualdade de Hoeffding, <span class="citation">Hoeffding (<a href="#ref-Hoeffding1963">1963</a>)</span>).
