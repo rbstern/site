@@ -1,0 +1,408 @@
+---
+title: "Aula 9: Linear smoothers"
+linkTitle: "Aula 9: Linear smoothers"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 90
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 8:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Estimadores sem a i-ésima observação indicados por -i, e não por (i).
+- Termos técnicos em inglês quando consagrados (kernel, linear smoother).
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 03/09/2026.
+
+**Leitura**: @Wasserman2006, Capítulo 5.
+
+# Regressão não-linear
+
+**Definição** (Modelo de regressão não-paramétrica).
+Sejam $(X_1, Y_1), \ldots, (X_n, Y_n)$ i.i.d., com $X_i \in \mathbb{R}^d$,
+$Y_i \in \mathbb{R}$ e $\mathbb{E}[Y_1^2] < \infty$. A função de regressão
+é
+
+$$r(x) = \mathbb{E}\left[Y_1 \mid X_1 = x\right].$$
+
+Escrevendo $\varepsilon_i = Y_i - r(X_i)$, obtém-se
+
+$$Y_i = r(X_i) + \varepsilon_i,
+  \qquad \text{com} \qquad
+  \mathbb{E}\left[\varepsilon_i \mid X_i\right] = 0.$$
+
+Supõe-se também que $\mathbb{V}[\varepsilon_i \mid X_i] = \sigma^2$. O
+modelo é não-paramétrico quando se supõe apenas que $r$ pertence a uma
+classe de dimensão infinita, como a classe de Hölder $\Sigma(\beta, L)$
+da Aula 7, em vez de uma família indexada por um número finito de
+parâmetros.
+
+**Observação**. Os estimadores desta aula são analisados
+condicionalmente a $X_1, \ldots, X_n$. Condicionalmente,
+$\varepsilon_1, \ldots, \varepsilon_n$ são independentes, com média $0$
+e variância $\sigma^2$.
+
+# Revisão de regressão linear
+
+**Definição** (Modelo linear).
+Nesta seção, $X_i \in \mathbb{R}^p$ e a primeira coordenada de toda
+covariável é igual a $1$, o que inclui o intercepto no modelo. O modelo
+linear supõe que existe $\beta \in \mathbb{R}^p$ tal que $r(x) = x^T\beta$.
+Em formato matricial,
+
+$$\mathbf{Y} = \mathbb{X}\beta + \boldsymbol{\varepsilon},$$
+
+em que $\mathbf{Y} = (Y_1, \ldots, Y_n)^T$,
+$\boldsymbol{\varepsilon} = (\varepsilon_1, \ldots, \varepsilon_n)^T$ e
+$\mathbb{X}$ é a matriz $n \times p$ cuja $i$-ésima linha é $X_i^T$.
+
+**Suposição** (A1).
+$\mathbb{X}$ tem posto $p$. Em particular, $\mathbb{X}^T\mathbb{X}$ é
+invertível.
+
+**Lema 1** (Mínimos quadrados).
+Sob (A1), o único minimizador de
+$\beta \mapsto \|\mathbf{Y} - \mathbb{X}\beta\|^2$ é
+
+$$\hat{\beta} = \left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbf{Y}.$$
+
+*Prova*. Pela definição de $\hat{\beta}$,
+$\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta})
+= \mathbb{X}^T\mathbf{Y} - \mathbb{X}^T\mathbf{Y} = 0$. Assim, para todo
+$\beta \in \mathbb{R}^p$,
+
+\begin{align*}
+ \|\mathbf{Y} - \mathbb{X}\beta\|^2
+ &= \left\|(\mathbf{Y} - \mathbb{X}\hat{\beta})
+    + \mathbb{X}(\hat{\beta} - \beta)\right\|^2 \\
+ &= \|\mathbf{Y} - \mathbb{X}\hat{\beta}\|^2
+    + 2(\hat{\beta} - \beta)^T\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta})
+    + \|\mathbb{X}(\hat{\beta} - \beta)\|^2 \\
+ &= \|\mathbf{Y} - \mathbb{X}\hat{\beta}\|^2
+    + \|\mathbb{X}(\hat{\beta} - \beta)\|^2 \\
+ &\geq \|\mathbf{Y} - \mathbb{X}\hat{\beta}\|^2.
+\end{align*}
+
+A terceira igualdade usa $\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta}) = 0$.
+A desigualdade é uma igualdade se e somente se
+$\mathbb{X}(\hat{\beta} - \beta) = 0$, isto é, por (A1), se e somente se
+$\beta = \hat{\beta}$. $\blacksquare$
+
+**Definição** (Predição).
+Para uma nova observação com covariável $x \in \mathbb{R}^p$, a predição
+de $Y$ pelo modelo linear é $\hat{r}_n(x) = x^T\hat{\beta}$.
+
+**Lema 2** (A predição é uma combinação linear das respostas).
+Sob (A1), para todo $x \in \mathbb{R}^p$,
+
+$$\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i,
+  \qquad \text{com} \qquad
+  \ell_i(x) = x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}X_i.$$
+
+Além disso, $\sum_{i=1}^{n}\ell_i(x) = 1$.
+
+*Prova*. Como $\mathbb{X}^T\mathbf{Y} = \sum_{i=1}^{n}X_iY_i$, decorre
+do Lema 1 que
+
+\begin{align*}
+ \hat{r}_n(x)
+ &= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbf{Y} \\
+ &= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\sum_{i=1}^{n}X_iY_i \\
+ &= \sum_{i=1}^{n}\ell_i(x)Y_i.
+\end{align*}
+
+Para a segunda afirmação, sejam $e_1 = (1, 0, \ldots, 0)^T \in \mathbb{R}^p$
+e $\mathbf{1} = (1, \ldots, 1)^T \in \mathbb{R}^n$. Como a primeira
+coordenada de cada $X_i$ é $1$, vale $\mathbb{X}e_1 = \mathbf{1}$.
+Assim,
+
+\begin{align*}
+ \sum_{i=1}^{n}\ell_i(x)
+ &= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbf{1} \\
+ &= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbb{X}e_1 \\
+ &= x^Te_1 = 1. \qquad \blacksquare
+\end{align*}
+
+**Observação**. Os pesos $\ell_i(x)$ dependem de $x$ e de
+$X_1, \ldots, X_n$, mas não de $Y_1, \ldots, Y_n$. Por outro lado, eles
+são determinados pela forma global do modelo: podem ser negativos, e
+observações com $X_i$ distante de $x$ podem receber peso grande. Os
+linear smoothers mantêm a estrutura linear em $\mathbf{Y}$, mas usam
+pesos concentrados nas observações com $X_i$ próximo de $x$.
+
+# Linear smoothers
+
+**Definição** (Linear smoother, @Wasserman2006).
+Um estimador $\hat{r}_n$ de $r$ é um linear smoother se, para todo $x$,
+existe um vetor $\ell(x) = (\ell_1(x), \ldots, \ell_n(x))^T$, que depende
+de $x$ e de $X_1, \ldots, X_n$, mas não de $Y_1, \ldots, Y_n$, tal que
+
+$$\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i.$$
+
+**Observação**. Pelo Lema 2, a predição da regressão linear é um linear
+smoother. Todos os exemplos a seguir satisfazem
+$\sum_{i=1}^{n}\ell_i(x) = 1$ (Exercício 2), de modo que, se $Y_i = c$
+para todo $i$, então $\hat{r}_n(x) = c$. Nos exemplos, $d = 1$.
+
+**Exemplo 1** (Regressograma).
+Suponha $X_i \in [0,1]$ e considere, como no histograma da Aula 1, a
+partição de $[0,1]$ em $m$ intervalos $B_1, \ldots, B_m$ de comprimento
+$h = m^{-1}$. O regressograma é a média das respostas cujas covariáveis
+estão no mesmo intervalo que $x$:
+
+$$\hat{r}_n(x) = \frac{\sum_{i=1}^{n}Y_i\,\mathbb{I}(X_i \in B_j)}
+  {\sum_{s=1}^{n}\mathbb{I}(X_s \in B_j)},
+  \qquad \text{se } x \in B_j,$$
+
+supondo que o denominador é positivo. É um linear smoother com
+
+$$\ell_i(x) = \frac{\mathbb{I}(X_i \in B_j)}
+  {\sum_{s=1}^{n}\mathbb{I}(X_s \in B_j)},
+  \qquad \text{se } x \in B_j.$$
+
+Assim como o histograma, $\hat{r}_n$ é constante em cada $B_j$, e $h$
+controla o compromisso entre viés e variância.
+
+**Exemplo 2** ($k$ vizinhos mais próximos).
+Seja $k \in \{1, \ldots, n\}$. Para $x \in \mathbb{R}$, seja $N_k(x)$ o
+conjunto dos índices das $k$ observações com $X_i$ mais próximo de $x$,
+com empates desfeitos pelo menor índice. O estimador de $k$ vizinhos
+mais próximos ($k$-NN) é
+
+$$\hat{r}_n(x) = \frac{1}{k}\sum_{i \in N_k(x)}Y_i,$$
+
+um linear smoother com $\ell_i(x) = k^{-1}\mathbb{I}(i \in N_k(x))$.
+Seja $d_k(x)$ a distância de $x$ ao seu $k$-ésimo vizinho mais próximo.
+Sem empates, $N_k(x) = \{i : |X_i - x| \leq d_k(x)\}$, de modo que o
+$k$-NN é a média das respostas com covariável na janela
+$[x - d_k(x), x + d_k(x)]$, cuja largura depende de $x$: a janela é larga onde há poucas observações e
+estreita onde há muitas. O número $k$ faz o papel da banda: $k = n$
+fornece $\hat{r}_n \equiv \bar{Y}$, e $k = 1$ fornece
+$\hat{r}_n(X_i) = Y_i$.
+
+**Exemplo 3** (Médias locais).
+Seja $h > 0$. A média local em $x$ é a média das respostas cujas
+covariáveis estão na janela $(x-h, x+h]$:
+
+\begin{align*}
+ \hat{r}_n(x)
+ &= \frac{\sum_{i=1}^{n}Y_i\,\mathbb{I}(x-h < X_i \leq x+h)}
+    {\sum_{s=1}^{n}\mathbb{I}(x-h < X_s \leq x+h)} \\
+ &= \frac{\sum_{i=1}^{n}Y_iK_0\left(\frac{X_i - x}{h}\right)}
+    {\sum_{s=1}^{n}K_0\left(\frac{X_s - x}{h}\right)},
+\end{align*}
+
+supondo que o denominador é positivo, em que
+$K_0(u) = 2^{-1}\mathbb{I}(-1 < u \leq 1)$ é o kernel uniforme da Aula 7.
+É um linear smoother com
+
+$$\ell_i(x) = \frac{K_0\left(\frac{X_i - x}{h}\right)}
+  {\sum_{s=1}^{n}K_0\left(\frac{X_s - x}{h}\right)}.$$
+
+Ao contrário do regressograma, as médias locais não dependem de uma
+partição pré-definida: a janela é centrada em $x$ e acompanha o ponto,
+assim como o KDE em relação ao histograma. Ao contrário do $k$-NN, a
+largura da janela é a mesma para todo $x$.
+
+**Exemplo 4** (Nadaraya-Watson, @Nadaraya1964; @Watson1964).
+Suponha que $(X_1, Y_1)$ tem densidade conjunta $f(y, x)$ e seja $f(x)$
+a densidade marginal de $X_1$. Então, se $f(x) > 0$,
+
+$$r(x) = \int y f(y \mid x)\,dy = \frac{\int y f(y, x)\,dy}{f(x)}.$$
+
+Sejam $K$ um kernel de ordem $1$ e $h > 0$. Estime $f(x)$ pelo KDE da
+Aula 7 e $f(y, x)$ pelo KDE bivariado com kernel produto:
+
+$$\hat{f}_n(x) = \frac{1}{nh}\sum_{i=1}^{n}K\left(\frac{X_i - x}{h}\right)
+  \qquad \text{e} \qquad
+  \hat{f}_n(y, x) = \frac{1}{nh^2}\sum_{i=1}^{n}
+  K\left(\frac{Y_i - y}{h}\right)K\left(\frac{X_i - x}{h}\right).$$
+
+Com a mudança de variáveis $y = Y_i - uh$, para todo $i$,
+
+\begin{align*}
+ \int y\,\frac{1}{h}K\left(\frac{Y_i - y}{h}\right)dy
+ &= \int (Y_i - uh)K(u)\,du \\
+ &= Y_i\int K(u)\,du - h\int uK(u)\,du \\
+ &= Y_i,
+\end{align*}
+
+pois $\int K = 1$ e, como $K$ tem ordem $1$, $\int uK(u)\,du = 0$. Assim,
+
+$$\int y\hat{f}_n(y, x)\,dy
+  = \frac{1}{nh}\sum_{i=1}^{n}Y_iK\left(\frac{X_i - x}{h}\right).$$
+
+Substituindo as duas estimativas na expressão de $r(x)$, o fator
+$(nh)^{-1}$ se cancela e obtém-se o estimador de Nadaraya-Watson
+
+$$\hat{r}_n(x) = \frac{\int y\hat{f}_n(y, x)\,dy}{\hat{f}_n(x)}
+  = \frac{\sum_{i=1}^{n}Y_iK\left(\frac{X_i - x}{h}\right)}
+    {\sum_{s=1}^{n}K\left(\frac{X_s - x}{h}\right)},$$
+
+supondo $\hat{f}_n(x) \neq 0$. É um linear smoother com
+
+$$\ell_i(x) = \frac{K\left(\frac{X_i - x}{h}\right)}
+  {\sum_{s=1}^{n}K\left(\frac{X_s - x}{h}\right)}.$$
+
+As médias locais são o caso $K = K_0$. Com $K \geq 0$ contínuo, como o
+gaussiano ou o de Epanechnikov, os pesos decaem continuamente com
+$|X_i - x|$ e $\hat{r}_n$ é contínua.
+
+**Exemplo 5** (Regressão polinomial local).
+Sejam $K \geq 0$ um kernel, $h > 0$ e $q \in \{0, 1, 2, \ldots\}$. Pela
+série de Taylor, como no Lema 3 da Aula 7, se $r$ é suave, então, para
+$u$ próximo de $x$,
+
+$$r(u) \approx \sum_{j=0}^{q}\frac{r^{(j)}(x)}{j!}(u - x)^j.$$
+
+Isto sugere ajustar, perto de $x$, um polinômio de grau $q$ em $u - x$.
+Sejam
+
+$$z_x(u) = \left(1, \, u - x, \, \frac{(u-x)^2}{2!}, \, \ldots, \,
+  \frac{(u-x)^q}{q!}\right)^T \in \mathbb{R}^{q+1}
+  \qquad \text{e} \qquad
+  w_i(x) = K\left(\frac{X_i - x}{h}\right),$$
+
+e considere o critério de mínimos quadrados ponderados
+
+$$\hat{a}(x) = \arg\min_{a \in \mathbb{R}^{q+1}}
+  \sum_{i=1}^{n}w_i(x)\left(Y_i - z_x(X_i)^Ta\right)^2,$$
+
+em que $a = (a_0, \ldots, a_q)^T$ e $a_j$ faz o papel de $r^{(j)}(x)$. O
+estimador de regressão polinomial local de grau $q$ é
+$\hat{r}_n(x) = \hat{a}_0(x)$.
+
+Sejam $\mathbb{X}_x$ a matriz $n \times (q+1)$ cuja $i$-ésima linha é
+$z_x(X_i)^T$ e $W_x = \text{diag}(w_1(x), \ldots, w_n(x))$, e suponha
+que $\mathbb{X}_x^TW_x\mathbb{X}_x$ é invertível. O critério é
+$\|W_x^{1/2}\mathbf{Y} - W_x^{1/2}\mathbb{X}_xa\|^2$, e o Lema 1 aplicado
+a $W_x^{1/2}\mathbb{X}_x$ e $W_x^{1/2}\mathbf{Y}$ fornece
+
+$$\hat{a}(x) = \left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}
+  \mathbb{X}_x^TW_x\mathbf{Y}.$$
+
+Como $\mathbb{X}_x^TW_x\mathbf{Y} = \sum_{i=1}^{n}w_i(x)z_x(X_i)Y_i$,
+sendo $e_1 = (1, 0, \ldots, 0)^T \in \mathbb{R}^{q+1}$,
+
+$$\hat{r}_n(x) = e_1^T\hat{a}(x) = \sum_{i=1}^{n}\ell_i(x)Y_i,
+  \qquad \text{com} \qquad
+  \ell_i(x) = w_i(x)\,e_1^T\left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}
+  z_x(X_i).$$
+
+Para $q = 0$, $\mathbb{X}_x = \mathbf{1}$ e
+$\hat{r}_n(x) = \sum_i w_i(x)Y_i / \sum_s w_s(x)$ é o estimador de
+Nadaraya-Watson. Para $q = 1$, obtém-se a regressão linear local
+(Exercício 4).
+
+# Exercícios
+
+## Exercício 1 (Matriz de suavização)
+
+Para um linear smoother, a matriz de suavização é a matriz
+$\mathbf{L}$, de dimensão $n \times n$, com $\mathbf{L}_{ij} = \ell_j(X_i)$,
+de modo que os valores ajustados são
+$(\hat{r}_n(X_1), \ldots, \hat{r}_n(X_n))^T = \mathbf{L}\mathbf{Y}$. O
+número efetivo de graus de liberdade é $\nu = \text{tr}(\mathbf{L})$.
+
+(a) Mostre que, na regressão linear,
+    $\mathbf{L} = \mathbb{X}(\mathbb{X}^T\mathbb{X})^{-1}\mathbb{X}^T$,
+    que $\mathbf{L}$ é simétrica e idempotente e que $\nu = p$.
+
+(b) Mostre que, se $X_1, \ldots, X_n$ são distintos, então o $k$-NN tem
+    $\nu = n/k$. Interprete os casos $k = 1$ e $k = n$.
+
+(c) Calcule $\nu$ para o estimador de Nadaraya-Watson e compare com o
+    termo $K(0)/(nh)$ do Lema 4 da Aula 8.
+
+## Exercício 2 (Reprodução de polinômios)
+
+(a) Mostre que, nos Exemplos 1 a 4, com $K \geq 0$ no Exemplo 4,
+    $\ell_i(x) \geq 0$ e $\sum_{i=1}^{n}\ell_i(x) = 1$.
+
+(b) No Exemplo 5, mostre que, se $Y_i = P(X_i)$ para todo $i$, em que
+    $P$ é um polinômio de grau no máximo $q$, então
+    $\hat{r}_n(x) = P(x)$. Sugestão: escreva $P(u) = z_x(u)^Ta^*$ e
+    note que o critério se anula em $a^*$.
+
+(c) Conclua de (b) que, no Exemplo 5, $\sum_{i=1}^{n}\ell_i(x) = 1$ e
+    $\sum_{i=1}^{n}\ell_i(x)(X_i - x)^j = 0$ para $1 \leq j \leq q$.
+    Compare com a definição de kernel de ordem $q$ da Aula 7.
+
+## Exercício 3 (Viés e variância condicionais)
+
+(a) Mostre que, para todo linear smoother,
+
+$$\mathbb{E}\left[\hat{r}_n(x) \mid X_1, \ldots, X_n\right]
+  = \sum_{i=1}^{n}\ell_i(x)r(X_i)
+  \qquad \text{e} \qquad
+  \mathbb{V}\left[\hat{r}_n(x) \mid X_1, \ldots, X_n\right]
+  = \sigma^2\sum_{i=1}^{n}\ell_i(x)^2.$$
+
+(b) No regressograma, suponha que $r$ é $L$-Lipschitz em $[0,1]$ e
+    seja $n_j = \sum_{i=1}^{n}\mathbb{I}(X_i \in B_j)$. Mostre que, para
+    $x \in B_j$, o viés condicional é, em módulo, no máximo $Lh$ e a
+    variância condicional é $\sigma^2/n_j$. Compare com os Lemas 1 e 3
+    da Aula 1.
+
+(c) No estimador de Nadaraya-Watson, suponha $K \geq 0$, $K(u) = 0$
+    para $|u| > 1$ e $r$ $L$-Lipschitz. Mostre que o viés condicional é,
+    em módulo, no máximo $Lh$.
+
+## Exercício 4 (Regressão linear local)
+
+Considere o Exemplo 5 com $q = 1$ e seja
+$S_j = \sum_{i=1}^{n}w_i(x)(X_i - x)^j$, para $j \in \{0, 1, 2\}$.
+
+(a) Mostre que
+
+$$\ell_i(x) = \frac{w_i(x)\left(S_2 - S_1(X_i - x)\right)}{S_0S_2 - S_1^2}.$$
+
+(b) Mostre que o estimador de Nadaraya-Watson satisfaz
+    $\sum_{i=1}^{n}\ell_i(x)(X_i - x) = S_1/S_0$, enquanto a regressão
+    linear local satisfaz $\sum_{i=1}^{n}\ell_i(x)(X_i - x) = 0$.
+
+(c) Suponha $r(u) = a + bu$. Conclua que o viés condicional do estimador
+    de Nadaraya-Watson em $x$ é $bS_1/S_0$, enquanto o da regressão
+    linear local é zero. Explique por que $S_1$ tende a ser grande em
+    módulo quando $x$ está próximo da fronteira do suporte de $X$.
+
+## Exercício 5 ($k$-NN como média local adaptativa)
+
+(a) Suponha que a densidade $f$ de $X_1$ é contínua e $f(x) > 0$. Argumente, de forma
+    heurística, que o número de observações em $[x - t, x + t]$ é
+    aproximadamente $2nf(x)t$ e, portanto, que
+    $d_k(x) \approx k/(2nf(x))$.
+
+(b) Usando o Exercício 3, argumente que, para $r$ Lipschitz, o $k$-NN
+    tem viés condicional da ordem de $k/n$ e variância condicional
+    $\sigma^2/k$. Que escolha de $k$ equilibra os dois termos? Compare a
+    taxa resultante com a do Teorema 1 da Aula 7 com $\beta = 1$.
+
+# Referências

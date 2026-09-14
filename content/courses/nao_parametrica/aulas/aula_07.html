@@ -1,0 +1,344 @@
+---
+title: "Aula 7: Estimador de densidade por kernel"
+linkTitle: "Aula 7: KDE"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 70
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 6:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 27/08/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">Tsybakov (<a href="#ref-Tsybakov2009">2009</a>)</span>, Seção 1.2.</p>
+<div id="estimador-de-densidade-por-kernel" class="section level1">
+<h1>Estimador de densidade por kernel</h1>
+<p>Ao longo desta aula, <span class="math inline">\(X_1, \ldots, X_n\)</span> são i.i.d. com função de
+distribuição <span class="math inline">\(F\)</span> e densidade <span class="math inline">\(f\)</span> em <span class="math inline">\(\mathbb{R}\)</span>, e <span class="math inline">\(\hat{F}_n\)</span> é a
+distribuição empírica da Aula 2.</p>
+<p><strong>Exemplo 1</strong> (Estimador baseado na distribuição empírica).
+Como <span class="math inline">\(f = F&#39;\)</span>, para <span class="math inline">\(h &gt; 0\)</span> pequeno,</p>
+<p><span class="math display">\[f(x) \approx \frac{F(x+h) - F(x-h)}{2h}.\]</span></p>
+<p>Aplicando o princípio plug-in da Aula 4, isto é, substituindo <span class="math inline">\(F\)</span> por
+<span class="math inline">\(\hat{F}_n\)</span>, obtém-se</p>
+<p><span class="math display">\[\begin{align*}
+\hat{f}_n(x)
+&amp;= \frac{\hat{F}_n(x+h) - \hat{F}_n(x-h)}{2h} \\
+&amp;= \frac{1}{2nh}\sum_{i=1}^{n}\mathbb{I}\left(x-h &lt; X_i \leq x+h\right) \\
+&amp;= \frac{1}{nh}\sum_{i=1}^{n}K_0\left(\frac{X_i - x}{h}\right),
+\end{align*}\]</span></p>
+<p>em que <span class="math inline">\(K_0(u) = 2^{-1}\mathbb{I}(-1 &lt; u \leq 1)\)</span> é o kernel uniforme.
+Assim, <span class="math inline">\(\hat{f}_n(x)\)</span> conta as observações em uma janela de largura
+<span class="math inline">\(2h\)</span> centrada em <span class="math inline">\(x\)</span>. Ao contrário do histograma da Aula 1, cujos
+intervalos são fixos, a janela acompanha o ponto <span class="math inline">\(x\)</span>.</p>
+<p><strong>Definição</strong> (Kernel).
+Um kernel é uma função <span class="math inline">\(K: \mathbb{R} \to \mathbb{R}\)</span> integrável e tal
+que</p>
+<p><span class="math display">\[\int K(u) \, du = 1
+  \qquad \text{e} \qquad
+  R(K) = \int K(u)^2 \, du &lt; \infty.\]</span></p>
+<p>Para <span class="math inline">\(j \geq 0\)</span>, denote <span class="math inline">\(\kappa_j = \int |u|^j |K(u)| \, du \in [0, \infty]\)</span>.</p>
+<p><strong>Definição</strong> (Kernel de ordem <span class="math inline">\(k\)</span>, <span class="citation">Tsybakov (<a href="#ref-Tsybakov2009">2009</a>)</span>).
+Seja <span class="math inline">\(k \geq 1\)</span> inteiro. Um kernel <span class="math inline">\(K\)</span> é de ordem <span class="math inline">\(k\)</span> se</p>
+<p><span class="math display">\[\kappa_k &lt; \infty
+  \qquad \text{e} \qquad
+  \int u^jK(u) \, du = 0, \quad \text{para } 1 \leq j \leq k.\]</span></p>
+<p>Por convenção, todo kernel é de ordem <span class="math inline">\(0\)</span>.</p>
+<p><strong>Observação</strong>. Para <span class="math inline">\(k = 1\)</span>, as condições se reduzem a
+<span class="math inline">\(\kappa_1 &lt; \infty\)</span> e <span class="math inline">\(\int uK(u)\,du = 0\)</span>, e valem para todo kernel
+simétrico com primeiro momento finito. O papel da ordem
+aparece no Lema 4 e no Exercício 3: quanto maior <span class="math inline">\(k\)</span>, mais termos da
+expansão de Taylor de <span class="math inline">\(f\)</span> se anulam no viés.</p>
+<p><strong>Definição</strong> (Estimador de densidade por kernel, <span class="citation">Rosenblatt (<a href="#ref-Rosenblatt1956">1956</a>)</span>; <span class="citation">Parzen (<a href="#ref-Parzen1962">1962</a>)</span>).
+Sejam <span class="math inline">\(K\)</span> um kernel e <span class="math inline">\(h &gt; 0\)</span>. O estimador de densidade por kernel
+(KDE) com kernel <span class="math inline">\(K\)</span> e banda <span class="math inline">\(h\)</span> é</p>
+<p><span class="math display">\[\hat{f}_n(x) = \frac{1}{nh}\sum_{i=1}^{n}
+  K\left(\frac{X_i - x}{h}\right).\]</span></p>
+<p><strong>Exemplo 2</strong> (Kernels usuais).
+Os kernels abaixo são simétricos, de modo que <span class="math inline">\(\int uK(u)\,du = 0\)</span>,
+e de ordem <span class="math inline">\(1\)</span>.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="21%" />
+<col width="21%" />
+<col width="28%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Kernel</th>
+<th align="left"><span class="math inline">\(K(u)\)</span></th>
+<th align="center"><span class="math inline">\(\kappa_2\)</span></th>
+<th align="center"><span class="math inline">\(R(K)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Uniforme</td>
+<td align="left"><span class="math inline">\(2^{-1}\mathbb{I}(\lvert u \rvert \leq 1)\)</span></td>
+<td align="center"><span class="math inline">\(3^{-1}\)</span></td>
+<td align="center"><span class="math inline">\(2^{-1}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Epanechnikov</td>
+<td align="left"><span class="math inline">\(4^{-1}3(1-u^2)\,\mathbb{I}(\lvert u \rvert \leq 1)\)</span></td>
+<td align="center"><span class="math inline">\(5^{-1}\)</span></td>
+<td align="center"><span class="math inline">\(5^{-1}3\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Gaussiano</td>
+<td align="left"><span class="math inline">\((2\pi)^{-1/2}e^{-u^2/2}\)</span></td>
+<td align="center"><span class="math inline">\(1\)</span></td>
+<td align="center"><span class="math inline">\((2\sqrt{\pi})^{-1}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>O Exemplo 1 é o KDE com o kernel uniforme.</p>
+<p><strong>Observação</strong>. A banda <span class="math inline">\(h\)</span> controla o compromisso da Aula 1. Com <span class="math inline">\(h\)</span>
+pequeno, <span class="math inline">\(\hat{f}_n(x)\)</span> usa poucas observações próximas de <span class="math inline">\(x\)</span>: pouco
+viés e muita variância. Com <span class="math inline">\(h\)</span> grande, usa muitas observações,
+inclusive distantes: pouca variância e muito viés. As seções a seguir
+tornam este compromisso quantitativo.</p>
+</div>
+<div id="viés-variância-e-risco" class="section level1">
+<h1>Viés, variância e risco</h1>
+<p><strong>Definição</strong> (Classe de Hölder, <span class="citation">Tsybakov (<a href="#ref-Tsybakov2009">2009</a>)</span>).
+Sejam <span class="math inline">\(\beta &gt; 0\)</span>, <span class="math inline">\(L &gt; 0\)</span> e <span class="math inline">\(\ell\)</span> o maior inteiro estritamente menor que
+<span class="math inline">\(\beta\)</span>. A classe de Hölder <span class="math inline">\(\Sigma(\beta, L)\)</span> é o conjunto das funções
+<span class="math inline">\(f: \mathbb{R} \to \mathbb{R}\)</span> que são <span class="math inline">\(\ell\)</span> vezes diferenciáveis e tais
+que</p>
+<p><span class="math display">\[\left|f^{(\ell)}(y) - f^{(\ell)}(x)\right| \leq L|y - x|^{\beta - \ell},
+  \qquad \text{para todos } x, y \in \mathbb{R}.\]</span></p>
+<p>Em particular, se <span class="math inline">\(\beta \in (0, 1]\)</span>, então <span class="math inline">\(\ell = 0\)</span> e a condição se
+reduz a <span class="math inline">\(|f(y) - f(x)| \leq L|y - x|^{\beta}\)</span>. Se <span class="math inline">\(\beta = 2\)</span>, então
+<span class="math inline">\(\ell = 1\)</span> e <span class="math inline">\(f&#39;\)</span> é <span class="math inline">\(L\)</span>-Lipschitz, o que vale, por exemplo, quando
+<span class="math inline">\(|f&#39;&#39;| \leq L\)</span>.</p>
+<p><strong>Suposição</strong> (A1) (Suavidade).
+<span class="math inline">\(f \in \Sigma(\beta, L)\)</span> para algum <span class="math inline">\(\beta &gt; 0\)</span> e algum <span class="math inline">\(L &gt; 0\)</span>.</p>
+<p>Ao longo desta seção, <span class="math inline">\(\ell\)</span> é o maior inteiro estritamente menor que
+<span class="math inline">\(\beta\)</span>, e <span class="math inline">\(C &gt; 0\)</span> denota uma constante que depende apenas de <span class="math inline">\(\beta\)</span>,
+<span class="math inline">\(L\)</span> e <span class="math inline">\(K\)</span>, e não de <span class="math inline">\(n\)</span>, <span class="math inline">\(h\)</span> ou <span class="math inline">\(x\)</span>. Quanto maior <span class="math inline">\(\beta\)</span>, mais suave é
+<span class="math inline">\(f\)</span>.</p>
+<p><strong>Lema 1</strong> (Decomposição do risco).
+Para todo <span class="math inline">\(x \in \mathbb{R}\)</span>,</p>
+<p><span class="math display">\[\text{MSE}\left(\hat{f}_n(x)\right)
+  := \mathbb{E}\left[\left(\hat{f}_n(x) - f(x)\right)^2\right]
+  = \left(\mathbb{E}\left[\hat{f}_n(x)\right] - f(x)\right)^2
+  + \mathbb{V}\left[\hat{f}_n(x)\right].\]</span></p>
+<p><em>Prova</em>. Escreva <span class="math inline">\(\mu = \mathbb{E}[\hat{f}_n(x)]\)</span>. Então</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\left[\left(\hat{f}_n(x) - f(x)\right)^2\right]
+&amp;= \mathbb{E}\left[\left(\hat{f}_n(x) - \mu\right)^2\right]
+    + 2(\mu - f(x))\,\mathbb{E}\left[\hat{f}_n(x) - \mu\right]
+    + (\mu - f(x))^2 \\
+&amp;= \mathbb{V}\left[\hat{f}_n(x)\right] + (\mu - f(x))^2,
+\end{align*}\]</span></p>
+<p>pois <span class="math inline">\(\mathbb{E}[\hat{f}_n(x) - \mu] = 0\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 2</strong> (Esperança e variância do KDE).
+Para todo <span class="math inline">\(x \in \mathbb{R}\)</span>,</p>
+<p><span class="math display">\[\mathbb{E}\left[\hat{f}_n(x)\right] = \int K(u)f(x+uh)\,du
+  \qquad \text{e} \qquad
+  \mathbb{V}\left[\hat{f}_n(x)\right]
+  \leq \frac{1}{nh}\int K(u)^2 f(x+uh)\,du.\]</span></p>
+<p><em>Prova</em>. Seja <span class="math inline">\(Z_i = h^{-1}K\left((X_i - x)h^{-1}\right)\)</span>, de modo que
+<span class="math inline">\(\hat{f}_n(x) = n^{-1}\sum_{i=1}^{n}Z_i\)</span>, com <span class="math inline">\(Z_1, \ldots, Z_n\)</span> i.i.d.
+Com a mudança de variáveis <span class="math inline">\(y = x + uh\)</span>,</p>
+<p><span class="math display">\[\mathbb{E}[Z_1] = \frac{1}{h}\int K\left(\frac{y-x}{h}\right)f(y)\,dy
+  = \int K(u)f(x+uh)\,du,\]</span></p>
+<p>o que prova a primeira afirmação. Para a segunda, como
+<span class="math inline">\(\mathbb{V}[\hat{f}_n(x)] = n^{-1}\mathbb{V}[Z_1]
+\leq n^{-1}\mathbb{E}[Z_1^2]\)</span>, a mesma mudança de variáveis fornece</p>
+<p><span class="math display">\[\mathbb{E}[Z_1^2]
+  = \frac{1}{h^2}\int K\left(\frac{y-x}{h}\right)^2 f(y)\,dy
+  = \frac{1}{h}\int K(u)^2 f(x+uh)\,du. \qquad \blacksquare\]</span></p>
+<p><strong>Lema 3</strong> (Expansão de Taylor).
+Sob (A1), para todos <span class="math inline">\(x, t \in \mathbb{R}\)</span>,</p>
+<p><span class="math display">\[f(x+t) = \sum_{j=0}^{\ell}\frac{f^{(j)}(x)}{j!}t^j + R_x(t),
+  \qquad \text{com} \qquad
+  |R_x(t)| \leq \frac{L}{\ell!}|t|^{\beta}.\]</span></p>
+<p><em>Prova</em>. Se <span class="math inline">\(\ell = 0\)</span>, então <span class="math inline">\(R_x(t) = f(x+t) - f(x)\)</span> e a conclusão é
+exatamente (A1). Se <span class="math inline">\(\ell \geq 1\)</span>, a fórmula de Taylor com resto de
+Lagrange fornece <span class="math inline">\(\xi\)</span> entre <span class="math inline">\(x\)</span> e <span class="math inline">\(x+t\)</span> tal que</p>
+<p><span class="math display">\[f(x+t) = \sum_{j=0}^{\ell-1}\frac{f^{(j)}(x)}{j!}t^j
+  + \frac{f^{(\ell)}(\xi)}{\ell!}t^\ell.\]</span></p>
+<p>Somando e subtraindo <span class="math inline">\(f^{(\ell)}(x)t^\ell(\ell!)^{-1}\)</span>, obtém-se a
+expansão do enunciado com
+<span class="math inline">\(R_x(t) = \left(f^{(\ell)}(\xi) - f^{(\ell)}(x)\right)t^\ell(\ell!)^{-1}\)</span>.
+Como <span class="math inline">\(|\xi - x| \leq |t|\)</span>, decorre de (A1) que
+<span class="math inline">\(\left|f^{(\ell)}(\xi) - f^{(\ell)}(x)\right| \leq L|t|^{\beta - \ell}\)</span>.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 4</strong> (Viés do KDE).
+Sob (A1), se <span class="math inline">\(K\)</span> é um kernel de ordem <span class="math inline">\(\ell\)</span> com <span class="math inline">\(\kappa_\beta &lt; \infty\)</span>,
+então, para todos <span class="math inline">\(x \in \mathbb{R}\)</span> e <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[\int K(u)f(x+uh)\,du - f(x) = \int K(u)R_x(uh)\,du
+  \qquad \text{e} \qquad
+  \left|\mathbb{E}\left[\hat{f}_n(x)\right] - f(x)\right| \leq Ch^{\beta}.\]</span></p>
+<p><em>Prova</em>. Como <span class="math inline">\(\int K = 1\)</span>, decorre dos Lemas 2 e 3 que</p>
+<p><span class="math display">\[\begin{align*}
+\int K(u)f(x+uh)\,du - f(x)
+&amp;= \int K(u)\left(f(x+uh) - f(x)\right)du \\
+&amp;= \int K(u)\left(\sum_{j=1}^{\ell}\frac{f^{(j)}(x)}{j!}(uh)^j
+    + R_x(uh)\right)du \\
+&amp;= \sum_{j=1}^{\ell}\frac{f^{(j)}(x)h^j}{j!}\int u^jK(u)\,du
+    + \int K(u)R_x(uh)\,du \\
+&amp;= \int K(u)R_x(uh)\,du.
+\end{align*}\]</span></p>
+<p>A segunda igualdade é a expansão de Taylor do Lema 3 com <span class="math inline">\(t = uh\)</span>. A
+última decorre de <span class="math inline">\(K\)</span> ter ordem <span class="math inline">\(\ell\)</span>, isto é, de
+<span class="math inline">\(\int u^jK(u)\,du = 0\)</span> para <span class="math inline">\(1 \leq j \leq \ell\)</span>. Pelo Lema 2, o lado
+esquerdo é o viés de <span class="math inline">\(\hat{f}_n(x)\)</span>, e pelo Lema 3,</p>
+<p><span class="math display">\[\left|\int K(u)R_x(uh)\,du\right|
+  \leq \frac{L}{\ell!}h^{\beta}\int |u|^{\beta}|K(u)|\,du
+  = \frac{L\kappa_\beta}{\ell!}h^{\beta}. \qquad \blacksquare\]</span></p>
+<p><strong>Observação</strong> (O papel da série de Taylor).
+A prova do Lema 4 é o centro desta aula. A série de Taylor decompõe
+<span class="math inline">\(f(x+uh) - f(x)\)</span> em um polinômio de grau <span class="math inline">\(\ell\)</span> em <span class="math inline">\(uh\)</span> e um resto de
+ordem <span class="math inline">\(|uh|^{\beta}\)</span>. Ao integrar contra <span class="math inline">\(K\)</span>, cada termo do polinômio é
+multiplicado por um momento de <span class="math inline">\(K\)</span>, e a ordem <span class="math inline">\(\ell\)</span> anula exatamente
+esses momentos. O viés, portanto, é inteiramente determinado pelo resto
+de Taylor. Com um kernel de ordem menor, algum termo do polinômio
+sobreviveria e dominaria o viés; com <span class="math inline">\(f\)</span> menos suave, o próprio resto
+seria maior.</p>
+<p><strong>Lema 5</strong> (Cota superior para <span class="math inline">\(f\)</span>).
+Sob (A1), se <span class="math inline">\(K\)</span> é um kernel limitado de ordem <span class="math inline">\(\ell\)</span> com
+<span class="math inline">\(\kappa_\beta &lt; \infty\)</span>, então <span class="math inline">\(f\)</span> é limitada.</p>
+<p><em>Prova</em>. Tomando <span class="math inline">\(h = 1\)</span> na identidade do Lema 4,</p>
+<p><span class="math display">\[f(x) = \int K(u)f(x+u)\,du - \int K(u)R_x(u)\,du.\]</span></p>
+<p>O primeiro termo é, em módulo, no máximo
+<span class="math inline">\(\sup_u |K(u)| \int f = \sup_u |K(u)|\)</span>. Pelo Lema 3, o segundo é, em
+módulo, no máximo <span class="math inline">\(L\kappa_\beta(\ell!)^{-1}\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. O Lema 5 é o análogo do Lema 2 da Aula 1: a suavidade
+de <span class="math inline">\(f\)</span>, junto com <span class="math inline">\(\int f = 1\)</span>, impede que <span class="math inline">\(f\)</span> seja arbitrariamente
+grande. Note que a prova reaproveita a mesma expansão de Taylor usada
+no viés.</p>
+<p><strong>Corolário 1</strong> (Variância do KDE).
+Sob as hipóteses do Lema 5, para todos <span class="math inline">\(x \in \mathbb{R}\)</span> e <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[\mathbb{V}\left[\hat{f}_n(x)\right] \leq \frac{C}{nh}.\]</span></p>
+<p><em>Prova</em>. Pelo Lema 2,
+<span class="math inline">\(\mathbb{V}[\hat{f}_n(x)] \leq (nh)^{-1}\sup_y f(y)\int K^2\)</span>. A
+conclusão decorre do Lema 5 e de <span class="math inline">\(R(K) &lt; \infty\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Teorema 1</strong> (Risco do KDE).
+Sob (A1), se <span class="math inline">\(K\)</span> é um kernel limitado de ordem <span class="math inline">\(\ell\)</span> com
+<span class="math inline">\(\kappa_\beta &lt; \infty\)</span>, então, para todos <span class="math inline">\(x \in \mathbb{R}\)</span> e <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[\text{MSE}\left(\hat{f}_n(x)\right)
+  \leq C\left(h^{2\beta} + \frac{1}{nh}\right).\]</span></p>
+<p>Em particular, tomando <span class="math inline">\(h = n^{-1/(2\beta+1)}\)</span>,</p>
+<p><span class="math display">\[\sup_{x \in \mathbb{R}}\text{MSE}\left(\hat{f}_n(x)\right)
+  \leq 2C\,n^{-\frac{2\beta}{2\beta+1}}.\]</span></p>
+<p><em>Prova</em>. A primeira cota decorre do Lema 1, do Lema 4 e do Corolário 1.
+Para <span class="math inline">\(h = n^{-1/(2\beta+1)}\)</span>, os dois termos coincidem:</p>
+<p><span class="math display">\[h^{2\beta} = n^{-\frac{2\beta}{2\beta+1}}
+  \qquad \text{e} \qquad
+  \frac{1}{nh} = n^{-1 + \frac{1}{2\beta+1}} = n^{-\frac{2\beta}{2\beta+1}}.\]</span></p>
+<p>Como a cota não depende de <span class="math inline">\(x\)</span>, ela também vale para o supremo.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong> (Taxas). A escolha <span class="math inline">\(h \asymp n^{-1/(2\beta+1)}\)</span> equilibra
+o viés ao quadrado, que cresce com <span class="math inline">\(h\)</span>, e a variância, que decresce com
+<span class="math inline">\(h\)</span>. Para <span class="math inline">\(\beta \leq 1\)</span>, nenhum momento de <span class="math inline">\(K\)</span> precisa se anular. Em
+particular, para <span class="math inline">\(\beta = 1\)</span>, <span class="math inline">\(f\)</span> é Lipschitz, o que vale sob a
+suposição <span class="math inline">\(|f&#39;| \leq L\)</span> da Aula 1, e a taxa é <span class="math inline">\(n^{-2/3}\)</span>, a mesma do
+histograma no Teorema 1 da Aula 1. Para <span class="math inline">\(\beta = 2\)</span>, basta um kernel
+simétrico, e a taxa é <span class="math inline">\(n^{-4/5}\)</span>. Quando <span class="math inline">\(\beta \to \infty\)</span>, a taxa se
+aproxima de <span class="math inline">\(n^{-1}\)</span>, a taxa com que <span class="math inline">\(\hat{F}_n\)</span> estima <span class="math inline">\(F\)</span> na Aula 2.
+O preço de explorar <span class="math inline">\(\beta &gt; 2\)</span> é que kernels de ordem <span class="math inline">\(2\)</span> ou mais
+assumem valores negativos (Exercício 3).</p>
+<p><strong>Observação</strong>. O Teorema 1 determina apenas a ordem da banda,
+<span class="math inline">\(h \asymp n^{-1/(2\beta+1)}\)</span>. Multiplicar <span class="math inline">\(h\)</span> por uma constante não
+altera a taxa, mas altera o risco, e a melhor constante depende de <span class="math inline">\(f\)</span>,
+que é desconhecida. Escolher <span class="math inline">\(h\)</span> a partir dos dados é o problema da
+Aula 8.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-propriedades-do-kde" class="section level2">
+<h2>Exercício 1 (Propriedades do KDE)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, se <span class="math inline">\(K \geq 0\)</span>, então <span class="math inline">\(\hat{f}_n\)</span> é uma densidade, isto
+é, <span class="math inline">\(\hat{f}_n \geq 0\)</span> e <span class="math inline">\(\int \hat{f}_n(x)\,dx = 1\)</span>.</p></li>
+<li><p>Verifique os valores de <span class="math inline">\(\kappa_2\)</span> e <span class="math inline">\(R(K)\)</span> na tabela do
+Exemplo 2.</p></li>
+<li><p>Mostre que <span class="math inline">\(\hat{f}_n\)</span> herda a regularidade de <span class="math inline">\(K\)</span>: se <span class="math inline">\(K\)</span> é
+contínuo, então <span class="math inline">\(\hat{f}_n\)</span> é contínua; se <span class="math inline">\(K\)</span> é diferenciável,
+então <span class="math inline">\(\hat{f}_n\)</span> é diferenciável. Isto vale para o histograma?</p></li>
+</ol>
+</div>
+<div id="exercício-2-o-papel-da-simetria" class="section level2">
+<h2>Exercício 2 (O papel da simetria)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Suponha (A1) com <span class="math inline">\(\beta = 2\)</span>, <span class="math inline">\(\kappa_2 &lt; \infty\)</span> e
+<span class="math inline">\(\int uK(u)\,du = m \neq 0\)</span>.
+Mostre que <span class="math inline">\(\mathbb{E}[\hat{f}_n(x)] - f(x) = hmf&#39;(x) + O(h^2)\)</span>.</p></li>
+<li><p>Conclua que, neste caso, o viés é de ordem <span class="math inline">\(h\)</span> e a taxa do MSE é
+<span class="math inline">\(n^{-2/3}\)</span>, e não <span class="math inline">\(n^{-4/5}\)</span>. Identifique, na prova do Lema 4, qual
+termo da série de Taylor deixa de se anular.</p></li>
+</ol>
+</div>
+<div id="exercício-3-kernels-de-ordem-superior" class="section level2">
+<h2>Exercício 3 (Kernels de ordem superior)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Seja <span class="math inline">\(\phi\)</span> a densidade da Normal padrão. Mostre que
+<span class="math inline">\(K(u) = 2^{-1}(3 - u^2)\phi(u)\)</span> é um kernel de ordem <span class="math inline">\(3\)</span>.</p></li>
+<li><p>Mostre que, se <span class="math inline">\(K\)</span> tem ordem <span class="math inline">\(k \geq 2\)</span>, então <span class="math inline">\(K\)</span> assume
+valores negativos. Que consequência isto tem para <span class="math inline">\(\hat{f}_n\)</span>?</p></li>
+<li><p>Suponha que <span class="math inline">\(f \in \Sigma(4, L) \cap \Sigma(2, L)\)</span>, mas que se usa
+um kernel de ordem <span class="math inline">\(1\)</span> com <span class="math inline">\(\kappa_2 &lt; \infty\)</span>. Que taxa o Teorema 1 garante? Relacione com a
+saturação do histograma no Exercício 1 da Aula 1.</p></li>
+</ol>
+</div>
+<div id="exercício-4-risco-integrado" class="section level2">
+<h2>Exercício 4 (Risco integrado)</h2>
+<ol style="list-style-type: lower-alpha">
+<li>Mostre que</li>
+</ol>
+<p><span class="math display">\[\int \mathbb{V}\left[\hat{f}_n(x)\right]dx \leq \frac{R(K)}{nh},\]</span></p>
+<pre><code>sem supor que $f$ é limitada. Compare com o Teorema 2 da Aula 1.</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Explique por que a cota pontual do Lema 4 não pode ser integrada
+em <span class="math inline">\(\mathbb{R}\)</span> para obter uma cota para o MISE. Que tipo de
+hipótese sobre <span class="math inline">\(f\)</span> substituiria (A1) no caso integrado?</li>
+</ol>
+</div>
+<div id="exercício-5-outra-cota-para-f" class="section level2">
+<h2>Exercício 5 (Outra cota para <span class="math inline">\(f\)</span>)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Suponha (A1) com <span class="math inline">\(\beta = 2\)</span>. Somando as expansões de Taylor de
+<span class="math inline">\(f(x+t)\)</span> e <span class="math inline">\(f(x-t)\)</span> e integrando em <span class="math inline">\(t \in [0,1]\)</span>, mostre que
+<span class="math inline">\(f(x) \leq 2^{-1} + 6^{-1}L\)</span>, sem usar kernel algum.</p></li>
+<li><p>Calcule a cota do Lema 5 para o kernel uniforme e compare com (a).</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Parzen1962" class="csl-entry">
+Parzen, Emanuel. 1962. <span>“On Estimation of a Probability Density Function and Mode.”</span> <em>The Annals of Mathematical Statistics</em> 33 (3): 1065–76.
+</div>
+<div id="ref-Rosenblatt1956" class="csl-entry">
+Rosenblatt, Murray. 1956. <span>“Remarks on Some Nonparametric Estimates of a Density Function.”</span> <em>The Annals of Mathematical Statistics</em> 27 (3): 832–37.
+</div>
+<div id="ref-Tsybakov2009" class="csl-entry">
+Tsybakov, Alexandre B. 2009. <em>Introduction to Nonparametric Estimation</em>. Springer.
+</div>
+</div>
+</div>

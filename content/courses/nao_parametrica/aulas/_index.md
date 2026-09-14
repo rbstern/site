@@ -10,3 +10,7 @@ toc: false
 cascade:
   toc: false
 ---
+
+{{% callout warning %}}
+**Atenção**: a maior parte destas notas de aula foi gerada automaticamente por inteligência artificial. Indiquei apenas o roteiro de cada aula.
+{{% /callout %}}

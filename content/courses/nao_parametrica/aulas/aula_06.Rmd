@@ -1,0 +1,362 @@
+---
+title: "Aula 6: Jackknife e Bootstrap"
+linkTitle: "Aula 6: Jackknife e Bootstrap"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 60
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 4:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 25/08/2026.
+
+**Leitura**: @Wasserman2006
+
+# Jackknife
+
+Ao longo desta aula, $X_1, \ldots, X_n$ são i.i.d. com distribuição
+$F$, $\theta = T(F)$ é o parâmetro de interesse e
+$\hat{\theta}_n = T(\hat{F}_n)$ é o estimador plug-in da Aula 4.
+
+**Definição** (Estimativas de exclusão).
+Para $1 \leq i \leq n$, seja $\hat{F}_{n,-i}$ a distribuição empírica
+de $X_1, \ldots, X_{i-1}, X_{i+1}, \ldots, X_n$. As estimativas de
+exclusão e a sua média são
+
+$$\hat{\theta}_{-i} = T\left(\hat{F}_{n,-i}\right)
+  \qquad \text{e} \qquad
+  \bar{\theta} = \frac{1}{n}\sum_{i=1}^{n}\hat{\theta}_{-i}.$$
+
+**Definição** (Jackknife).
+O estimador jackknife do viés de $\hat{\theta}_n$ e o estimador
+jackknife de $\theta$ são
+
+$$\hat{b}_{\text{jack}} = (n-1)\left(\bar{\theta}
+  - \hat{\theta}_n\right)
+  \qquad \text{e} \qquad
+  \hat{\theta}_{\text{jack}} = \hat{\theta}_n - \hat{b}_{\text{jack}}
+  = n\hat{\theta}_n - (n-1)\bar{\theta}.$$
+
+**Suposição** (A1).
+Existem $a$ e $b$, que não dependem de $n$, tais que
+
+$$\mathbb{E}\left[\hat{\theta}_n\right]
+  = \theta + \frac{a}{n} + \frac{b}{n^2} + O\left(n^{-3}\right).$$
+
+**Observação**. A Suposição (A1) é o que dá sentido ao fator $n-1$ da
+definição. Ela afirma que o viés se anula à taxa $n^{-1}$ e que o
+termo dominante, $an^{-1}$, não depende de $n$ a não ser pelo próprio
+$n$. É o comportamento típico de estimadores plug-in de funcionais
+suaves, como o do Exemplo 2 a seguir.
+
+**Teorema 1** (Redução do viés).
+Sob (A1),
+
+$$\mathbb{E}\left[\hat{b}_{\text{jack}}\right] = \frac{a}{n}
+  + O\left(n^{-2}\right)
+  \qquad \text{e} \qquad
+  \mathbb{E}\left[\hat{\theta}_{\text{jack}}\right] - \theta
+  = O\left(n^{-2}\right).$$
+
+*Prova*. Como $\hat{\theta}_{-i}$ é calculado a partir de $n-1$
+observações i.i.d. com distribuição $F$, decorre de (A1) que
+
+$$\mathbb{E}\left[\bar{\theta}\right] = \theta + \frac{a}{n-1}
+  + \frac{b}{(n-1)^2} + O\left(n^{-3}\right).$$
+
+Subtraindo (A1) e multiplicando por $n-1$,
+
+\begin{align*}
+ \mathbb{E}\left[\hat{b}_{\text{jack}}\right]
+ &= (n-1)\left[a\left(\frac{1}{n-1} - \frac{1}{n}\right)
+    + b\left(\frac{1}{(n-1)^2} - \frac{1}{n^2}\right)
+    + O\left(n^{-3}\right)\right] \\
+ &= (n-1)\left[\frac{a}{n(n-1)}
+    + \frac{b(2n-1)}{n^2(n-1)^2} + O\left(n^{-3}\right)\right] \\
+ &= \frac{a}{n} + O\left(n^{-2}\right).
+\end{align*}
+
+Subtraindo esta identidade de (A1), os termos em $an^{-1}$ se
+cancelam e sobra $O(n^{-2})$. $\blacksquare$
+
+**Definição** (Pseudo-valores e variância jackknife).
+Os pseudo-valores de $\hat{\theta}_n$ e o estimador jackknife da
+variância são
+
+$$\tilde{\theta}_i = n\hat{\theta}_n - (n-1)\hat{\theta}_{-i}
+  \qquad \text{e} \qquad
+  \hat{v}_{\text{jack}} = \frac{n-1}{n}\sum_{i=1}^{n}
+  \left(\hat{\theta}_{-i} - \bar{\theta}\right)^2.$$
+
+**Observação**. Como $\tilde{\theta}_i - n^{-1}\sum_{j}\tilde{\theta}_j
+= -(n-1)\left(\hat{\theta}_{-i} - \bar{\theta}\right)$, tem-se
+
+$$\hat{v}_{\text{jack}} = \frac{1}{n(n-1)}\sum_{i=1}^{n}
+  \left(\tilde{\theta}_i
+  - \frac{1}{n}\sum_{j=1}^{n}\tilde{\theta}_j\right)^2,$$
+
+isto é, $\hat{v}_{\text{jack}}$ é a variância amostral usual dos
+pseudo-valores dividida por $n$. Também,
+$\hat{\theta}_{\text{jack}} = n^{-1}\sum_{i}\tilde{\theta}_i$.
+Assim, o jackknife trata os pseudo-valores como se fossem observações
+i.i.d. e aplica a eles os estimadores usuais de média e variância.
+
+**Exemplo 1** (Média).
+Seja $T(F) = \int x \, dF$, de modo que $\hat{\theta}_n = \bar{X}$.
+Como $\hat{\theta}_{-i} = (n\bar{X} - X_i)(n-1)^{-1}$, tem-se
+$\bar{\theta} = \bar{X}$ e
+$\hat{\theta}_{-i} - \bar{\theta}
+= \left(\bar{X} - X_i\right)(n-1)^{-1}$. Portanto,
+
+$$\hat{b}_{\text{jack}} = 0
+  \qquad \text{e} \qquad
+  \hat{v}_{\text{jack}} = \frac{n-1}{n}\sum_{i=1}^{n}
+  \frac{\left(X_i - \bar{X}\right)^2}{(n-1)^2}
+  = \frac{S^2}{n},$$
+
+em que $S^2 = (n-1)^{-1}\sum_{i}\left(X_i - \bar{X}\right)^2$.
+O jackknife recupera exatamente o erro padrão usual da média e
+detecta que ela é não-viesada.
+
+**Exemplo 2** (Variância plug-in).
+Seja $T$ o funcional variância e
+$\hat{\theta}_n = n^{-1}\sum_{i}\left(X_i - \bar{X}\right)^2$ o seu
+plug-in, obtido no Exercício 1 da Aula 4. Escrevendo
+$SS = \sum_{i}\left(X_i - \bar{X}\right)^2$, vale a identidade
+
+$$\sum_{j \neq i}\left(X_j - \bar{X}_{-i}\right)^2
+  = SS - \frac{n}{n-1}\left(X_i - \bar{X}\right)^2,$$
+
+de modo que
+$\hat{\theta}_{-i} = \left[SS - n(n-1)^{-1}
+\left(X_i - \bar{X}\right)^2\right](n-1)^{-1}$ e
+$\bar{\theta} = SS(n-2)(n-1)^{-2}$. Portanto,
+
+$$\hat{\theta}_{\text{jack}} = n\frac{SS}{n}
+  - (n-1)\frac{SS(n-2)}{(n-1)^2}
+  = SS\left(1 - \frac{n-2}{n-1}\right)
+  = \frac{SS}{n-1} = S^2.$$
+
+Ou seja, neste caso o jackknife não apenas reduz o viés: ele o elimina
+por completo, produzindo o estimador não-viesado da variância.
+
+**Observação** (Relação com a função de influência).
+Como $\hat{F}_{n,-i} = \left(1 - \varepsilon\right)\hat{F}_n
++ \varepsilon\delta_{X_i}$, com $\varepsilon = -(n-1)^{-1}$, a
+Definição de função de influência da Aula 4 fornece
+
+$$\hat{\theta}_{-i} - \hat{\theta}_n
+  \approx -\frac{\widehat{\text{IF}}(X_i)}{n-1},
+  \qquad \text{isto é,} \qquad
+  \tilde{\theta}_i \approx \hat{\theta}_n
+  + \widehat{\text{IF}}(X_i).$$
+
+Assim, os pseudo-valores estimam a função de influência por diferenças
+finitas, e
+
+$$\hat{v}_{\text{jack}} \approx \frac{1}{n(n-1)}
+  \sum_{i=1}^{n}\widehat{\text{IF}}(X_i)^2
+  \approx \frac{\hat{\tau}^2}{n},$$
+
+que é exatamente a variância assintótica do Corolário 2 da Aula 4.
+O jackknife é, portanto, uma forma automática de calcular aquele erro
+padrão, sem derivar $\text{IF}$ analiticamente.
+
+**Observação** (Quando o jackknife falha).
+A aproximação acima exige que $T$ seja suave o bastante para que a
+diferença finita se aproxime da derivada. Para a mediana isto não
+ocorre: $\hat{\theta}_{-i}$ assume apenas dois ou três valores
+distintos, qualquer que seja $n$, e $\hat{v}_{\text{jack}}$ não é
+consistente para a variância assintótica obtida no Exemplo 7 da
+Aula 4. O bootstrap, a seguir, não sofre deste problema.
+
+# Bootstrap
+
+**Definição** (Amostra bootstrap).
+Uma amostra bootstrap $X_1^*, \ldots, X_n^*$ é uma amostra i.i.d. com
+distribuição $\hat{F}_n$, isto é, um sorteio com reposição de
+$X_1, \ldots, X_n$. Se $\hat{F}_n^*$ é a sua distribuição empírica,
+a réplica bootstrap de $\hat{\theta}_n$ é
+$\hat{\theta}^* = T\left(\hat{F}_n^*\right)$.
+
+**Observação** (O bootstrap como estimador plug-in).
+O erro padrão de $\hat{\theta}_n$ é ele próprio um funcional de $F$:
+
+$$v(F) = \mathbb{V}_F\left[T\left(\hat{F}_n\right)\right].$$
+
+O que se quer estimar é $v(F)$, e o princípio plug-in da Aula 4 manda
+substituir $F$ por $\hat{F}_n$, produzindo $v(\hat{F}_n)$. Isto é
+exatamente o bootstrap: $v(\hat{F}_n)$ é a variância de
+$\hat{\theta}^*$ quando as observações são sorteadas de $\hat{F}_n$.
+A novidade em relação à Aula 4 é apenas o alvo: lá o plug-in era
+aplicado ao parâmetro, aqui ele é aplicado à distribuição amostral
+do estimador.
+
+**Observação** (As duas fontes de erro).
+Em geral não há fórmula fechada para $v(\hat{F}_n)$, e ele é
+aproximado por Monte Carlo. Sorteando $B$ amostras bootstrap
+independentes e calculando as réplicas
+$\hat{\theta}^*_1, \ldots, \hat{\theta}^*_B$,
+
+$$\hat{\text{se}}^2_{\text{boot}} = \frac{1}{B-1}\sum_{b=1}^{B}
+  \left(\hat{\theta}^*_b - \frac{1}{B}\sum_{c=1}^{B}
+  \hat{\theta}^*_c\right)^2.$$
+
+Há, portanto, dois erros sobrepostos. O primeiro, de trocar $F$ por
+$\hat{F}_n$, é estatístico e só diminui com $n$. O segundo, de trocar
+$v(\hat{F}_n)$ pela média de $B$ réplicas, é computacional e
+desaparece quando $B \to \infty$, com $n$ fixo. Apenas o segundo está
+sob o nosso controle.
+
+**Teorema 2** (Consistência do bootstrap; sem demonstração).
+Suponha que $\mathbb{V}[X_1] < \infty$ e seja
+$T(F) = \int x \, dF$. Então, quase certamente,
+
+$$\sup_{x \in \mathbb{R}}\left|\mathbb{P}^*\left(
+  \sqrt{n}\left(\hat{\theta}^* - \hat{\theta}_n\right) \leq x\right)
+  - \mathbb{P}\left(\sqrt{n}\left(\hat{\theta}_n - \theta\right)
+  \leq x\right)\right| \longrightarrow 0,$$
+
+em que $\mathbb{P}^*$ denota a probabilidade condicional em
+$X_1, \ldots, X_n$.
+
+**Observação**. O Teorema 2 vale bem além da média: sob (A1) da
+Aula 4, a distribuição bootstrap de
+$\sqrt{n}(\hat{\theta}^* - \hat{\theta}_n)$ aproxima a de
+$\sqrt{n}(\hat{\theta}_n - \theta)$. A demonstração está em
+@Singh1981 e em @BickelFreedman1981. Há contraexemplos, no entanto:
+se $F$ é Uniforme$(0,\vartheta)$ e $T(F) = \vartheta$, o estimador é
+$X_{(n)}$ e o bootstrap falha, pois
+$\mathbb{P}^*\left(\hat{\theta}^* = \hat{\theta}_n\right)
+\to 1 - e^{-1}$, ao passo que a distribuição limite verdadeira é
+contínua.
+
+**Definição** (Intervalo t).
+O intervalo t de nível $1-\alpha$ para $\theta$ é
+
+$$\hat{\theta}_n \pm z_{1-0,5\alpha}\,
+  \hat{\text{se}}_{\text{boot}}.$$
+
+**Definição** (Intervalo percentil).
+Sejam $\hat{\theta}^*_{(1)} \leq \ldots \leq \hat{\theta}^*_{(B)}$ as
+réplicas bootstrap ordenadas e $q^*_{\beta}$ o quantil amostral de
+ordem $\beta$ destas réplicas. O intervalo percentil de nível
+$1-\alpha$ para $\theta$ é
+
+$$\left[q^*_{0,5\alpha},\ q^*_{1-0,5\alpha}\right].$$
+
+**Observação**. O intervalo t usa o bootstrap apenas para estimar o
+erro padrão, e a sua validade depende da normalidade assintótica de
+$\hat{\theta}_n$. O intervalo percentil usa a forma inteira da
+distribuição bootstrap e, por isso, não exige simetria: se existe uma
+transformação monótona $\phi$ tal que $\phi(\hat{\theta}_n) -
+\phi(\theta)$ tem distribuição simétrica e livre de $\theta$, então o
+intervalo percentil é aproximadamente correto **sem que seja
+necessário conhecer $\phi$**. Esta invariância por
+reparametrização é a sua principal vantagem.
+
+# Exercícios
+
+## Exercício 1 (Jackknife de funcionais lineares)
+
+(a) Seja $T(F) = \int g \, dF$. Mostre que
+    $\hat{b}_{\text{jack}} = 0$ e que
+
+$$\hat{v}_{\text{jack}} = \frac{1}{n(n-1)}\sum_{i=1}^{n}
+  \left(g(X_i) - \overline{g}\right)^2,
+  \qquad \overline{g} = \frac{1}{n}\sum_{i=1}^{n}g(X_i).$$
+
+(b) Verifique que (a) generaliza o Exemplo 1.
+
+(c) Compare o resultado de (a) com o Corolário 2 da Aula 4, usando a
+    função de influência obtida no Exemplo 5 daquela aula.
+
+(d) Complete a identidade usada no Exemplo 2, isto é, mostre que
+    $\sum_{j \neq i}\left(X_j - \bar{X}_{-i}\right)^2
+    = SS - n(n-1)^{-1}\left(X_i - \bar{X}\right)^2$.
+
+## Exercício 2 (Onde o jackknife falha)
+
+Seja $F$ contínua e $T(F)$ a mediana, com $n = 2m+1$ ímpar.
+
+(a) Mostre que $\hat{\theta}_{-i}$ assume apenas dois valores
+    distintos, $X_{(m)}$ e $X_{(m+2)}$, e determine quantos índices
+    $i$ produzem cada um deles.
+
+(b) Obtenha $\hat{v}_{\text{jack}}$ em função de
+    $X_{(m+2)} - X_{(m)}$.
+
+(c) Compare o resultado de (b) com a variância assintótica obtida no
+    Exemplo 7 da Aula 4. Argumente que $\hat{v}_{\text{jack}}$ não é
+    consistente.
+
+(d) Explique o resultado em termos da Observação que relaciona
+    pseudo-valores e função de influência.
+
+## Exercício 3 (O bootstrap como plug-in)
+
+(a) Para $T(F) = \int x \, dF$, obtenha $v(\hat{F}_n)$ em forma
+    fechada, isto é, calcule $\mathbb{V}^*\left[\hat{\theta}^*\right]$
+    sem recorrer a Monte Carlo. Compare com $S^2n^{-1}$.
+
+(b) Mostre que, no item (a),
+    $\mathbb{E}^*\left[\hat{\theta}^*\right] = \hat{\theta}_n$, e
+    conclua que o bootstrap não detecta viés neste caso.
+
+(c) Seja $N_i$ o número de vezes que $X_i$ aparece em uma amostra
+    bootstrap. Obtenha a distribuição conjunta de
+    $(N_1, \ldots, N_n)$ e mostre que
+    $\mathbb{P}^*\left(N_i = 0\right) \to e^{-1}$.
+
+(d) Use (c) para explicar o contraexemplo do máximo de uniformes
+    mencionado na Observação após o Teorema 2.
+
+## Exercício 4 (Intervalos de confiança)
+
+(a) Descreva, em pseudo-código, um algoritmo que produza os
+    intervalos t e percentil a partir de $X_1, \ldots, X_n$, $B$ e
+    $\alpha$.
+
+(b) Mostre que o intervalo percentil é invariante por transformações
+    monótonas, isto é, que se $\phi$ é crescente, então o intervalo
+    percentil para $\phi(\theta)$ é a imagem por $\phi$ do intervalo
+    percentil para $\theta$. O intervalo t tem esta propriedade?
+
+(c) Simule dados de uma distribuição assimétrica, por exemplo
+    Exponencial, e compare a cobertura empírica dos dois intervalos
+    para a variância, com $n$ pequeno.
+
+(d) O intervalo t pode conter valores fora do espaço paramétrico,
+    por exemplo variâncias negativas. Isto pode ocorrer com o
+    intervalo percentil?
+
+# Referências

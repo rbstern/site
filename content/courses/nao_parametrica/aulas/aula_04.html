@@ -1,0 +1,292 @@
+---
+title: "Aula 4: Função de influência"
+linkTitle: "Aula 4: Função de influência"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 40
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 3:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 18/08/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">Wasserman (<a href="#ref-Wasserman2006">2006</a>)</span>, Capítulo 2.</p>
+<div id="funcionais-estatísticos" class="section level1">
+<h1>Funcionais estatísticos</h1>
+<p><strong>Definição</strong> (Funcional estatístico).
+Sejam <span class="math inline">\(\mathcal{D}\)</span> um conjunto de funções de distribuição em
+<span class="math inline">\(\mathbb{R}\)</span> e <span class="math inline">\(F \in \mathcal{D}\)</span>. Um funcional estatístico é uma
+função <span class="math inline">\(T: \mathcal{D} \to \mathbb{R}\)</span>, e <span class="math inline">\(T(F)\)</span> é o parâmetro de
+interesse.</p>
+<p><strong>Observação</strong>. Em um modelo paramétrico, o parâmetro é um ponto de
+<span class="math inline">\(\mathbb{R}^d\)</span> que indexa a distribuição. Aqui, ao contrário, o
+parâmetro é uma característica da distribuição, definida diretamente
+a partir dela e sem supor que <span class="math inline">\(F\)</span> pertença a uma família indexada por
+uma quantidade de dimensão finita.</p>
+<p><strong>Exemplo 1</strong> (Média).
+<span class="math inline">\(T(F) = \int x \, dF(x)\)</span>, com
+<span class="math inline">\(\mathcal{D} = \left\{F: \int |x| dF(x) &lt; \infty\right\}\)</span>.</p>
+<p><strong>Exemplo 2</strong> (Variância).
+<span class="math inline">\(T(F) = \int x^2 dF(x) - \left(\int x \, dF(x)\right)^2\)</span>, com
+<span class="math inline">\(\mathcal{D} = \left\{F: \int x^2 dF(x) &lt; \infty\right\}\)</span>.</p>
+<p><strong>Exemplo 3</strong> (Quantis).
+<span class="math inline">\(T(F) = \xi_p(F) = \inf\{x \in \mathbb{R}: F(x) \geq p\}\)</span>,
+para <span class="math inline">\(p \in (0,1)\)</span> fixo. Se <span class="math inline">\(p = 2^{-1}\)</span>, <span class="math inline">\(T\)</span> é a mediana.</p>
+<p><strong>Definição</strong> (Funcional linear).
+<span class="math inline">\(T\)</span> é um funcional linear se existe <span class="math inline">\(g: \mathbb{R} \to \mathbb{R}\)</span>
+tal que</p>
+<p><span class="math display">\[T(F) = \int g(x) \, dF(x), \qquad \text{para todo } F \in \mathcal{D}.\]</span></p>
+<p><strong>Observação</strong>. O nome se justifica porque, se <span class="math inline">\(T\)</span> é linear e
+<span class="math inline">\(\lambda \in [0,1]\)</span>, então
+<span class="math inline">\(T\left((1-\lambda)F + \lambda G\right)
+= (1-\lambda)T(F) + \lambda T(G)\)</span>, isto é, <span class="math inline">\(T\)</span> é afim ao longo de
+misturas. O Exemplo 1 é linear, com <span class="math inline">\(g(x) = x\)</span>. Os Exemplos 2 e 3
+não são: para a variância, o termo <span class="math inline">\(\left(\int x \, dF\right)^2\)</span>
+é quadrático em <span class="math inline">\(F\)</span>.</p>
+<p><strong>Definição</strong> (Composição de funcionais lineares).
+<span class="math inline">\(T\)</span> é uma composição de funcionais lineares se existem
+<span class="math inline">\(g_1, \ldots, g_k: \mathbb{R} \to \mathbb{R}\)</span> e
+<span class="math inline">\(h: \mathbb{R}^k \to \mathbb{R}\)</span> tais que</p>
+<p><span class="math display">\[T(F) = h\left(\int g_1 \, dF, \ldots, \int g_k \, dF\right).\]</span></p>
+<p><strong>Exemplo 4</strong> (A variância é uma composição).
+O funcional do Exemplo 2 é a composição obtida tomando
+<span class="math inline">\(g_1(x) = x\)</span>, <span class="math inline">\(g_2(x) = x^2\)</span> e <span class="math inline">\(h(a,b) = b - a^2\)</span>.</p>
+<p><strong>Definição</strong> (Estimador plug-in).
+Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. com distribuição <span class="math inline">\(F\)</span> e <span class="math inline">\(\hat{F}_n\)</span> a
+distribuição empírica. O estimador plug-in de <span class="math inline">\(T(F)\)</span> é
+<span class="math inline">\(T(\hat{F}_n)\)</span>.</p>
+<p><strong>Lema 1</strong> (Plug-in de um funcional linear).
+Se <span class="math inline">\(T(F) = \int g \, dF\)</span>, então</p>
+<p><span class="math display">\[T(\hat{F}_n) = \frac{1}{n}\sum_{i=1}^{n}g(X_i).\]</span></p>
+<p>Em particular, se <span class="math inline">\(\mathbb{V}[g(X_1)] &lt; \infty\)</span>, então
+<span class="math inline">\(\mathbb{E}\left[T(\hat{F}_n)\right] = T(F)\)</span> e
+<span class="math inline">\(\mathbb{V}\left[T(\hat{F}_n)\right] = n^{-1}\mathbb{V}[g(X_1)]\)</span>.</p>
+<p><em>Prova</em>. Como <span class="math inline">\(\hat{F}_n\)</span> atribui massa <span class="math inline">\(n^{-1}\)</span> a cada uma das
+observações <span class="math inline">\(X_1, \ldots, X_n\)</span>,</p>
+<p><span class="math display">\[T(\hat{F}_n) = \int g(x) \, d\hat{F}_n(x)
+  = \sum_{i=1}^{n}\frac{1}{n}g(X_i).\]</span></p>
+<p>As duas últimas afirmações decorrem de
+<span class="math inline">\(\mathbb{E}[g(X_1)] = T(F)\)</span>, da linearidade da esperança e de
+<span class="math inline">\(g(X_1), \ldots, g(X_n)\)</span> serem i.i.d. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Corolário 1</strong>.
+Nas condições do Lema 1, <span class="math inline">\(T(\hat{F}_n) \to T(F)\)</span> quase certamente e</p>
+<p><span class="math display">\[\sqrt{n}\left(T(\hat{F}_n) - T(F)\right)
+  \xrightarrow{d} N\left(0, \mathbb{V}[g(X_1)]\right).\]</span></p>
+<p><em>Prova</em>. Decorre do Lema 1 que <span class="math inline">\(T(\hat{F}_n)\)</span> é a média de <span class="math inline">\(n\)</span>
+variáveis i.i.d. com esperança <span class="math inline">\(T(F)\)</span> e variância finita. As
+conclusões decorrem da Lei Forte dos Grandes Números e do Teorema
+Central do Limite. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 2</strong> (Plug-in de uma composição).
+Se <span class="math inline">\(T(F) = h\left(\int g_1 dF, \ldots, \int g_k dF\right)\)</span>, com <span class="math inline">\(h\)</span>
+contínua e <span class="math inline">\(\int |g_j| dF &lt; \infty\)</span> para todo <span class="math inline">\(j\)</span>, então
+<span class="math inline">\(T(\hat{F}_n) \to T(F)\)</span> quase certamente.</p>
+<p><em>Prova</em>. Decorre do Lema 1 que a <span class="math inline">\(j\)</span>-ésima coordenada de
+<span class="math inline">\(T(\hat{F}_n)\)</span> é <span class="math inline">\(n^{-1}\sum_{i=1}^{n}g_j(X_i)\)</span>, que converge quase
+certamente a <span class="math inline">\(\int g_j dF\)</span>, pela Lei Forte dos Grandes Números. Como
+a interseção de <span class="math inline">\(k\)</span> eventos de probabilidade <span class="math inline">\(1\)</span> tem probabilidade
+<span class="math inline">\(1\)</span>, o vetor destas médias converge quase certamente. A conclusão
+decorre da continuidade de <span class="math inline">\(h\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. Os Lemas 1 e 2 esgotam os casos fáceis. Para um
+funcional linear, o plug-in é uma média amostral, e a Lei dos Grandes
+Números e o Teorema Central do Limite se aplicam diretamente. Para uma
+composição, a consistência decorre da continuidade, e a normalidade
+assintótica decorreria do método delta. Para um funcional qualquer,
+como o quantil do Exemplo 3, nenhum dos dois argumentos está
+disponível. A função de influência resolve este caso, mostrando que
+todo funcional suficientemente regular se comporta, assintoticamente,
+como um funcional linear.</p>
+</div>
+<div id="função-de-influência" class="section level1">
+<h1>Função de influência</h1>
+<p><strong>Definição</strong> (Contaminação).
+Sejam <span class="math inline">\(x \in \mathbb{R}\)</span> e <span class="math inline">\(\delta_x\)</span> a distribuição degenerada em <span class="math inline">\(x\)</span>.
+Para <span class="math inline">\(\varepsilon \in [0,1]\)</span>, a contaminação de <span class="math inline">\(F\)</span> por <span class="math inline">\(x\)</span> é</p>
+<p><span class="math display">\[F_{\varepsilon,x} = (1-\varepsilon)F + \varepsilon\delta_x.\]</span></p>
+<p><strong>Definição</strong> (Função de influência).
+A função de influência de <span class="math inline">\(T\)</span> em <span class="math inline">\(F\)</span> é</p>
+<p><span class="math display">\[\text{IF}(x) = \lim_{\varepsilon \downarrow 0}
+  \frac{T(F_{\varepsilon,x}) - T(F)}{\varepsilon},\]</span></p>
+<p>quando o limite existe para todo <span class="math inline">\(x \in \mathbb{R}\)</span>.</p>
+<p><strong>Observação</strong>. A função de influência é a derivada de <span class="math inline">\(T\)</span> na direção
+de <span class="math inline">\(\delta_x\)</span>, e mede o efeito sobre <span class="math inline">\(T(F)\)</span> de uma contaminação
+infinitesimal da população por observações em <span class="math inline">\(x\)</span>. Nesta leitura,
+<span class="math inline">\(\text{IF}(x)\)</span> descreve o quanto uma única observação em <span class="math inline">\(x\)</span>
+influencia o estimador, o que explica o nome.</p>
+<p><strong>Exemplo 5</strong> (Funcional linear).
+Se <span class="math inline">\(T(F) = \int g \, dF\)</span>, então <span class="math inline">\(\text{IF}(x) = g(x) - T(F)\)</span>.
+De fato,
+<span class="math inline">\(T(F_{\varepsilon,x}) = (1-\varepsilon)T(F) + \varepsilon g(x)\)</span>,
+de modo que
+<span class="math inline">\(T(F_{\varepsilon,x}) - T(F) = \varepsilon\left(g(x) - T(F)\right)\)</span>.
+Em particular, para a média, <span class="math inline">\(\text{IF}(x) = x - \mu\)</span>.</p>
+<p><strong>Exemplo 6</strong> (Variância).
+Se <span class="math inline">\(T\)</span> é o funcional do Exemplo 2, <span class="math inline">\(\mu = \int x \, dF\)</span> e
+<span class="math inline">\(\sigma^2 = T(F)\)</span>, então
+<span class="math inline">\(\text{IF}(x) = (x-\mu)^2 - \sigma^2\)</span>.
+De fato, escrevendo <span class="math inline">\(m_2 = \int x^2 dF\)</span>, decorre do Exemplo 5 que as
+derivadas em <span class="math inline">\(\varepsilon = 0\)</span> de <span class="math inline">\(\int x \, dF_{\varepsilon,x}\)</span> e de
+<span class="math inline">\(\int x^2 dF_{\varepsilon,x}\)</span> são <span class="math inline">\(x - \mu\)</span> e <span class="math inline">\(x^2 - m_2\)</span>. Pela regra
+da cadeia aplicada a <span class="math inline">\(h(a,b) = b - a^2\)</span> do Exemplo 4,</p>
+<p><span class="math display">\[\text{IF}(x) = \left(x^2 - m_2\right) - 2\mu\left(x - \mu\right)
+  = (x - \mu)^2 - \sigma^2.\]</span></p>
+<p><strong>Exemplo 7</strong> (Quantis).
+Seja <span class="math inline">\(T(F) = \xi_p\)</span> o funcional do Exemplo 3 e suponha que <span class="math inline">\(F\)</span> é
+diferenciável em <span class="math inline">\(\xi_p\)</span>, com <span class="math inline">\(F&#39;(\xi_p) = f(\xi_p) &gt; 0\)</span>. Então</p>
+<p><span class="math display">\[\text{IF}(x) = \frac{p - \mathbb{I}(x \leq \xi_p)}{f(\xi_p)}.\]</span></p>
+<p>De fato, seja <span class="math inline">\(\xi_p(\varepsilon)\)</span> o quantil de <span class="math inline">\(F_{\varepsilon,x}\)</span>,
+de modo que
+<span class="math inline">\((1-\varepsilon)F(\xi_p(\varepsilon))
++ \varepsilon\mathbb{I}(x \leq \xi_p(\varepsilon)) = p\)</span>.
+Derivando esta identidade em <span class="math inline">\(\varepsilon = 0\)</span>, obtém-se</p>
+<p><span class="math display">\[-F(\xi_p) + f(\xi_p)\,\xi_p&#39;(0) + \mathbb{I}(x \leq \xi_p) = 0,\]</span></p>
+<p>e a conclusão decorre de <span class="math inline">\(F(\xi_p) = p\)</span>. Em particular, para a
+mediana, <span class="math inline">\(\text{IF}(x) = \text{sinal}(x - \xi_{0,5})
+\left(2f(\xi_{0,5})\right)^{-1}\)</span>.</p>
+<p><strong>Observação</strong>. Em todos os exemplos acima,
+<span class="math inline">\(\int \text{IF}(x) \, dF(x) = 0\)</span>. No Exemplo 5, porque
+<span class="math inline">\(\int (g - T(F)) dF = 0\)</span>; no Exemplo 6, porque
+<span class="math inline">\(\int \left((x-\mu)^2 - \sigma^2\right)dF = 0\)</span>; e no Exemplo 7,
+porque <span class="math inline">\(\int \left(p - \mathbb{I}(x \leq \xi_p)\right)dF
+= p - F(\xi_p) = 0\)</span>. Esta propriedade é geral e é o que permite
+interpretar <span class="math inline">\(\text{IF}\)</span> como um desvio em torno de <span class="math inline">\(T(F)\)</span>.</p>
+<p><strong>Suposição</strong> (A1).
+<span class="math inline">\(T\)</span> admite a expansão de von Mises em <span class="math inline">\(F\)</span>, isto é, para <span class="math inline">\(G\)</span> em uma
+vizinhança de <span class="math inline">\(F\)</span>,</p>
+<p><span class="math display">\[T(G) - T(F) = \int \text{IF}(x) \, d(G - F)(x) + R(G,F),\]</span></p>
+<p>em que o resto satisfaz <span class="math inline">\(\sqrt{n}\,R(\hat{F}_n, F) \to 0\)</span> em
+probabilidade. Além disso,
+<span class="math inline">\(\tau^2 = \int \text{IF}(x)^2 dF(x) \in (0,\infty)\)</span>.</p>
+<p><strong>Teorema 1</strong> (Normalidade assintótica do plug-in).
+Sob (A1),</p>
+<p><span class="math display">\[\sqrt{n}\left(T(\hat{F}_n) - T(F)\right)
+  \xrightarrow{d} N\left(0, \tau^2\right).\]</span></p>
+<p><strong>Observação</strong>. A prova, que não faremos, consiste em notar que, por
+(A1) e por <span class="math inline">\(\int \text{IF} \, dF = 0\)</span>,</p>
+<p><span class="math display">\[\sqrt{n}\left(T(\hat{F}_n) - T(F)\right)
+  = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\text{IF}(X_i)
+  + \sqrt{n}\,R(\hat{F}_n,F),\]</span></p>
+<p>de modo que o Teorema Central do Limite se aplica ao primeiro termo e
+o segundo é desprezível. Em outras palavras, o Teorema 1 diz que todo
+funcional que satisfaz (A1) é, assintoticamente, o funcional linear
+associado a <span class="math inline">\(g = \text{IF}\)</span>. Comparando com o Corolário 1, o papel de
+<span class="math inline">\(\mathbb{V}[g(X_1)]\)</span> passa a ser desempenhado por <span class="math inline">\(\tau^2\)</span>.</p>
+<p><strong>Corolário 2</strong> (Erro padrão e intervalo de confiança).
+Sob (A1), se <span class="math inline">\(\widehat{\text{IF}}\)</span> é a função de influência calculada
+em <span class="math inline">\(\hat{F}_n\)</span> e <span class="math inline">\(\hat{\tau}^2 = n^{-1}\sum_{i=1}^{n}
+\widehat{\text{IF}}(X_i)^2\)</span> é consistente para <span class="math inline">\(\tau^2\)</span>, então</p>
+<p><span class="math display">\[T(\hat{F}_n) \pm z_{1-0,5\alpha}\,\frac{\hat{\tau}}{\sqrt{n}}\]</span></p>
+<p>é um intervalo de confiança assintótico de nível <span class="math inline">\(1-\alpha\)</span>
+para <span class="math inline">\(T(F)\)</span>.</p>
+<p><strong>Observação</strong>. A função de influência também mede a robustez do
+estimador. No Exemplo 5, <span class="math inline">\(\text{IF}\)</span> é ilimitada quando <span class="math inline">\(g\)</span> o é: uma
+única observação distante pode deslocar arbitrariamente a média. Já no
+Exemplo 7, <span class="math inline">\(\text{IF}\)</span> é limitada por <span class="math inline">\(\left(f(\xi_p)\right)^{-1}\)</span>,
+qualquer que seja <span class="math inline">\(x\)</span>: nenhuma observação isolada desloca muito a
+mediana. A quantidade <span class="math inline">\(\sup_x |\text{IF}(x)|\)</span> é chamada de
+sensibilidade a erros grosseiros e é uma das medidas clássicas de
+robustez (<span class="citation">Hampel (<a href="#ref-Hampel1974">1974</a>)</span>).</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-funcionais-e-estimadores-plug-in" class="section level2">
+<h2>Exercício 1 (Funcionais e estimadores plug-in)</h2>
+<ol style="list-style-type: lower-alpha">
+<li>Mostre que o funcional do Exemplo 2 satisfaz</li>
+</ol>
+<p><span class="math display">\[T(\hat{F}_n) = \frac{1}{n}\sum_{i=1}^{n}
+  \left(X_i - \bar{X}\right)^2,\]</span></p>
+<pre><code>isto é, que o plug-in da variância é a variância amostral com
+denominador $n$. Ele é não-viesado?</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Exiba <span class="math inline">\(g_1, \ldots, g_k\)</span> e <span class="math inline">\(h\)</span> que representem a covariância
+como composição de funcionais lineares.</p></li>
+<li><p>Mostre que o funcional do Exemplo 3 não é uma composição de
+funcionais lineares.
+Sugestão: composições são contínuas em <span class="math inline">\(F\)</span> com respeito à
+convergência em distribuição.</p></li>
+<li><p>Use o Teorema 2 da Aula 2 para mostrar que, se <span class="math inline">\(T\)</span> é contínuo com
+respeito à norma do supremo, então <span class="math inline">\(T(\hat{F}_n) \to T(F)\)</span> quase
+certamente. Este critério cobre o Exemplo 3?</p></li>
+</ol>
+</div>
+<div id="exercício-2-cálculo-de-funções-de-influência" class="section level2">
+<h2>Exercício 2 (Cálculo de funções de influência)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Obtenha a função de influência de <span class="math inline">\(T(F) = \int g \, dF\)</span> quando
+<span class="math inline">\(g(x) = \mathbb{I}(x \leq t)\)</span>, com <span class="math inline">\(t\)</span> fixo. Relacione o resultado
+com o Lema 1 da Aula 2.</p></li>
+<li><p>Seja <span class="math inline">\(T(F) = h\left(\int g_1 dF, \ldots, \int g_k dF\right)\)</span>, com
+<span class="math inline">\(h\)</span> diferenciável. Mostre que</p></li>
+</ol>
+<p><span class="math display">\[\text{IF}(x) = \sum_{j=1}^{k}\frac{\partial h}{\partial a_j}
+  \left(\theta_1,\ldots,\theta_k\right)
+  \left(g_j(x) - \theta_j\right),
+  \qquad \theta_j = \int g_j \, dF.\]</span></p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>Verifique que (b) recupera o Exemplo 6.</p></li>
+<li><p>Obtenha a função de influência da razão de médias,
+<span class="math inline">\(T(F) = \int g_1 dF \left(\int g_2 dF\right)^{-1}\)</span>, supondo
+<span class="math inline">\(\int g_2 dF \neq 0\)</span>.</p></li>
+<li><p>Verifique que <span class="math inline">\(\int \text{IF} \, dF = 0\)</span> em (b).</p></li>
+</ol>
+</div>
+<div id="exercício-3-consequências-do-teorema-1" class="section level2">
+<h2>Exercício 3 (Consequências do Teorema 1)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Verifique que, para um funcional linear, o Teorema 1 e o
+Corolário 1 fornecem a mesma distribuição assintótica.</p></li>
+<li><p>Use o Teorema 1 e o Exemplo 6 para obter um intervalo de
+confiança assintótico para a variância. De que momento de <span class="math inline">\(F\)</span>
+a variância assintótica depende?</p></li>
+<li><p>Use o Teorema 1 e o Exemplo 7 para obter a distribuição
+assintótica da mediana amostral. Por que o intervalo de confiança
+resultante é difícil de usar na prática?</p></li>
+<li><p>O item (c) motiva as próximas aulas. Explique por que o
+bootstrap é uma alternativa atraente neste caso.</p></li>
+</ol>
+</div>
+<div id="exercício-4-robustez" class="section level2">
+<h2>Exercício 4 (Robustez)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Compare <span class="math inline">\(\sup_x |\text{IF}(x)|\)</span> para a média e para a mediana.</p></li>
+<li><p>A média aparada de nível <span class="math inline">\(\alpha\)</span> é definida por
+<span class="math inline">\(T(F) = (1-2\alpha)^{-1}\int_{\xi_{\alpha}}^{\xi_{1-\alpha}}
+x \, dF(x)\)</span>. Argumente, sem calcular, que a sua função de
+influência é limitada.</p></li>
+<li><p>Um estimador com função de influência limitada é
+necessariamente preferível? Discuta em termos da variância
+assintótica <span class="math inline">\(\tau^2\)</span> quando <span class="math inline">\(F\)</span> é Normal.</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Hampel1974" class="csl-entry">
+Hampel, Frank R. 1974. <span>“The Influence Curve and Its Role in Robust Estimation.”</span> <em>Journal of the American Statistical Association</em> 69 (346): 383–93.
+</div>
+<div id="ref-Wasserman2006" class="csl-entry">
+Wasserman, Larry. 2006. <em>All of Nonparametric Statistics</em>. Springer.
+</div>
+</div>
+</div>

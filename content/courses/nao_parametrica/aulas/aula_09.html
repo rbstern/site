@@ -1,0 +1,351 @@
+---
+title: "Aula 9: Linear smoothers"
+linkTitle: "Aula 9: Linear smoothers"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 90
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 8:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Estimadores sem a i-ésima observação indicados por -i, e não por (i).
+- Termos técnicos em inglês quando consagrados (kernel, linear smoother).
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 03/09/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">Wasserman (<a href="#ref-Wasserman2006">2006</a>)</span>, Capítulo 5.</p>
+<div id="regressão-não-linear" class="section level1">
+<h1>Regressão não-linear</h1>
+<p><strong>Definição</strong> (Modelo de regressão não-paramétrica).
+Sejam <span class="math inline">\((X_1, Y_1), \ldots, (X_n, Y_n)\)</span> i.i.d., com <span class="math inline">\(X_i \in \mathbb{R}^d\)</span>,
+<span class="math inline">\(Y_i \in \mathbb{R}\)</span> e <span class="math inline">\(\mathbb{E}[Y_1^2] &lt; \infty\)</span>. A função de regressão
+é</p>
+<p><span class="math display">\[r(x) = \mathbb{E}\left[Y_1 \mid X_1 = x\right].\]</span></p>
+<p>Escrevendo <span class="math inline">\(\varepsilon_i = Y_i - r(X_i)\)</span>, obtém-se</p>
+<p><span class="math display">\[Y_i = r(X_i) + \varepsilon_i,
+  \qquad \text{com} \qquad
+  \mathbb{E}\left[\varepsilon_i \mid X_i\right] = 0.\]</span></p>
+<p>Supõe-se também que <span class="math inline">\(\mathbb{V}[\varepsilon_i \mid X_i] = \sigma^2\)</span>. O
+modelo é não-paramétrico quando se supõe apenas que <span class="math inline">\(r\)</span> pertence a uma
+classe de dimensão infinita, como a classe de Hölder <span class="math inline">\(\Sigma(\beta, L)\)</span>
+da Aula 7, em vez de uma família indexada por um número finito de
+parâmetros.</p>
+<p><strong>Observação</strong>. Os estimadores desta aula são analisados
+condicionalmente a <span class="math inline">\(X_1, \ldots, X_n\)</span>. Condicionalmente,
+<span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span> são independentes, com média <span class="math inline">\(0\)</span>
+e variância <span class="math inline">\(\sigma^2\)</span>.</p>
+</div>
+<div id="revisão-de-regressão-linear" class="section level1">
+<h1>Revisão de regressão linear</h1>
+<p><strong>Definição</strong> (Modelo linear).
+Nesta seção, <span class="math inline">\(X_i \in \mathbb{R}^p\)</span> e a primeira coordenada de toda
+covariável é igual a <span class="math inline">\(1\)</span>, o que inclui o intercepto no modelo. O modelo
+linear supõe que existe <span class="math inline">\(\beta \in \mathbb{R}^p\)</span> tal que <span class="math inline">\(r(x) = x^T\beta\)</span>.
+Em formato matricial,</p>
+<p><span class="math display">\[\mathbf{Y} = \mathbb{X}\beta + \boldsymbol{\varepsilon},\]</span></p>
+<p>em que <span class="math inline">\(\mathbf{Y} = (Y_1, \ldots, Y_n)^T\)</span>,
+<span class="math inline">\(\boldsymbol{\varepsilon} = (\varepsilon_1, \ldots, \varepsilon_n)^T\)</span> e
+<span class="math inline">\(\mathbb{X}\)</span> é a matriz <span class="math inline">\(n \times p\)</span> cuja <span class="math inline">\(i\)</span>-ésima linha é <span class="math inline">\(X_i^T\)</span>.</p>
+<p><strong>Suposição</strong> (A1).
+<span class="math inline">\(\mathbb{X}\)</span> tem posto <span class="math inline">\(p\)</span>. Em particular, <span class="math inline">\(\mathbb{X}^T\mathbb{X}\)</span> é
+invertível.</p>
+<p><strong>Lema 1</strong> (Mínimos quadrados).
+Sob (A1), o único minimizador de
+<span class="math inline">\(\beta \mapsto \|\mathbf{Y} - \mathbb{X}\beta\|^2\)</span> é</p>
+<p><span class="math display">\[\hat{\beta} = \left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbf{Y}.\]</span></p>
+<p><em>Prova</em>. Pela definição de <span class="math inline">\(\hat{\beta}\)</span>,
+<span class="math inline">\(\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta})
+= \mathbb{X}^T\mathbf{Y} - \mathbb{X}^T\mathbf{Y} = 0\)</span>. Assim, para todo
+<span class="math inline">\(\beta \in \mathbb{R}^p\)</span>,</p>
+<p><span class="math display">\[\begin{align*}
+\|\mathbf{Y} - \mathbb{X}\beta\|^2
+&amp;= \left\|(\mathbf{Y} - \mathbb{X}\hat{\beta})
+    + \mathbb{X}(\hat{\beta} - \beta)\right\|^2 \\
+&amp;= \|\mathbf{Y} - \mathbb{X}\hat{\beta}\|^2
+    + 2(\hat{\beta} - \beta)^T\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta})
+    + \|\mathbb{X}(\hat{\beta} - \beta)\|^2 \\
+&amp;= \|\mathbf{Y} - \mathbb{X}\hat{\beta}\|^2
+    + \|\mathbb{X}(\hat{\beta} - \beta)\|^2 \\
+&amp;\geq \|\mathbf{Y} - \mathbb{X}\hat{\beta}\|^2.
+\end{align*}\]</span></p>
+<p>A terceira igualdade usa <span class="math inline">\(\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta}) = 0\)</span>.
+A desigualdade é uma igualdade se e somente se
+<span class="math inline">\(\mathbb{X}(\hat{\beta} - \beta) = 0\)</span>, isto é, por (A1), se e somente se
+<span class="math inline">\(\beta = \hat{\beta}\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Definição</strong> (Predição).
+Para uma nova observação com covariável <span class="math inline">\(x \in \mathbb{R}^p\)</span>, a predição
+de <span class="math inline">\(Y\)</span> pelo modelo linear é <span class="math inline">\(\hat{r}_n(x) = x^T\hat{\beta}\)</span>.</p>
+<p><strong>Lema 2</strong> (A predição é uma combinação linear das respostas).
+Sob (A1), para todo <span class="math inline">\(x \in \mathbb{R}^p\)</span>,</p>
+<p><span class="math display">\[\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i,
+  \qquad \text{com} \qquad
+  \ell_i(x) = x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}X_i.\]</span></p>
+<p>Além disso, <span class="math inline">\(\sum_{i=1}^{n}\ell_i(x) = 1\)</span>.</p>
+<p><em>Prova</em>. Como <span class="math inline">\(\mathbb{X}^T\mathbf{Y} = \sum_{i=1}^{n}X_iY_i\)</span>, decorre
+do Lema 1 que</p>
+<p><span class="math display">\[\begin{align*}
+\hat{r}_n(x)
+&amp;= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbf{Y} \\
+&amp;= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\sum_{i=1}^{n}X_iY_i \\
+&amp;= \sum_{i=1}^{n}\ell_i(x)Y_i.
+\end{align*}\]</span></p>
+<p>Para a segunda afirmação, sejam <span class="math inline">\(e_1 = (1, 0, \ldots, 0)^T \in \mathbb{R}^p\)</span>
+e <span class="math inline">\(\mathbf{1} = (1, \ldots, 1)^T \in \mathbb{R}^n\)</span>. Como a primeira
+coordenada de cada <span class="math inline">\(X_i\)</span> é <span class="math inline">\(1\)</span>, vale <span class="math inline">\(\mathbb{X}e_1 = \mathbf{1}\)</span>.
+Assim,</p>
+<p><span class="math display">\[\begin{align*}
+\sum_{i=1}^{n}\ell_i(x)
+&amp;= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbf{1} \\
+&amp;= x^T\left(\mathbb{X}^T\mathbb{X}\right)^{-1}\mathbb{X}^T\mathbb{X}e_1 \\
+&amp;= x^Te_1 = 1. \qquad \blacksquare
+\end{align*}\]</span></p>
+<p><strong>Observação</strong>. Os pesos <span class="math inline">\(\ell_i(x)\)</span> dependem de <span class="math inline">\(x\)</span> e de
+<span class="math inline">\(X_1, \ldots, X_n\)</span>, mas não de <span class="math inline">\(Y_1, \ldots, Y_n\)</span>. Por outro lado, eles
+são determinados pela forma global do modelo: podem ser negativos, e
+observações com <span class="math inline">\(X_i\)</span> distante de <span class="math inline">\(x\)</span> podem receber peso grande. Os
+linear smoothers mantêm a estrutura linear em <span class="math inline">\(\mathbf{Y}\)</span>, mas usam
+pesos concentrados nas observações com <span class="math inline">\(X_i\)</span> próximo de <span class="math inline">\(x\)</span>.</p>
+</div>
+<div id="linear-smoothers" class="section level1">
+<h1>Linear smoothers</h1>
+<p><strong>Definição</strong> (Linear smoother, <span class="citation">Wasserman (<a href="#ref-Wasserman2006">2006</a>)</span>).
+Um estimador <span class="math inline">\(\hat{r}_n\)</span> de <span class="math inline">\(r\)</span> é um linear smoother se, para todo <span class="math inline">\(x\)</span>,
+existe um vetor <span class="math inline">\(\ell(x) = (\ell_1(x), \ldots, \ell_n(x))^T\)</span>, que depende
+de <span class="math inline">\(x\)</span> e de <span class="math inline">\(X_1, \ldots, X_n\)</span>, mas não de <span class="math inline">\(Y_1, \ldots, Y_n\)</span>, tal que</p>
+<p><span class="math display">\[\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i.\]</span></p>
+<p><strong>Observação</strong>. Pelo Lema 2, a predição da regressão linear é um linear
+smoother. Todos os exemplos a seguir satisfazem
+<span class="math inline">\(\sum_{i=1}^{n}\ell_i(x) = 1\)</span> (Exercício 2), de modo que, se <span class="math inline">\(Y_i = c\)</span>
+para todo <span class="math inline">\(i\)</span>, então <span class="math inline">\(\hat{r}_n(x) = c\)</span>. Nos exemplos, <span class="math inline">\(d = 1\)</span>.</p>
+<p><strong>Exemplo 1</strong> (Regressograma).
+Suponha <span class="math inline">\(X_i \in [0,1]\)</span> e considere, como no histograma da Aula 1, a
+partição de <span class="math inline">\([0,1]\)</span> em <span class="math inline">\(m\)</span> intervalos <span class="math inline">\(B_1, \ldots, B_m\)</span> de comprimento
+<span class="math inline">\(h = m^{-1}\)</span>. O regressograma é a média das respostas cujas covariáveis
+estão no mesmo intervalo que <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[\hat{r}_n(x) = \frac{\sum_{i=1}^{n}Y_i\,\mathbb{I}(X_i \in B_j)}
+  {\sum_{s=1}^{n}\mathbb{I}(X_s \in B_j)},
+  \qquad \text{se } x \in B_j,\]</span></p>
+<p>supondo que o denominador é positivo. É um linear smoother com</p>
+<p><span class="math display">\[\ell_i(x) = \frac{\mathbb{I}(X_i \in B_j)}
+  {\sum_{s=1}^{n}\mathbb{I}(X_s \in B_j)},
+  \qquad \text{se } x \in B_j.\]</span></p>
+<p>Assim como o histograma, <span class="math inline">\(\hat{r}_n\)</span> é constante em cada <span class="math inline">\(B_j\)</span>, e <span class="math inline">\(h\)</span>
+controla o compromisso entre viés e variância.</p>
+<p><strong>Exemplo 2</strong> (<span class="math inline">\(k\)</span> vizinhos mais próximos).
+Seja <span class="math inline">\(k \in \{1, \ldots, n\}\)</span>. Para <span class="math inline">\(x \in \mathbb{R}\)</span>, seja <span class="math inline">\(N_k(x)\)</span> o
+conjunto dos índices das <span class="math inline">\(k\)</span> observações com <span class="math inline">\(X_i\)</span> mais próximo de <span class="math inline">\(x\)</span>,
+com empates desfeitos pelo menor índice. O estimador de <span class="math inline">\(k\)</span> vizinhos
+mais próximos (<span class="math inline">\(k\)</span>-NN) é</p>
+<p><span class="math display">\[\hat{r}_n(x) = \frac{1}{k}\sum_{i \in N_k(x)}Y_i,\]</span></p>
+<p>um linear smoother com <span class="math inline">\(\ell_i(x) = k^{-1}\mathbb{I}(i \in N_k(x))\)</span>.
+Seja <span class="math inline">\(d_k(x)\)</span> a distância de <span class="math inline">\(x\)</span> ao seu <span class="math inline">\(k\)</span>-ésimo vizinho mais próximo.
+Sem empates, <span class="math inline">\(N_k(x) = \{i : |X_i - x| \leq d_k(x)\}\)</span>, de modo que o
+<span class="math inline">\(k\)</span>-NN é a média das respostas com covariável na janela
+<span class="math inline">\([x - d_k(x), x + d_k(x)]\)</span>, cuja largura depende de <span class="math inline">\(x\)</span>: a janela é larga onde há poucas observações e
+estreita onde há muitas. O número <span class="math inline">\(k\)</span> faz o papel da banda: <span class="math inline">\(k = n\)</span>
+fornece <span class="math inline">\(\hat{r}_n \equiv \bar{Y}\)</span>, e <span class="math inline">\(k = 1\)</span> fornece
+<span class="math inline">\(\hat{r}_n(X_i) = Y_i\)</span>.</p>
+<p><strong>Exemplo 3</strong> (Médias locais).
+Seja <span class="math inline">\(h &gt; 0\)</span>. A média local em <span class="math inline">\(x\)</span> é a média das respostas cujas
+covariáveis estão na janela <span class="math inline">\((x-h, x+h]\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\hat{r}_n(x)
+&amp;= \frac{\sum_{i=1}^{n}Y_i\,\mathbb{I}(x-h &lt; X_i \leq x+h)}
+    {\sum_{s=1}^{n}\mathbb{I}(x-h &lt; X_s \leq x+h)} \\
+&amp;= \frac{\sum_{i=1}^{n}Y_iK_0\left(\frac{X_i - x}{h}\right)}
+    {\sum_{s=1}^{n}K_0\left(\frac{X_s - x}{h}\right)},
+\end{align*}\]</span></p>
+<p>supondo que o denominador é positivo, em que
+<span class="math inline">\(K_0(u) = 2^{-1}\mathbb{I}(-1 &lt; u \leq 1)\)</span> é o kernel uniforme da Aula 7.
+É um linear smoother com</p>
+<p><span class="math display">\[\ell_i(x) = \frac{K_0\left(\frac{X_i - x}{h}\right)}
+  {\sum_{s=1}^{n}K_0\left(\frac{X_s - x}{h}\right)}.\]</span></p>
+<p>Ao contrário do regressograma, as médias locais não dependem de uma
+partição pré-definida: a janela é centrada em <span class="math inline">\(x\)</span> e acompanha o ponto,
+assim como o KDE em relação ao histograma. Ao contrário do <span class="math inline">\(k\)</span>-NN, a
+largura da janela é a mesma para todo <span class="math inline">\(x\)</span>.</p>
+<p><strong>Exemplo 4</strong> (Nadaraya-Watson, <span class="citation">Nadaraya (<a href="#ref-Nadaraya1964">1964</a>)</span>; <span class="citation">Watson (<a href="#ref-Watson1964">1964</a>)</span>).
+Suponha que <span class="math inline">\((X_1, Y_1)\)</span> tem densidade conjunta <span class="math inline">\(f(y, x)\)</span> e seja <span class="math inline">\(f(x)\)</span>
+a densidade marginal de <span class="math inline">\(X_1\)</span>. Então, se <span class="math inline">\(f(x) &gt; 0\)</span>,</p>
+<p><span class="math display">\[r(x) = \int y f(y \mid x)\,dy = \frac{\int y f(y, x)\,dy}{f(x)}.\]</span></p>
+<p>Sejam <span class="math inline">\(K\)</span> um kernel de ordem <span class="math inline">\(1\)</span> e <span class="math inline">\(h &gt; 0\)</span>. Estime <span class="math inline">\(f(x)\)</span> pelo KDE da
+Aula 7 e <span class="math inline">\(f(y, x)\)</span> pelo KDE bivariado com kernel produto:</p>
+<p><span class="math display">\[\hat{f}_n(x) = \frac{1}{nh}\sum_{i=1}^{n}K\left(\frac{X_i - x}{h}\right)
+  \qquad \text{e} \qquad
+  \hat{f}_n(y, x) = \frac{1}{nh^2}\sum_{i=1}^{n}
+  K\left(\frac{Y_i - y}{h}\right)K\left(\frac{X_i - x}{h}\right).\]</span></p>
+<p>Com a mudança de variáveis <span class="math inline">\(y = Y_i - uh\)</span>, para todo <span class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[\begin{align*}
+\int y\,\frac{1}{h}K\left(\frac{Y_i - y}{h}\right)dy
+&amp;= \int (Y_i - uh)K(u)\,du \\
+&amp;= Y_i\int K(u)\,du - h\int uK(u)\,du \\
+&amp;= Y_i,
+\end{align*}\]</span></p>
+<p>pois <span class="math inline">\(\int K = 1\)</span> e, como <span class="math inline">\(K\)</span> tem ordem <span class="math inline">\(1\)</span>, <span class="math inline">\(\int uK(u)\,du = 0\)</span>. Assim,</p>
+<p><span class="math display">\[\int y\hat{f}_n(y, x)\,dy
+  = \frac{1}{nh}\sum_{i=1}^{n}Y_iK\left(\frac{X_i - x}{h}\right).\]</span></p>
+<p>Substituindo as duas estimativas na expressão de <span class="math inline">\(r(x)\)</span>, o fator
+<span class="math inline">\((nh)^{-1}\)</span> se cancela e obtém-se o estimador de Nadaraya-Watson</p>
+<p><span class="math display">\[\hat{r}_n(x) = \frac{\int y\hat{f}_n(y, x)\,dy}{\hat{f}_n(x)}
+  = \frac{\sum_{i=1}^{n}Y_iK\left(\frac{X_i - x}{h}\right)}
+    {\sum_{s=1}^{n}K\left(\frac{X_s - x}{h}\right)},\]</span></p>
+<p>supondo <span class="math inline">\(\hat{f}_n(x) \neq 0\)</span>. É um linear smoother com</p>
+<p><span class="math display">\[\ell_i(x) = \frac{K\left(\frac{X_i - x}{h}\right)}
+  {\sum_{s=1}^{n}K\left(\frac{X_s - x}{h}\right)}.\]</span></p>
+<p>As médias locais são o caso <span class="math inline">\(K = K_0\)</span>. Com <span class="math inline">\(K \geq 0\)</span> contínuo, como o
+gaussiano ou o de Epanechnikov, os pesos decaem continuamente com
+<span class="math inline">\(|X_i - x|\)</span> e <span class="math inline">\(\hat{r}_n\)</span> é contínua.</p>
+<p><strong>Exemplo 5</strong> (Regressão polinomial local).
+Sejam <span class="math inline">\(K \geq 0\)</span> um kernel, <span class="math inline">\(h &gt; 0\)</span> e <span class="math inline">\(q \in \{0, 1, 2, \ldots\}\)</span>. Pela
+série de Taylor, como no Lema 3 da Aula 7, se <span class="math inline">\(r\)</span> é suave, então, para
+<span class="math inline">\(u\)</span> próximo de <span class="math inline">\(x\)</span>,</p>
+<p><span class="math display">\[r(u) \approx \sum_{j=0}^{q}\frac{r^{(j)}(x)}{j!}(u - x)^j.\]</span></p>
+<p>Isto sugere ajustar, perto de <span class="math inline">\(x\)</span>, um polinômio de grau <span class="math inline">\(q\)</span> em <span class="math inline">\(u - x\)</span>.
+Sejam</p>
+<p><span class="math display">\[z_x(u) = \left(1, \, u - x, \, \frac{(u-x)^2}{2!}, \, \ldots, \,
+  \frac{(u-x)^q}{q!}\right)^T \in \mathbb{R}^{q+1}
+  \qquad \text{e} \qquad
+  w_i(x) = K\left(\frac{X_i - x}{h}\right),\]</span></p>
+<p>e considere o critério de mínimos quadrados ponderados</p>
+<p><span class="math display">\[\hat{a}(x) = \arg\min_{a \in \mathbb{R}^{q+1}}
+  \sum_{i=1}^{n}w_i(x)\left(Y_i - z_x(X_i)^Ta\right)^2,\]</span></p>
+<p>em que <span class="math inline">\(a = (a_0, \ldots, a_q)^T\)</span> e <span class="math inline">\(a_j\)</span> faz o papel de <span class="math inline">\(r^{(j)}(x)\)</span>. O
+estimador de regressão polinomial local de grau <span class="math inline">\(q\)</span> é
+<span class="math inline">\(\hat{r}_n(x) = \hat{a}_0(x)\)</span>.</p>
+<p>Sejam <span class="math inline">\(\mathbb{X}_x\)</span> a matriz <span class="math inline">\(n \times (q+1)\)</span> cuja <span class="math inline">\(i\)</span>-ésima linha é
+<span class="math inline">\(z_x(X_i)^T\)</span> e <span class="math inline">\(W_x = \text{diag}(w_1(x), \ldots, w_n(x))\)</span>, e suponha
+que <span class="math inline">\(\mathbb{X}_x^TW_x\mathbb{X}_x\)</span> é invertível. O critério é
+<span class="math inline">\(\|W_x^{1/2}\mathbf{Y} - W_x^{1/2}\mathbb{X}_xa\|^2\)</span>, e o Lema 1 aplicado
+a <span class="math inline">\(W_x^{1/2}\mathbb{X}_x\)</span> e <span class="math inline">\(W_x^{1/2}\mathbf{Y}\)</span> fornece</p>
+<p><span class="math display">\[\hat{a}(x) = \left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}
+  \mathbb{X}_x^TW_x\mathbf{Y}.\]</span></p>
+<p>Como <span class="math inline">\(\mathbb{X}_x^TW_x\mathbf{Y} = \sum_{i=1}^{n}w_i(x)z_x(X_i)Y_i\)</span>,
+sendo <span class="math inline">\(e_1 = (1, 0, \ldots, 0)^T \in \mathbb{R}^{q+1}\)</span>,</p>
+<p><span class="math display">\[\hat{r}_n(x) = e_1^T\hat{a}(x) = \sum_{i=1}^{n}\ell_i(x)Y_i,
+  \qquad \text{com} \qquad
+  \ell_i(x) = w_i(x)\,e_1^T\left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}
+  z_x(X_i).\]</span></p>
+<p>Para <span class="math inline">\(q = 0\)</span>, <span class="math inline">\(\mathbb{X}_x = \mathbf{1}\)</span> e
+<span class="math inline">\(\hat{r}_n(x) = \sum_i w_i(x)Y_i / \sum_s w_s(x)\)</span> é o estimador de
+Nadaraya-Watson. Para <span class="math inline">\(q = 1\)</span>, obtém-se a regressão linear local
+(Exercício 4).</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-matriz-de-suavização" class="section level2">
+<h2>Exercício 1 (Matriz de suavização)</h2>
+<p>Para um linear smoother, a matriz de suavização é a matriz
+<span class="math inline">\(\mathbf{L}\)</span>, de dimensão <span class="math inline">\(n \times n\)</span>, com <span class="math inline">\(\mathbf{L}_{ij} = \ell_j(X_i)\)</span>,
+de modo que os valores ajustados são
+<span class="math inline">\((\hat{r}_n(X_1), \ldots, \hat{r}_n(X_n))^T = \mathbf{L}\mathbf{Y}\)</span>. O
+número efetivo de graus de liberdade é <span class="math inline">\(\nu = \text{tr}(\mathbf{L})\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, na regressão linear,
+<span class="math inline">\(\mathbf{L} = \mathbb{X}(\mathbb{X}^T\mathbb{X})^{-1}\mathbb{X}^T\)</span>,
+que <span class="math inline">\(\mathbf{L}\)</span> é simétrica e idempotente e que <span class="math inline">\(\nu = p\)</span>.</p></li>
+<li><p>Mostre que, se <span class="math inline">\(X_1, \ldots, X_n\)</span> são distintos, então o <span class="math inline">\(k\)</span>-NN tem
+<span class="math inline">\(\nu = n/k\)</span>. Interprete os casos <span class="math inline">\(k = 1\)</span> e <span class="math inline">\(k = n\)</span>.</p></li>
+<li><p>Calcule <span class="math inline">\(\nu\)</span> para o estimador de Nadaraya-Watson e compare com o
+termo <span class="math inline">\(K(0)/(nh)\)</span> do Lema 4 da Aula 8.</p></li>
+</ol>
+</div>
+<div id="exercício-2-reprodução-de-polinômios" class="section level2">
+<h2>Exercício 2 (Reprodução de polinômios)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, nos Exemplos 1 a 4, com <span class="math inline">\(K \geq 0\)</span> no Exemplo 4,
+<span class="math inline">\(\ell_i(x) \geq 0\)</span> e <span class="math inline">\(\sum_{i=1}^{n}\ell_i(x) = 1\)</span>.</p></li>
+<li><p>No Exemplo 5, mostre que, se <span class="math inline">\(Y_i = P(X_i)\)</span> para todo <span class="math inline">\(i\)</span>, em que
+<span class="math inline">\(P\)</span> é um polinômio de grau no máximo <span class="math inline">\(q\)</span>, então
+<span class="math inline">\(\hat{r}_n(x) = P(x)\)</span>. Sugestão: escreva <span class="math inline">\(P(u) = z_x(u)^Ta^*\)</span> e
+note que o critério se anula em <span class="math inline">\(a^*\)</span>.</p></li>
+<li><p>Conclua de (b) que, no Exemplo 5, <span class="math inline">\(\sum_{i=1}^{n}\ell_i(x) = 1\)</span> e
+<span class="math inline">\(\sum_{i=1}^{n}\ell_i(x)(X_i - x)^j = 0\)</span> para <span class="math inline">\(1 \leq j \leq q\)</span>.
+Compare com a definição de kernel de ordem <span class="math inline">\(q\)</span> da Aula 7.</p></li>
+</ol>
+</div>
+<div id="exercício-3-viés-e-variância-condicionais" class="section level2">
+<h2>Exercício 3 (Viés e variância condicionais)</h2>
+<ol style="list-style-type: lower-alpha">
+<li>Mostre que, para todo linear smoother,</li>
+</ol>
+<p><span class="math display">\[\mathbb{E}\left[\hat{r}_n(x) \mid X_1, \ldots, X_n\right]
+  = \sum_{i=1}^{n}\ell_i(x)r(X_i)
+  \qquad \text{e} \qquad
+  \mathbb{V}\left[\hat{r}_n(x) \mid X_1, \ldots, X_n\right]
+  = \sigma^2\sum_{i=1}^{n}\ell_i(x)^2.\]</span></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>No regressograma, suponha que <span class="math inline">\(r\)</span> é <span class="math inline">\(L\)</span>-Lipschitz em <span class="math inline">\([0,1]\)</span> e
+seja <span class="math inline">\(n_j = \sum_{i=1}^{n}\mathbb{I}(X_i \in B_j)\)</span>. Mostre que, para
+<span class="math inline">\(x \in B_j\)</span>, o viés condicional é, em módulo, no máximo <span class="math inline">\(Lh\)</span> e a
+variância condicional é <span class="math inline">\(\sigma^2/n_j\)</span>. Compare com os Lemas 1 e 3
+da Aula 1.</p></li>
+<li><p>No estimador de Nadaraya-Watson, suponha <span class="math inline">\(K \geq 0\)</span>, <span class="math inline">\(K(u) = 0\)</span>
+para <span class="math inline">\(|u| &gt; 1\)</span> e <span class="math inline">\(r\)</span> <span class="math inline">\(L\)</span>-Lipschitz. Mostre que o viés condicional é,
+em módulo, no máximo <span class="math inline">\(Lh\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-4-regressão-linear-local" class="section level2">
+<h2>Exercício 4 (Regressão linear local)</h2>
+<p>Considere o Exemplo 5 com <span class="math inline">\(q = 1\)</span> e seja
+<span class="math inline">\(S_j = \sum_{i=1}^{n}w_i(x)(X_i - x)^j\)</span>, para <span class="math inline">\(j \in \{0, 1, 2\}\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Mostre que</li>
+</ol>
+<p><span class="math display">\[\ell_i(x) = \frac{w_i(x)\left(S_2 - S_1(X_i - x)\right)}{S_0S_2 - S_1^2}.\]</span></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Mostre que o estimador de Nadaraya-Watson satisfaz
+<span class="math inline">\(\sum_{i=1}^{n}\ell_i(x)(X_i - x) = S_1/S_0\)</span>, enquanto a regressão
+linear local satisfaz <span class="math inline">\(\sum_{i=1}^{n}\ell_i(x)(X_i - x) = 0\)</span>.</p></li>
+<li><p>Suponha <span class="math inline">\(r(u) = a + bu\)</span>. Conclua que o viés condicional do estimador
+de Nadaraya-Watson em <span class="math inline">\(x\)</span> é <span class="math inline">\(bS_1/S_0\)</span>, enquanto o da regressão
+linear local é zero. Explique por que <span class="math inline">\(S_1\)</span> tende a ser grande em
+módulo quando <span class="math inline">\(x\)</span> está próximo da fronteira do suporte de <span class="math inline">\(X\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-5-k-nn-como-média-local-adaptativa" class="section level2">
+<h2>Exercício 5 (<span class="math inline">\(k\)</span>-NN como média local adaptativa)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Suponha que a densidade <span class="math inline">\(f\)</span> de <span class="math inline">\(X_1\)</span> é contínua e <span class="math inline">\(f(x) &gt; 0\)</span>. Argumente, de forma
+heurística, que o número de observações em <span class="math inline">\([x - t, x + t]\)</span> é
+aproximadamente <span class="math inline">\(2nf(x)t\)</span> e, portanto, que
+<span class="math inline">\(d_k(x) \approx k/(2nf(x))\)</span>.</p></li>
+<li><p>Usando o Exercício 3, argumente que, para <span class="math inline">\(r\)</span> Lipschitz, o <span class="math inline">\(k\)</span>-NN
+tem viés condicional da ordem de <span class="math inline">\(k/n\)</span> e variância condicional
+<span class="math inline">\(\sigma^2/k\)</span>. Que escolha de <span class="math inline">\(k\)</span> equilibra os dois termos? Compare a
+taxa resultante com a do Teorema 1 da Aula 7 com <span class="math inline">\(\beta = 1\)</span>.</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Nadaraya1964" class="csl-entry">
+Nadaraya, Elizbar A. 1964. <span>“On Estimating Regression.”</span> <em>Theory of Probability and Its Applications</em> 9 (1): 141–42.
+</div>
+<div id="ref-Wasserman2006" class="csl-entry">
+Wasserman, Larry. 2006. <em>All of Nonparametric Statistics</em>. Springer.
+</div>
+<div id="ref-Watson1964" class="csl-entry">
+Watson, Geoffrey S. 1964. <span>“Smooth Regression Analysis.”</span> <em>Sankhy<span>ā</span>: The Indian Journal of Statistics, Series A</em> 26 (4): 359–72.
+</div>
+</div>
+</div>

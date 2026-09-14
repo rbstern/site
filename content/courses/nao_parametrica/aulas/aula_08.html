@@ -1,0 +1,324 @@
+---
+title: "Aula 8: Estimação não-viesada do risco"
+linkTitle: "Aula 8: Risco do KDE"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 80
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 6:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 01/09/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">Tsybakov (<a href="#ref-Tsybakov2009">2009</a>)</span>, Seção 1.4.</p>
+<div id="estimação-não-viesada-do-risco" class="section level1">
+<h1>Estimação não-viesada do risco</h1>
+<p>Ao longo desta aula, <span class="math inline">\(X_1, \ldots, X_n\)</span> são i.i.d. com densidade <span class="math inline">\(f\)</span>,
+<span class="math inline">\(K\)</span> é um kernel e, para enfatizar a dependência na banda, escrevemos</p>
+<p><span class="math display">\[\hat{f}_h(x) = \frac{1}{nh}\sum_{i=1}^{n}K\left(\frac{X_i - x}{h}\right)\]</span></p>
+<p>para o KDE da Aula 7. Supomos também que <span class="math inline">\(\int f^2 &lt; \infty\)</span>.</p>
+<p>A Aula 7 mostrou que a banda deve ser da ordem de <span class="math inline">\(n^{-1/(2\beta+1)}\)</span>, mas
+que a melhor constante depende de <span class="math inline">\(f\)</span>, que é desconhecida. O objetivo
+desta aula é estimar o risco de <span class="math inline">\(\hat{f}_h\)</span> a partir dos dados, para
+então escolher <span class="math inline">\(h\)</span> minimizando essa estimativa.</p>
+<p><strong>Definição</strong> (Risco quadrático integrado).
+O risco quadrático integrado de <span class="math inline">\(\hat{f}_h\)</span> é</p>
+<p><span class="math display">\[\text{MISE}(h) = \mathbb{E}\left[\int \left(\hat{f}_h(x)
+  - f(x)\right)^2 dx\right].\]</span></p>
+<p><strong>Lema 1</strong> (Decomposição em três termos).
+Para todo <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[\text{MISE}(h) = A(h) - 2B(h) + \int f(x)^2\,dx,\]</span></p>
+<p>em que</p>
+<p><span class="math display">\[A(h) = \mathbb{E}\left[\int \hat{f}_h(x)^2\,dx\right]
+  \qquad \text{e} \qquad
+  B(h) = \mathbb{E}\left[\int \hat{f}_h(x)f(x)\,dx\right].\]</span></p>
+<p><em>Prova</em>. Abrindo o quadrado,</p>
+<p><span class="math display">\[\begin{align*}
+\text{MISE}(h)
+&amp;= \mathbb{E}\left[\int \left(\hat{f}_h(x)^2 - 2\hat{f}_h(x)f(x)
+    + f(x)^2\right)dx\right] \\
+&amp;= \mathbb{E}\left[\int \hat{f}_h(x)^2\,dx\right]
+    - 2\,\mathbb{E}\left[\int \hat{f}_h(x)f(x)\,dx\right]
+    + \int f(x)^2\,dx,
+\end{align*}\]</span></p>
+<p>em que a segunda igualdade usa a linearidade da esperança e que
+<span class="math inline">\(\int f^2\)</span> não é aleatório. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong> (O terceiro termo).
+O termo <span class="math inline">\(\int f^2\)</span> é desconhecido, mas não depende de <span class="math inline">\(h\)</span>. Portanto,
+minimizar <span class="math inline">\(\text{MISE}(h)\)</span> em <span class="math inline">\(h\)</span> é equivalente a minimizar</p>
+<p><span class="math display">\[J(h) = \text{MISE}(h) - \int f(x)^2\,dx = A(h) - 2B(h),\]</span></p>
+<p>e não é necessário estimar <span class="math inline">\(\int f^2\)</span>. Basta estimar <span class="math inline">\(A(h)\)</span> e <span class="math inline">\(B(h)\)</span>.</p>
+<p><strong>Observação</strong> (Por que o risco integrado).
+Para o MSE em um ponto <span class="math inline">\(x\)</span>, a mesma abertura do quadrado produziria o
+termo <span class="math inline">\(f(x)\,\mathbb{E}[\hat{f}_h(x)]\)</span>, que envolve o valor de <span class="math inline">\(f\)</span> em um
+único ponto. Já no risco integrado, o termo cruzado é uma integral
+contra <span class="math inline">\(f\)</span>, isto é, uma esperança com respeito à distribuição dos
+dados. É isto que permitirá estimá-lo por uma média sobre a amostra.</p>
+<p><strong>Lema 2</strong> (O primeiro termo).
+<span class="math inline">\(\int \hat{f}_h(x)^2\,dx\)</span> é um estimador não-viesado de <span class="math inline">\(A(h)\)</span>.</p>
+<p><em>Prova</em>. <span class="math inline">\(\int \hat{f}_h^2\)</span> é uma função dos dados e, pela definição de
+<span class="math inline">\(A(h)\)</span>, a sua esperança é <span class="math inline">\(A(h)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. O Lema 2 é imediato porque <span class="math inline">\(A(h)\)</span> depende apenas do
+estimador, e não de <span class="math inline">\(f\)</span>. Toda a dificuldade está em <span class="math inline">\(B(h)\)</span>.</p>
+<p><strong>Observação</strong> (Uma ideia natural).
+Como <span class="math inline">\(f\)</span> é a densidade dos dados, <span class="math inline">\(\int \hat{f}_h(x)f(x)\,dx\)</span> é a média
+de <span class="math inline">\(\hat{f}_h\)</span> com respeito à distribuição que gerou a amostra. Isto
+sugere estimar esta integral pela média de <span class="math inline">\(\hat{f}_h\)</span> nos pontos
+observados,</p>
+<p><span class="math display">\[\frac{1}{n}\sum_{i=1}^{n}\hat{f}_h(X_i).\]</span></p>
+<p>A justificativa seria a do Lema 1 da Aula 4: se <span class="math inline">\(g\)</span> é uma função
+<strong>fixa</strong>, então <span class="math inline">\(\mathbb{E}\left[n^{-1}\sum_{i}g(X_i)\right]
+= \int g f\)</span>. O problema é que <span class="math inline">\(\hat{f}_h\)</span> não é fixa, pois foi
+construída a partir dos próprios <span class="math inline">\(X_1, \ldots, X_n\)</span>. Assim, cada <span class="math inline">\(X_i\)</span>
+entra duas vezes em <span class="math inline">\(\hat{f}_h(X_i)\)</span>: como ponto de avaliação e como uma
+das observações que definem <span class="math inline">\(\hat{f}_h\)</span>. Em particular, a parcela
+<span class="math inline">\(j = i\)</span> da soma que define <span class="math inline">\(\hat{f}_h(X_i)\)</span> vale <span class="math inline">\(K(0)(nh)^{-1}\)</span>,
+qualquer que seja a amostra, e não há parcela análoga em
+<span class="math inline">\(\int \hat{f}_h f\)</span>. Isto sugere que o estimador acima é viesado. Para
+confirmar, é preciso comparar a sua esperança com <span class="math inline">\(B(h)\)</span>, o que é feito
+nos dois lemas a seguir.</p>
+<p><strong>Lema 3</strong> (O segundo termo e uma observação nova).
+Seja <span class="math inline">\(X_{n+1}\)</span> com densidade <span class="math inline">\(f\)</span>, independente de <span class="math inline">\(X_1, \ldots, X_n\)</span>.
+Então</p>
+<p><span class="math display">\[\int \hat{f}_h(x)f(x)\,dx = \mathbb{E}\left[\hat{f}_h(X_{n+1})
+  \,\middle|\, X_1,\ldots,X_n\right]\]</span></p>
+<p>e, para todo <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[B(h) = \mathbb{E}\left[\hat{f}_h(X_{n+1})\right]
+  = \frac{1}{h}\mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right].\]</span></p>
+<p><em>Prova</em>. Condicionalmente a <span class="math inline">\(X_1, \ldots, X_n\)</span>, <span class="math inline">\(\hat{f}_h\)</span> é uma função
+fixa e <span class="math inline">\(X_{n+1}\)</span> tem densidade <span class="math inline">\(f\)</span>, o que prova a primeira identidade.
+Tomando a esperança dos dois lados, a lei da esperança total fornece
+<span class="math inline">\(B(h) = \mathbb{E}[\hat{f}_h(X_{n+1})]\)</span>. Por fim,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\left[\hat{f}_h(X_{n+1})\right]
+&amp;= \frac{1}{nh}\sum_{j=1}^{n}
+    \mathbb{E}\left[K\left(\frac{X_j - X_{n+1}}{h}\right)\right] \\
+&amp;= \frac{1}{h}\mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right],
+\end{align*}\]</span></p>
+<p>pois, como <span class="math inline">\(X_1, \ldots, X_{n+1}\)</span> são i.i.d., cada par
+<span class="math inline">\((X_j, X_{n+1})\)</span> tem a mesma distribuição que <span class="math inline">\((X_2, X_1)\)</span>.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Lema 4</strong> (Viés do estimador ingênuo).
+Para todo <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}\hat{f}_h(X_i)\right]
+  = \frac{K(0)}{nh} + \frac{n-1}{n}B(h).\]</span></p>
+<p><em>Prova</em>. Como os <span class="math inline">\(X_i\)</span> são i.i.d., basta calcular
+<span class="math inline">\(\mathbb{E}[\hat{f}_h(X_1)]\)</span>. A diferença em relação ao Lema 3 é que o
+ponto de avaliação, <span class="math inline">\(X_1\)</span>, é agora uma das observações usadas em
+<span class="math inline">\(\hat{f}_h\)</span>. Separando a parcela <span class="math inline">\(j = 1\)</span>,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\left[\hat{f}_h(X_1)\right]
+&amp;= \frac{1}{nh}K(0) + \frac{1}{nh}\sum_{j=2}^{n}
+    \mathbb{E}\left[K\left(\frac{X_j - X_1}{h}\right)\right] \\
+&amp;= \frac{K(0)}{nh} + \frac{n-1}{n}\cdot\frac{1}{h}
+    \mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right] \\
+&amp;= \frac{K(0)}{nh} + \frac{n-1}{n}B(h),
+\end{align*}\]</span></p>
+<p>em que a última igualdade decorre do Lema 3. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong> (O problema).
+Os Lemas 3 e 4 diferem apenas no ponto de avaliação. No Lema 3,
+<span class="math inline">\(X_{n+1}\)</span> é independente de todas as observações, e as <span class="math inline">\(n\)</span> parcelas se
+comportam da mesma forma. No Lema 4, a parcela <span class="math inline">\(j = 1\)</span> é substituída
+pela constante <span class="math inline">\(K(0)(nh)^{-1}\)</span>, e apenas as <span class="math inline">\(n - 1\)</span> parcelas restantes
+se comportam como no Lema 3. O viés do estimador ingênuo é, portanto,
+<span class="math inline">\(K(0)(nh)^{-1} - n^{-1}B(h)\)</span>, confirmando a suspeita da Observação
+anterior: <span class="math inline">\(X_i\)</span> “enxerga a si mesma”. A parcela <span class="math inline">\(K(0)(nh)^{-1}\)</span> explode
+quando <span class="math inline">\(h \to 0\)</span>. Para dados distintos e <span class="math inline">\(K \geq 0\)</span> com máximo em <span class="math inline">\(0\)</span>,
+o critério ingênuo <span class="math inline">\(\int \hat{f}_h^2 - 2n^{-1}\sum_i \hat{f}_h(X_i)\)</span> se
+comporta como <span class="math inline">\((R(K) - 2K(0))(nh)^{-1}\)</span> para <span class="math inline">\(h\)</span> pequeno e, como
+<span class="math inline">\(R(K) \leq K(0)\int K = K(0)\)</span>, tende a <span class="math inline">\(-\infty\)</span> (Exercício 2).
+Minimizá-lo levaria sempre a <span class="math inline">\(h \to 0\)</span>, isto é, a um estimador que
+apenas reproduz os dados.</p>
+</div>
+<div id="validação-cruzada" class="section level1">
+<h1>Validação cruzada</h1>
+<p>A solução para o problema do Lema 4 é a mesma ideia do jackknife da
+Aula 6: calcular o estimador em <span class="math inline">\(X_i\)</span> sem usar <span class="math inline">\(X_i\)</span>.</p>
+<p><strong>Definição</strong> (KDE de exclusão).
+Para <span class="math inline">\(1 \leq i \leq n\)</span>, o KDE calculado sem a <span class="math inline">\(i\)</span>-ésima observação é</p>
+<p><span class="math display">\[\hat{f}_{h,-i}(x) = \frac{1}{(n-1)h}\sum_{j \neq i}
+  K\left(\frac{X_j - x}{h}\right).\]</span></p>
+<p><strong>Definição</strong> (Validação cruzada, <span class="citation">Rudemo (<a href="#ref-Rudemo1982">1982</a>)</span>).
+O critério de validação cruzada e a banda escolhida por ele são</p>
+<p><span class="math display">\[\text{CV}(h) = \int \hat{f}_h(x)^2\,dx
+  - \frac{2}{n}\sum_{i=1}^{n}\hat{f}_{h,-i}(X_i)
+  \qquad \text{e} \qquad
+  \hat{h}_{\text{CV}} = \arg\min_{h &gt; 0}\text{CV}(h).\]</span></p>
+<p><strong>Teorema 1</strong> (Estimação não-viesada do risco).
+Para todo <span class="math inline">\(h &gt; 0\)</span>,</p>
+<p><span class="math display">\[\mathbb{E}\left[\text{CV}(h)\right] = J(h)
+  = \text{MISE}(h) - \int f(x)^2\,dx.\]</span></p>
+<p><em>Prova</em>. Como <span class="math inline">\(\hat{f}_{h,-i}\)</span> não depende de <span class="math inline">\(X_i\)</span> e os <span class="math inline">\(X_j\)</span> são
+i.i.d.,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\left[\hat{f}_{h,-i}(X_i)\right]
+&amp;= \frac{1}{(n-1)h}\sum_{j \neq i}
+    \mathbb{E}\left[K\left(\frac{X_j - X_i}{h}\right)\right] \\
+&amp;= \frac{1}{h}\mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right] \\
+&amp;= B(h),
+\end{align*}\]</span></p>
+<p>em que a última igualdade é o Lema 3. Assim,
+<span class="math inline">\(\mathbb{E}\left[2n^{-1}\sum_i \hat{f}_{h,-i}(X_i)\right] = 2B(h)\)</span>.
+A conclusão decorre do Lema 2 e da Observação sobre o terceiro termo.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Observação</strong>. A diferença em relação ao estimador ingênuo está
+inteiramente na parcela <span class="math inline">\(j = i\)</span>. Ao excluí-la, <span class="math inline">\(X_i\)</span> passa a se
+comportar, para <span class="math inline">\(\hat{f}_{h,-i}\)</span>, como uma observação nova e
+independente, exatamente como a observação <span class="math inline">\(X_{n+1}\)</span> do Lema 3.
+Note também que <span class="math inline">\(\mathbb{E}[\hat{f}_{h,-i}(x)] = \mathbb{E}[\hat{f}_h(x)]\)</span>:
+a esperança do KDE não depende do tamanho da amostra, de modo que
+remover uma observação não introduz viés em <span class="math inline">\(B(h)\)</span>.</p>
+<p><strong>Lema 5</strong> (Cálculo eficiente).
+Seja <span class="math inline">\(\bar{K}(v) = \int K(t)K(t+v)\,dt\)</span>. Então</p>
+<p><span class="math display">\[\text{CV}(h) = \frac{1}{n^2h}\sum_{i=1}^{n}\sum_{j=1}^{n}
+  \bar{K}\left(\frac{X_j - X_i}{h}\right)
+  - \frac{2}{n(n-1)h}\sum_{i=1}^{n}\sum_{j \neq i}
+  K\left(\frac{X_j - X_i}{h}\right).\]</span></p>
+<p><em>Prova</em>. Para o primeiro termo, expandindo o quadrado,</p>
+<p><span class="math display">\[\int \hat{f}_h(x)^2\,dx = \frac{1}{n^2h^2}\sum_{i=1}^{n}\sum_{j=1}^{n}
+  \int K\left(\frac{X_i - x}{h}\right)K\left(\frac{X_j - x}{h}\right)dx.\]</span></p>
+<p>Com a mudança de variáveis <span class="math inline">\(t = (X_i - x)h^{-1}\)</span>, tem-se
+<span class="math inline">\((X_j - x)h^{-1} = t + (X_j - X_i)h^{-1}\)</span> e <span class="math inline">\(dx = h\,dt\)</span>, de modo que
+cada integral vale <span class="math inline">\(h\bar{K}\left((X_j - X_i)h^{-1}\right)\)</span>. O segundo
+termo decorre diretamente da definição de <span class="math inline">\(\hat{f}_{h,-i}\)</span>.
+<span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Exemplo 1</strong> (Kernel gaussiano).
+Se <span class="math inline">\(K = \phi\)</span> é a densidade da Normal padrão, então <span class="math inline">\(\bar{K}(v)\)</span> é a
+densidade de <span class="math inline">\(Z_2 - Z_1\)</span> em <span class="math inline">\(v\)</span>, com <span class="math inline">\(Z_1, Z_2\)</span> i.i.d. Normal padrão.
+Assim, <span class="math inline">\(\bar{K}(v) = (4\pi)^{-1/2}e^{-v^2/4}\)</span> é a densidade da
+<span class="math inline">\(N(0,2)\)</span>, e <span class="math inline">\(\text{CV}(h)\)</span> tem forma fechada.</p>
+<p><strong>Observação</strong> (Custo computacional).
+O Lema 5 elimina as duas operações caras da definição de
+<span class="math inline">\(\text{CV}(h)\)</span>: a integração numérica de <span class="math inline">\(\hat{f}_h^2\)</span> e a construção
+de <span class="math inline">\(n\)</span> estimadores de exclusão. Tudo depende apenas das diferenças
+<span class="math inline">\(X_j - X_i\)</span>, que são calculadas uma única vez e reaproveitadas para
+cada <span class="math inline">\(h\)</span> de uma grade. Alternativamente, os termos de exclusão podem ser
+obtidos a partir do KDE completo, pois
+<span class="math inline">\(\hat{f}_{h,-i}(X_i) = (n-1)^{-1}\left(n\hat{f}_h(X_i) - K(0)h^{-1}\right)\)</span>.</p>
+<p><strong>Observação</strong> (A variância de <span class="math inline">\(\text{CV}(h)\)</span>).
+O Teorema 1 garante que <span class="math inline">\(\text{CV}(h)\)</span> acerta <span class="math inline">\(J(h)\)</span> em média, para
+cada <span class="math inline">\(h\)</span> fixo. Isto não garante que <span class="math inline">\(\hat{h}_{\text{CV}}\)</span> esteja perto
+da banda que minimiza <span class="math inline">\(J\)</span>, e há três razões para esperar que não
+esteja.</p>
+<p>Primeiro, <span class="math inline">\(J\)</span> é plana perto do seu mínimo. Como <span class="math inline">\(J&#39;(h^*) = 0\)</span>, tem-se
+<span class="math inline">\(J(h) \approx J(h^*) + c(h - h^*)^2\)</span>, e uma flutuação de tamanho
+<span class="math inline">\(\delta\)</span> em <span class="math inline">\(\text{CV}(h)\)</span> desloca o minimizador por uma distância da
+ordem de <span class="math inline">\(\sqrt{\delta/c}\)</span>. Flutuações pequenas do critério tornam-se
+flutuações grandes da banda.</p>
+<p>Segundo, as parcelas <span class="math inline">\(K((X_j - X_i)h^{-1})\)</span> só são relevantes para
+pares com <span class="math inline">\(|X_j - X_i|\)</span> da ordem de <span class="math inline">\(h\)</span>. Para <span class="math inline">\(h\)</span> pequeno,
+<span class="math inline">\(\text{CV}(h)\)</span> depende de poucos pares e tem variância grande
+justamente na região de bandas pequenas, onde podem surgir mínimos
+espúrios.</p>
+<p>Terceiro, se os dados foram arredondados, há pares com <span class="math inline">\(X_i = X_j\)</span> e
+<span class="math inline">\(i \neq j\)</span>. Cada um contribui com <span class="math inline">\(K(0)\)</span> no termo de exclusão, o que
+reintroduz o problema do Lema 4 e pode levar a
+<span class="math inline">\(\text{CV}(h) \to -\infty\)</span> quando <span class="math inline">\(h \to 0\)</span> (Exercício 3).</p>
+<p>Estes argumentos são confirmados pela teoria: <span class="citation">Stone (<a href="#ref-Stone1984">1984</a>)</span> mostrou que
+<span class="math inline">\(\hat{h}_{\text{CV}}\)</span> é assintoticamente ótima, mas <span class="citation">Hall and Marron (<a href="#ref-HallMarron1987">1987</a>)</span>
+mostraram que o erro relativo <span class="math inline">\(\hat{h}_{\text{CV}}/h^* - 1\)</span> converge a
+zero apenas à taxa <span class="math inline">\(n^{-1/10}\)</span>.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-cálculo-do-critério" class="section level2">
+<h2>Exercício 1 (Cálculo do critério)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Verifique a identidade
+<span class="math inline">\(\hat{f}_{h,-i}(X_i) = (n-1)^{-1}\left(n\hat{f}_h(X_i)
+- K(0)h^{-1}\right)\)</span>.</p></li>
+<li><p>Mostre que, para o kernel uniforme,
+<span class="math inline">\(\bar{K}(v) = 4^{-1}(2 - |v|)\,\mathbb{I}(|v| \leq 2)\)</span>.</p></li>
+<li><p>Mostre que, se <span class="math inline">\(K\)</span> é simétrico, então <span class="math inline">\(\bar{K}(0) = R(K)\)</span> e
+<span class="math inline">\(\bar{K}\)</span> é simétrico.</p></li>
+</ol>
+</div>
+<div id="exercício-2-o-critério-ingênuo" class="section level2">
+<h2>Exercício 2 (O critério ingênuo)</h2>
+<p>Suponha que <span class="math inline">\(X_1, \ldots, X_n\)</span> são distintos e que <span class="math inline">\(K \geq 0\)</span> tem
+suporte compacto e máximo em <span class="math inline">\(0\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, para <span class="math inline">\(h\)</span> suficientemente pequeno,
+<span class="math inline">\(\int \hat{f}_h^2 = R(K)(nh)^{-1}\)</span> e
+<span class="math inline">\(n^{-1}\sum_i \hat{f}_h(X_i) = K(0)(nh)^{-1}\)</span>.</p></li>
+<li><p>Conclua que o critério ingênuo tende a <span class="math inline">\(-\infty\)</span> quando <span class="math inline">\(h \to 0\)</span>.</p></li>
+<li><p>Mostre que, sob as mesmas condições, <span class="math inline">\(\text{CV}(h)\)</span> tende a
+<span class="math inline">\(+\infty\)</span> quando <span class="math inline">\(h \to 0\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-3-dados-arredondados" class="section level2">
+<h2>Exercício 3 (Dados arredondados)</h2>
+<p>Suponha que <span class="math inline">\(n = rm\)</span> e que os dados assumem <span class="math inline">\(r\)</span> valores distintos, cada
+um repetido exatamente <span class="math inline">\(m\)</span> vezes. Seja <span class="math inline">\(K = \phi\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Mostre que</li>
+</ol>
+<p><span class="math display">\[\lim_{h \to 0} h\,\text{CV}(h)
+  = \frac{mR(K)}{n} - \frac{2(m-1)K(0)}{n-1}.\]</span></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Conclua que, se <span class="math inline">\(m \geq 2\)</span>, então <span class="math inline">\(\text{CV}(h) \to -\infty\)</span> quando
+<span class="math inline">\(h \to 0\)</span>.</p></li>
+<li><p>Proponha uma forma de contornar este problema na prática.</p></li>
+</ol>
+</div>
+<div id="exercício-4-simulação" class="section level2">
+<h2>Exercício 4 (Simulação)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Implemente <span class="math inline">\(\text{CV}(h)\)</span> usando o Lema 5 e o Exemplo 1.</p></li>
+<li><p>Gere <span class="math inline">\(200\)</span> amostras de tamanho <span class="math inline">\(n = 100\)</span> de uma
+<span class="math inline">\(N(0,1)\)</span> e obtenha <span class="math inline">\(\hat{h}_{\text{CV}}\)</span> em cada uma. Faça um
+histograma das bandas obtidas e compare com a banda que minimiza o
+MISE, que para o kernel gaussiano e <span class="math inline">\(f = \phi\)</span> é aproximadamente
+<span class="math inline">\(1{,}06\,n^{-1/5}\)</span>.</p></li>
+<li><p>Repita (b) com <span class="math inline">\(n = 1000\)</span>. A dispersão das bandas diminui na
+proporção esperada pela Observação sobre a variância de
+<span class="math inline">\(\text{CV}(h)\)</span>?</p></li>
+</ol>
+</div>
+<div id="exercício-5-validação-cruzada-e-jackknife" class="section level2">
+<h2>Exercício 5 (Validação cruzada e jackknife)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Explique a relação entre <span class="math inline">\(\hat{f}_{h,-i}\)</span> e as estimativas de
+exclusão do jackknife da Aula 6.</p></li>
+<li><p>O critério <span class="math inline">\(\text{CV}(h)\)</span> poderia ser obtido aplicando a correção
+de viés do jackknife ao critério ingênuo? Discuta.</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-HallMarron1987" class="csl-entry">
+Hall, Peter, and James Stephen Marron. 1987. <span>“Extent to Which Least-Squares Cross-Validation Minimises Integrated Square Error in Nonparametric Density Estimation.”</span> <em>Probability Theory and Related Fields</em> 74 (4): 567–81.
+</div>
+<div id="ref-Rudemo1982" class="csl-entry">
+Rudemo, Mats. 1982. <span>“Empirical Choice of Histograms and Kernel Density Estimators.”</span> <em>Scandinavian Journal of Statistics</em> 9 (2): 65–78.
+</div>
+<div id="ref-Stone1984" class="csl-entry">
+Stone, Charles J. 1984. <span>“An Asymptotically Optimal Window Selection Rule for Kernel Density Estimates.”</span> <em>The Annals of Statistics</em> 12 (4): 1285–97.
+</div>
+<div id="ref-Tsybakov2009" class="csl-entry">
+Tsybakov, Alexandre B. 2009. <em>Introduction to Nonparametric Estimation</em>. Springer.
+</div>
+</div>
+</div>

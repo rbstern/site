@@ -1,5 +1,5 @@
 ---
-title: "Aula 2: Distribuição empírica e funcionais estatísticos"
+title: "Aula 2: Distribuição empírica"
 linkTitle: "Aula 2: Distribuição empírica"
 author: "Rafael B. Stern"
 highlight: true

@@ -1,0 +1,374 @@
+---
+title: "Aula 8: Estimação não-viesada do risco"
+linkTitle: "Aula 8: Risco do KDE"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 80
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 6:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 01/09/2026.
+
+**Leitura**: @Tsybakov2009, Seção 1.4.
+
+# Estimação não-viesada do risco
+
+Ao longo desta aula, $X_1, \ldots, X_n$ são i.i.d. com densidade $f$,
+$K$ é um kernel e, para enfatizar a dependência na banda, escrevemos
+
+$$\hat{f}_h(x) = \frac{1}{nh}\sum_{i=1}^{n}K\left(\frac{X_i - x}{h}\right)$$
+
+para o KDE da Aula 7. Supomos também que $\int f^2 < \infty$.
+
+A Aula 7 mostrou que a banda deve ser da ordem de $n^{-1/(2\beta+1)}$, mas
+que a melhor constante depende de $f$, que é desconhecida. O objetivo
+desta aula é estimar o risco de $\hat{f}_h$ a partir dos dados, para
+então escolher $h$ minimizando essa estimativa.
+
+**Definição** (Risco quadrático integrado).
+O risco quadrático integrado de $\hat{f}_h$ é
+
+$$\text{MISE}(h) = \mathbb{E}\left[\int \left(\hat{f}_h(x)
+  - f(x)\right)^2 dx\right].$$
+
+**Lema 1** (Decomposição em três termos).
+Para todo $h > 0$,
+
+$$\text{MISE}(h) = A(h) - 2B(h) + \int f(x)^2\,dx,$$
+
+em que
+
+$$A(h) = \mathbb{E}\left[\int \hat{f}_h(x)^2\,dx\right]
+  \qquad \text{e} \qquad
+  B(h) = \mathbb{E}\left[\int \hat{f}_h(x)f(x)\,dx\right].$$
+
+*Prova*. Abrindo o quadrado,
+
+\begin{align*}
+ \text{MISE}(h)
+ &= \mathbb{E}\left[\int \left(\hat{f}_h(x)^2 - 2\hat{f}_h(x)f(x)
+    + f(x)^2\right)dx\right] \\
+ &= \mathbb{E}\left[\int \hat{f}_h(x)^2\,dx\right]
+    - 2\,\mathbb{E}\left[\int \hat{f}_h(x)f(x)\,dx\right]
+    + \int f(x)^2\,dx,
+\end{align*}
+
+em que a segunda igualdade usa a linearidade da esperança e que
+$\int f^2$ não é aleatório. $\blacksquare$
+
+**Observação** (O terceiro termo).
+O termo $\int f^2$ é desconhecido, mas não depende de $h$. Portanto,
+minimizar $\text{MISE}(h)$ em $h$ é equivalente a minimizar
+
+$$J(h) = \text{MISE}(h) - \int f(x)^2\,dx = A(h) - 2B(h),$$
+
+e não é necessário estimar $\int f^2$. Basta estimar $A(h)$ e $B(h)$.
+
+**Observação** (Por que o risco integrado).
+Para o MSE em um ponto $x$, a mesma abertura do quadrado produziria o
+termo $f(x)\,\mathbb{E}[\hat{f}_h(x)]$, que envolve o valor de $f$ em um
+único ponto. Já no risco integrado, o termo cruzado é uma integral
+contra $f$, isto é, uma esperança com respeito à distribuição dos
+dados. É isto que permitirá estimá-lo por uma média sobre a amostra.
+
+**Lema 2** (O primeiro termo).
+$\int \hat{f}_h(x)^2\,dx$ é um estimador não-viesado de $A(h)$.
+
+*Prova*. $\int \hat{f}_h^2$ é uma função dos dados e, pela definição de
+$A(h)$, a sua esperança é $A(h)$. $\blacksquare$
+
+**Observação**. O Lema 2 é imediato porque $A(h)$ depende apenas do
+estimador, e não de $f$. Toda a dificuldade está em $B(h)$.
+
+**Observação** (Uma ideia natural).
+Como $f$ é a densidade dos dados, $\int \hat{f}_h(x)f(x)\,dx$ é a média
+de $\hat{f}_h$ com respeito à distribuição que gerou a amostra. Isto
+sugere estimar esta integral pela média de $\hat{f}_h$ nos pontos
+observados,
+
+$$\frac{1}{n}\sum_{i=1}^{n}\hat{f}_h(X_i).$$
+
+A justificativa seria a do Lema 1 da Aula 4: se $g$ é uma função
+**fixa**, então $\mathbb{E}\left[n^{-1}\sum_{i}g(X_i)\right]
+= \int g f$. O problema é que $\hat{f}_h$ não é fixa, pois foi
+construída a partir dos próprios $X_1, \ldots, X_n$. Assim, cada $X_i$
+entra duas vezes em $\hat{f}_h(X_i)$: como ponto de avaliação e como uma
+das observações que definem $\hat{f}_h$. Em particular, a parcela
+$j = i$ da soma que define $\hat{f}_h(X_i)$ vale $K(0)(nh)^{-1}$,
+qualquer que seja a amostra, e não há parcela análoga em
+$\int \hat{f}_h f$. Isto sugere que o estimador acima é viesado. Para
+confirmar, é preciso comparar a sua esperança com $B(h)$, o que é feito
+nos dois lemas a seguir.
+
+**Lema 3** (O segundo termo e uma observação nova).
+Seja $X_{n+1}$ com densidade $f$, independente de $X_1, \ldots, X_n$.
+Então
+
+$$\int \hat{f}_h(x)f(x)\,dx = \mathbb{E}\left[\hat{f}_h(X_{n+1})
+  \,\middle|\, X_1,\ldots,X_n\right]$$
+
+e, para todo $h > 0$,
+
+$$B(h) = \mathbb{E}\left[\hat{f}_h(X_{n+1})\right]
+  = \frac{1}{h}\mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right].$$
+
+*Prova*. Condicionalmente a $X_1, \ldots, X_n$, $\hat{f}_h$ é uma função
+fixa e $X_{n+1}$ tem densidade $f$, o que prova a primeira identidade.
+Tomando a esperança dos dois lados, a lei da esperança total fornece
+$B(h) = \mathbb{E}[\hat{f}_h(X_{n+1})]$. Por fim,
+
+\begin{align*}
+ \mathbb{E}\left[\hat{f}_h(X_{n+1})\right]
+ &= \frac{1}{nh}\sum_{j=1}^{n}
+    \mathbb{E}\left[K\left(\frac{X_j - X_{n+1}}{h}\right)\right] \\
+ &= \frac{1}{h}\mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right],
+\end{align*}
+
+pois, como $X_1, \ldots, X_{n+1}$ são i.i.d., cada par
+$(X_j, X_{n+1})$ tem a mesma distribuição que $(X_2, X_1)$.
+$\blacksquare$
+
+**Lema 4** (Viés do estimador ingênuo).
+Para todo $h > 0$,
+
+$$\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}\hat{f}_h(X_i)\right]
+  = \frac{K(0)}{nh} + \frac{n-1}{n}B(h).$$
+
+*Prova*. Como os $X_i$ são i.i.d., basta calcular
+$\mathbb{E}[\hat{f}_h(X_1)]$. A diferença em relação ao Lema 3 é que o
+ponto de avaliação, $X_1$, é agora uma das observações usadas em
+$\hat{f}_h$. Separando a parcela $j = 1$,
+
+\begin{align*}
+ \mathbb{E}\left[\hat{f}_h(X_1)\right]
+ &= \frac{1}{nh}K(0) + \frac{1}{nh}\sum_{j=2}^{n}
+    \mathbb{E}\left[K\left(\frac{X_j - X_1}{h}\right)\right] \\
+ &= \frac{K(0)}{nh} + \frac{n-1}{n}\cdot\frac{1}{h}
+    \mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right] \\
+ &= \frac{K(0)}{nh} + \frac{n-1}{n}B(h),
+\end{align*}
+
+em que a última igualdade decorre do Lema 3. $\blacksquare$
+
+**Observação** (O problema).
+Os Lemas 3 e 4 diferem apenas no ponto de avaliação. No Lema 3,
+$X_{n+1}$ é independente de todas as observações, e as $n$ parcelas se
+comportam da mesma forma. No Lema 4, a parcela $j = 1$ é substituída
+pela constante $K(0)(nh)^{-1}$, e apenas as $n - 1$ parcelas restantes
+se comportam como no Lema 3. O viés do estimador ingênuo é, portanto,
+$K(0)(nh)^{-1} - n^{-1}B(h)$, confirmando a suspeita da Observação
+anterior: $X_i$ "enxerga a si mesma". A parcela $K(0)(nh)^{-1}$ explode
+quando $h \to 0$. Para dados distintos e $K \geq 0$ com máximo em $0$,
+o critério ingênuo $\int \hat{f}_h^2 - 2n^{-1}\sum_i \hat{f}_h(X_i)$ se
+comporta como $(R(K) - 2K(0))(nh)^{-1}$ para $h$ pequeno e, como
+$R(K) \leq K(0)\int K = K(0)$, tende a $-\infty$ (Exercício 2).
+Minimizá-lo levaria sempre a $h \to 0$, isto é, a um estimador que
+apenas reproduz os dados.
+
+# Validação cruzada
+
+A solução para o problema do Lema 4 é a mesma ideia do jackknife da
+Aula 6: calcular o estimador em $X_i$ sem usar $X_i$.
+
+**Definição** (KDE de exclusão).
+Para $1 \leq i \leq n$, o KDE calculado sem a $i$-ésima observação é
+
+$$\hat{f}_{h,-i}(x) = \frac{1}{(n-1)h}\sum_{j \neq i}
+  K\left(\frac{X_j - x}{h}\right).$$
+
+**Definição** (Validação cruzada, @Rudemo1982).
+O critério de validação cruzada e a banda escolhida por ele são
+
+$$\text{CV}(h) = \int \hat{f}_h(x)^2\,dx
+  - \frac{2}{n}\sum_{i=1}^{n}\hat{f}_{h,-i}(X_i)
+  \qquad \text{e} \qquad
+  \hat{h}_{\text{CV}} = \arg\min_{h > 0}\text{CV}(h).$$
+
+**Teorema 1** (Estimação não-viesada do risco).
+Para todo $h > 0$,
+
+$$\mathbb{E}\left[\text{CV}(h)\right] = J(h)
+  = \text{MISE}(h) - \int f(x)^2\,dx.$$
+
+*Prova*. Como $\hat{f}_{h,-i}$ não depende de $X_i$ e os $X_j$ são
+i.i.d.,
+
+\begin{align*}
+ \mathbb{E}\left[\hat{f}_{h,-i}(X_i)\right]
+ &= \frac{1}{(n-1)h}\sum_{j \neq i}
+    \mathbb{E}\left[K\left(\frac{X_j - X_i}{h}\right)\right] \\
+ &= \frac{1}{h}\mathbb{E}\left[K\left(\frac{X_2 - X_1}{h}\right)\right] \\
+ &= B(h),
+\end{align*}
+
+em que a última igualdade é o Lema 3. Assim,
+$\mathbb{E}\left[2n^{-1}\sum_i \hat{f}_{h,-i}(X_i)\right] = 2B(h)$.
+A conclusão decorre do Lema 2 e da Observação sobre o terceiro termo.
+$\blacksquare$
+
+**Observação**. A diferença em relação ao estimador ingênuo está
+inteiramente na parcela $j = i$. Ao excluí-la, $X_i$ passa a se
+comportar, para $\hat{f}_{h,-i}$, como uma observação nova e
+independente, exatamente como a observação $X_{n+1}$ do Lema 3.
+Note também que $\mathbb{E}[\hat{f}_{h,-i}(x)] = \mathbb{E}[\hat{f}_h(x)]$:
+a esperança do KDE não depende do tamanho da amostra, de modo que
+remover uma observação não introduz viés em $B(h)$.
+
+**Lema 5** (Cálculo eficiente).
+Seja $\bar{K}(v) = \int K(t)K(t+v)\,dt$. Então
+
+$$\text{CV}(h) = \frac{1}{n^2h}\sum_{i=1}^{n}\sum_{j=1}^{n}
+  \bar{K}\left(\frac{X_j - X_i}{h}\right)
+  - \frac{2}{n(n-1)h}\sum_{i=1}^{n}\sum_{j \neq i}
+  K\left(\frac{X_j - X_i}{h}\right).$$
+
+*Prova*. Para o primeiro termo, expandindo o quadrado,
+
+$$\int \hat{f}_h(x)^2\,dx = \frac{1}{n^2h^2}\sum_{i=1}^{n}\sum_{j=1}^{n}
+  \int K\left(\frac{X_i - x}{h}\right)K\left(\frac{X_j - x}{h}\right)dx.$$
+
+Com a mudança de variáveis $t = (X_i - x)h^{-1}$, tem-se
+$(X_j - x)h^{-1} = t + (X_j - X_i)h^{-1}$ e $dx = h\,dt$, de modo que
+cada integral vale $h\bar{K}\left((X_j - X_i)h^{-1}\right)$. O segundo
+termo decorre diretamente da definição de $\hat{f}_{h,-i}$.
+$\blacksquare$
+
+**Exemplo 1** (Kernel gaussiano).
+Se $K = \phi$ é a densidade da Normal padrão, então $\bar{K}(v)$ é a
+densidade de $Z_2 - Z_1$ em $v$, com $Z_1, Z_2$ i.i.d. Normal padrão.
+Assim, $\bar{K}(v) = (4\pi)^{-1/2}e^{-v^2/4}$ é a densidade da
+$N(0,2)$, e $\text{CV}(h)$ tem forma fechada.
+
+**Observação** (Custo computacional).
+O Lema 5 elimina as duas operações caras da definição de
+$\text{CV}(h)$: a integração numérica de $\hat{f}_h^2$ e a construção
+de $n$ estimadores de exclusão. Tudo depende apenas das diferenças
+$X_j - X_i$, que são calculadas uma única vez e reaproveitadas para
+cada $h$ de uma grade. Alternativamente, os termos de exclusão podem ser
+obtidos a partir do KDE completo, pois
+$\hat{f}_{h,-i}(X_i) = (n-1)^{-1}\left(n\hat{f}_h(X_i) - K(0)h^{-1}\right)$.
+
+**Observação** (A variância de $\text{CV}(h)$).
+O Teorema 1 garante que $\text{CV}(h)$ acerta $J(h)$ em média, para
+cada $h$ fixo. Isto não garante que $\hat{h}_{\text{CV}}$ esteja perto
+da banda que minimiza $J$, e há três razões para esperar que não
+esteja.
+
+Primeiro, $J$ é plana perto do seu mínimo. Como $J'(h^*) = 0$, tem-se
+$J(h) \approx J(h^*) + c(h - h^*)^2$, e uma flutuação de tamanho
+$\delta$ em $\text{CV}(h)$ desloca o minimizador por uma distância da
+ordem de $\sqrt{\delta/c}$. Flutuações pequenas do critério tornam-se
+flutuações grandes da banda.
+
+Segundo, as parcelas $K((X_j - X_i)h^{-1})$ só são relevantes para
+pares com $|X_j - X_i|$ da ordem de $h$. Para $h$ pequeno,
+$\text{CV}(h)$ depende de poucos pares e tem variância grande
+justamente na região de bandas pequenas, onde podem surgir mínimos
+espúrios.
+
+Terceiro, se os dados foram arredondados, há pares com $X_i = X_j$ e
+$i \neq j$. Cada um contribui com $K(0)$ no termo de exclusão, o que
+reintroduz o problema do Lema 4 e pode levar a
+$\text{CV}(h) \to -\infty$ quando $h \to 0$ (Exercício 3).
+
+Estes argumentos são confirmados pela teoria: @Stone1984 mostrou que
+$\hat{h}_{\text{CV}}$ é assintoticamente ótima, mas @HallMarron1987
+mostraram que o erro relativo $\hat{h}_{\text{CV}}/h^* - 1$ converge a
+zero apenas à taxa $n^{-1/10}$.
+
+# Exercícios
+
+## Exercício 1 (Cálculo do critério)
+
+(a) Verifique a identidade
+    $\hat{f}_{h,-i}(X_i) = (n-1)^{-1}\left(n\hat{f}_h(X_i)
+    - K(0)h^{-1}\right)$.
+
+(b) Mostre que, para o kernel uniforme,
+    $\bar{K}(v) = 4^{-1}(2 - |v|)\,\mathbb{I}(|v| \leq 2)$.
+
+(c) Mostre que, se $K$ é simétrico, então $\bar{K}(0) = R(K)$ e
+    $\bar{K}$ é simétrico.
+
+## Exercício 2 (O critério ingênuo)
+
+Suponha que $X_1, \ldots, X_n$ são distintos e que $K \geq 0$ tem
+suporte compacto e máximo em $0$.
+
+(a) Mostre que, para $h$ suficientemente pequeno,
+    $\int \hat{f}_h^2 = R(K)(nh)^{-1}$ e
+    $n^{-1}\sum_i \hat{f}_h(X_i) = K(0)(nh)^{-1}$.
+
+(b) Conclua que o critério ingênuo tende a $-\infty$ quando $h \to 0$.
+
+(c) Mostre que, sob as mesmas condições, $\text{CV}(h)$ tende a
+    $+\infty$ quando $h \to 0$.
+
+## Exercício 3 (Dados arredondados)
+
+Suponha que $n = rm$ e que os dados assumem $r$ valores distintos, cada
+um repetido exatamente $m$ vezes. Seja $K = \phi$.
+
+(a) Mostre que
+
+$$\lim_{h \to 0} h\,\text{CV}(h)
+  = \frac{mR(K)}{n} - \frac{2(m-1)K(0)}{n-1}.$$
+
+(b) Conclua que, se $m \geq 2$, então $\text{CV}(h) \to -\infty$ quando
+    $h \to 0$.
+
+(c) Proponha uma forma de contornar este problema na prática.
+
+## Exercício 4 (Simulação)
+
+(a) Implemente $\text{CV}(h)$ usando o Lema 5 e o Exemplo 1.
+
+(b) Gere $200$ amostras de tamanho $n = 100$ de uma
+    $N(0,1)$ e obtenha $\hat{h}_{\text{CV}}$ em cada uma. Faça um
+    histograma das bandas obtidas e compare com a banda que minimiza o
+    MISE, que para o kernel gaussiano e $f = \phi$ é aproximadamente
+    $1{,}06\,n^{-1/5}$.
+
+(c) Repita (b) com $n = 1000$. A dispersão das bandas diminui na
+    proporção esperada pela Observação sobre a variância de
+    $\text{CV}(h)$?
+
+## Exercício 5 (Validação cruzada e jackknife)
+
+(a) Explique a relação entre $\hat{f}_{h,-i}$ e as estimativas de
+    exclusão do jackknife da Aula 6.
+
+(b) O critério $\text{CV}(h)$ poderia ser obtido aplicando a correção
+    de viés do jackknife ao critério ingênuo? Discuta.
+
+# Referências

@@ -1,0 +1,314 @@
+---
+title: "Aula 6: Jackknife e Bootstrap"
+linkTitle: "Aula 6: Jackknife e Bootstrap"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 60
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 4:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 25/08/2026.</p>
+<p><strong>Leitura</strong>: <span class="citation">Wasserman (<a href="#ref-Wasserman2006">2006</a>)</span></p>
+<div id="jackknife" class="section level1">
+<h1>Jackknife</h1>
+<p>Ao longo desta aula, <span class="math inline">\(X_1, \ldots, X_n\)</span> são i.i.d. com distribuição
+<span class="math inline">\(F\)</span>, <span class="math inline">\(\theta = T(F)\)</span> é o parâmetro de interesse e
+<span class="math inline">\(\hat{\theta}_n = T(\hat{F}_n)\)</span> é o estimador plug-in da Aula 4.</p>
+<p><strong>Definição</strong> (Estimativas de exclusão).
+Para <span class="math inline">\(1 \leq i \leq n\)</span>, seja <span class="math inline">\(\hat{F}_{n,-i}\)</span> a distribuição empírica
+de <span class="math inline">\(X_1, \ldots, X_{i-1}, X_{i+1}, \ldots, X_n\)</span>. As estimativas de
+exclusão e a sua média são</p>
+<p><span class="math display">\[\hat{\theta}_{-i} = T\left(\hat{F}_{n,-i}\right)
+  \qquad \text{e} \qquad
+  \bar{\theta} = \frac{1}{n}\sum_{i=1}^{n}\hat{\theta}_{-i}.\]</span></p>
+<p><strong>Definição</strong> (Jackknife).
+O estimador jackknife do viés de <span class="math inline">\(\hat{\theta}_n\)</span> e o estimador
+jackknife de <span class="math inline">\(\theta\)</span> são</p>
+<p><span class="math display">\[\hat{b}_{\text{jack}} = (n-1)\left(\bar{\theta}
+  - \hat{\theta}_n\right)
+  \qquad \text{e} \qquad
+  \hat{\theta}_{\text{jack}} = \hat{\theta}_n - \hat{b}_{\text{jack}}
+  = n\hat{\theta}_n - (n-1)\bar{\theta}.\]</span></p>
+<p><strong>Suposição</strong> (A1).
+Existem <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span>, que não dependem de <span class="math inline">\(n\)</span>, tais que</p>
+<p><span class="math display">\[\mathbb{E}\left[\hat{\theta}_n\right]
+  = \theta + \frac{a}{n} + \frac{b}{n^2} + O\left(n^{-3}\right).\]</span></p>
+<p><strong>Observação</strong>. A Suposição (A1) é o que dá sentido ao fator <span class="math inline">\(n-1\)</span> da
+definição. Ela afirma que o viés se anula à taxa <span class="math inline">\(n^{-1}\)</span> e que o
+termo dominante, <span class="math inline">\(an^{-1}\)</span>, não depende de <span class="math inline">\(n\)</span> a não ser pelo próprio
+<span class="math inline">\(n\)</span>. É o comportamento típico de estimadores plug-in de funcionais
+suaves, como o do Exemplo 2 a seguir.</p>
+<p><strong>Teorema 1</strong> (Redução do viés).
+Sob (A1),</p>
+<p><span class="math display">\[\mathbb{E}\left[\hat{b}_{\text{jack}}\right] = \frac{a}{n}
+  + O\left(n^{-2}\right)
+  \qquad \text{e} \qquad
+  \mathbb{E}\left[\hat{\theta}_{\text{jack}}\right] - \theta
+  = O\left(n^{-2}\right).\]</span></p>
+<p><em>Prova</em>. Como <span class="math inline">\(\hat{\theta}_{-i}\)</span> é calculado a partir de <span class="math inline">\(n-1\)</span>
+observações i.i.d. com distribuição <span class="math inline">\(F\)</span>, decorre de (A1) que</p>
+<p><span class="math display">\[\mathbb{E}\left[\bar{\theta}\right] = \theta + \frac{a}{n-1}
+  + \frac{b}{(n-1)^2} + O\left(n^{-3}\right).\]</span></p>
+<p>Subtraindo (A1) e multiplicando por <span class="math inline">\(n-1\)</span>,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\left[\hat{b}_{\text{jack}}\right]
+&amp;= (n-1)\left[a\left(\frac{1}{n-1} - \frac{1}{n}\right)
+    + b\left(\frac{1}{(n-1)^2} - \frac{1}{n^2}\right)
+    + O\left(n^{-3}\right)\right] \\
+&amp;= (n-1)\left[\frac{a}{n(n-1)}
+    + \frac{b(2n-1)}{n^2(n-1)^2} + O\left(n^{-3}\right)\right] \\
+&amp;= \frac{a}{n} + O\left(n^{-2}\right).
+\end{align*}\]</span></p>
+<p>Subtraindo esta identidade de (A1), os termos em <span class="math inline">\(an^{-1}\)</span> se
+cancelam e sobra <span class="math inline">\(O(n^{-2})\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Definição</strong> (Pseudo-valores e variância jackknife).
+Os pseudo-valores de <span class="math inline">\(\hat{\theta}_n\)</span> e o estimador jackknife da
+variância são</p>
+<p><span class="math display">\[\tilde{\theta}_i = n\hat{\theta}_n - (n-1)\hat{\theta}_{-i}
+  \qquad \text{e} \qquad
+  \hat{v}_{\text{jack}} = \frac{n-1}{n}\sum_{i=1}^{n}
+  \left(\hat{\theta}_{-i} - \bar{\theta}\right)^2.\]</span></p>
+<p><strong>Observação</strong>. Como <span class="math inline">\(\tilde{\theta}_i - n^{-1}\sum_{j}\tilde{\theta}_j
+= -(n-1)\left(\hat{\theta}_{-i} - \bar{\theta}\right)\)</span>, tem-se</p>
+<p><span class="math display">\[\hat{v}_{\text{jack}} = \frac{1}{n(n-1)}\sum_{i=1}^{n}
+  \left(\tilde{\theta}_i
+  - \frac{1}{n}\sum_{j=1}^{n}\tilde{\theta}_j\right)^2,\]</span></p>
+<p>isto é, <span class="math inline">\(\hat{v}_{\text{jack}}\)</span> é a variância amostral usual dos
+pseudo-valores dividida por <span class="math inline">\(n\)</span>. Também,
+<span class="math inline">\(\hat{\theta}_{\text{jack}} = n^{-1}\sum_{i}\tilde{\theta}_i\)</span>.
+Assim, o jackknife trata os pseudo-valores como se fossem observações
+i.i.d. e aplica a eles os estimadores usuais de média e variância.</p>
+<p><strong>Exemplo 1</strong> (Média).
+Seja <span class="math inline">\(T(F) = \int x \, dF\)</span>, de modo que <span class="math inline">\(\hat{\theta}_n = \bar{X}\)</span>.
+Como <span class="math inline">\(\hat{\theta}_{-i} = (n\bar{X} - X_i)(n-1)^{-1}\)</span>, tem-se
+<span class="math inline">\(\bar{\theta} = \bar{X}\)</span> e
+<span class="math inline">\(\hat{\theta}_{-i} - \bar{\theta}
+= \left(\bar{X} - X_i\right)(n-1)^{-1}\)</span>. Portanto,</p>
+<p><span class="math display">\[\hat{b}_{\text{jack}} = 0
+  \qquad \text{e} \qquad
+  \hat{v}_{\text{jack}} = \frac{n-1}{n}\sum_{i=1}^{n}
+  \frac{\left(X_i - \bar{X}\right)^2}{(n-1)^2}
+  = \frac{S^2}{n},\]</span></p>
+<p>em que <span class="math inline">\(S^2 = (n-1)^{-1}\sum_{i}\left(X_i - \bar{X}\right)^2\)</span>.
+O jackknife recupera exatamente o erro padrão usual da média e
+detecta que ela é não-viesada.</p>
+<p><strong>Exemplo 2</strong> (Variância plug-in).
+Seja <span class="math inline">\(T\)</span> o funcional variância e
+<span class="math inline">\(\hat{\theta}_n = n^{-1}\sum_{i}\left(X_i - \bar{X}\right)^2\)</span> o seu
+plug-in, obtido no Exercício 1 da Aula 4. Escrevendo
+<span class="math inline">\(SS = \sum_{i}\left(X_i - \bar{X}\right)^2\)</span>, vale a identidade</p>
+<p><span class="math display">\[\sum_{j \neq i}\left(X_j - \bar{X}_{-i}\right)^2
+  = SS - \frac{n}{n-1}\left(X_i - \bar{X}\right)^2,\]</span></p>
+<p>de modo que
+<span class="math inline">\(\hat{\theta}_{-i} = \left[SS - n(n-1)^{-1}
+\left(X_i - \bar{X}\right)^2\right](n-1)^{-1}\)</span> e
+<span class="math inline">\(\bar{\theta} = SS(n-2)(n-1)^{-2}\)</span>. Portanto,</p>
+<p><span class="math display">\[\hat{\theta}_{\text{jack}} = n\frac{SS}{n}
+  - (n-1)\frac{SS(n-2)}{(n-1)^2}
+  = SS\left(1 - \frac{n-2}{n-1}\right)
+  = \frac{SS}{n-1} = S^2.\]</span></p>
+<p>Ou seja, neste caso o jackknife não apenas reduz o viés: ele o elimina
+por completo, produzindo o estimador não-viesado da variância.</p>
+<p><strong>Observação</strong> (Relação com a função de influência).
+Como <span class="math inline">\(\hat{F}_{n,-i} = \left(1 - \varepsilon\right)\hat{F}_n
++ \varepsilon\delta_{X_i}\)</span>, com <span class="math inline">\(\varepsilon = -(n-1)^{-1}\)</span>, a
+Definição de função de influência da Aula 4 fornece</p>
+<p><span class="math display">\[\hat{\theta}_{-i} - \hat{\theta}_n
+  \approx -\frac{\widehat{\text{IF}}(X_i)}{n-1},
+  \qquad \text{isto é,} \qquad
+  \tilde{\theta}_i \approx \hat{\theta}_n
+  + \widehat{\text{IF}}(X_i).\]</span></p>
+<p>Assim, os pseudo-valores estimam a função de influência por diferenças
+finitas, e</p>
+<p><span class="math display">\[\hat{v}_{\text{jack}} \approx \frac{1}{n(n-1)}
+  \sum_{i=1}^{n}\widehat{\text{IF}}(X_i)^2
+  \approx \frac{\hat{\tau}^2}{n},\]</span></p>
+<p>que é exatamente a variância assintótica do Corolário 2 da Aula 4.
+O jackknife é, portanto, uma forma automática de calcular aquele erro
+padrão, sem derivar <span class="math inline">\(\text{IF}\)</span> analiticamente.</p>
+<p><strong>Observação</strong> (Quando o jackknife falha).
+A aproximação acima exige que <span class="math inline">\(T\)</span> seja suave o bastante para que a
+diferença finita se aproxime da derivada. Para a mediana isto não
+ocorre: <span class="math inline">\(\hat{\theta}_{-i}\)</span> assume apenas dois ou três valores
+distintos, qualquer que seja <span class="math inline">\(n\)</span>, e <span class="math inline">\(\hat{v}_{\text{jack}}\)</span> não é
+consistente para a variância assintótica obtida no Exemplo 7 da
+Aula 4. O bootstrap, a seguir, não sofre deste problema.</p>
+</div>
+<div id="bootstrap" class="section level1">
+<h1>Bootstrap</h1>
+<p><strong>Definição</strong> (Amostra bootstrap).
+Uma amostra bootstrap <span class="math inline">\(X_1^*, \ldots, X_n^*\)</span> é uma amostra i.i.d. com
+distribuição <span class="math inline">\(\hat{F}_n\)</span>, isto é, um sorteio com reposição de
+<span class="math inline">\(X_1, \ldots, X_n\)</span>. Se <span class="math inline">\(\hat{F}_n^*\)</span> é a sua distribuição empírica,
+a réplica bootstrap de <span class="math inline">\(\hat{\theta}_n\)</span> é
+<span class="math inline">\(\hat{\theta}^* = T\left(\hat{F}_n^*\right)\)</span>.</p>
+<p><strong>Observação</strong> (O bootstrap como estimador plug-in).
+O erro padrão de <span class="math inline">\(\hat{\theta}_n\)</span> é ele próprio um funcional de <span class="math inline">\(F\)</span>:</p>
+<p><span class="math display">\[v(F) = \mathbb{V}_F\left[T\left(\hat{F}_n\right)\right].\]</span></p>
+<p>O que se quer estimar é <span class="math inline">\(v(F)\)</span>, e o princípio plug-in da Aula 4 manda
+substituir <span class="math inline">\(F\)</span> por <span class="math inline">\(\hat{F}_n\)</span>, produzindo <span class="math inline">\(v(\hat{F}_n)\)</span>. Isto é
+exatamente o bootstrap: <span class="math inline">\(v(\hat{F}_n)\)</span> é a variância de
+<span class="math inline">\(\hat{\theta}^*\)</span> quando as observações são sorteadas de <span class="math inline">\(\hat{F}_n\)</span>.
+A novidade em relação à Aula 4 é apenas o alvo: lá o plug-in era
+aplicado ao parâmetro, aqui ele é aplicado à distribuição amostral
+do estimador.</p>
+<p><strong>Observação</strong> (As duas fontes de erro).
+Em geral não há fórmula fechada para <span class="math inline">\(v(\hat{F}_n)\)</span>, e ele é
+aproximado por Monte Carlo. Sorteando <span class="math inline">\(B\)</span> amostras bootstrap
+independentes e calculando as réplicas
+<span class="math inline">\(\hat{\theta}^*_1, \ldots, \hat{\theta}^*_B\)</span>,</p>
+<p><span class="math display">\[\hat{\text{se}}^2_{\text{boot}} = \frac{1}{B-1}\sum_{b=1}^{B}
+  \left(\hat{\theta}^*_b - \frac{1}{B}\sum_{c=1}^{B}
+  \hat{\theta}^*_c\right)^2.\]</span></p>
+<p>Há, portanto, dois erros sobrepostos. O primeiro, de trocar <span class="math inline">\(F\)</span> por
+<span class="math inline">\(\hat{F}_n\)</span>, é estatístico e só diminui com <span class="math inline">\(n\)</span>. O segundo, de trocar
+<span class="math inline">\(v(\hat{F}_n)\)</span> pela média de <span class="math inline">\(B\)</span> réplicas, é computacional e
+desaparece quando <span class="math inline">\(B \to \infty\)</span>, com <span class="math inline">\(n\)</span> fixo. Apenas o segundo está
+sob o nosso controle.</p>
+<p><strong>Teorema 2</strong> (Consistência do bootstrap; sem demonstração).
+Suponha que <span class="math inline">\(\mathbb{V}[X_1] &lt; \infty\)</span> e seja
+<span class="math inline">\(T(F) = \int x \, dF\)</span>. Então, quase certamente,</p>
+<p><span class="math display">\[\sup_{x \in \mathbb{R}}\left|\mathbb{P}^*\left(
+  \sqrt{n}\left(\hat{\theta}^* - \hat{\theta}_n\right) \leq x\right)
+  - \mathbb{P}\left(\sqrt{n}\left(\hat{\theta}_n - \theta\right)
+  \leq x\right)\right| \longrightarrow 0,\]</span></p>
+<p>em que <span class="math inline">\(\mathbb{P}^*\)</span> denota a probabilidade condicional em
+<span class="math inline">\(X_1, \ldots, X_n\)</span>.</p>
+<p><strong>Observação</strong>. O Teorema 2 vale bem além da média: sob (A1) da
+Aula 4, a distribuição bootstrap de
+<span class="math inline">\(\sqrt{n}(\hat{\theta}^* - \hat{\theta}_n)\)</span> aproxima a de
+<span class="math inline">\(\sqrt{n}(\hat{\theta}_n - \theta)\)</span>. A demonstração está em
+<span class="citation">Singh (<a href="#ref-Singh1981">1981</a>)</span> e em <span class="citation">Bickel and Freedman (<a href="#ref-BickelFreedman1981">1981</a>)</span>. Há contraexemplos, no entanto:
+se <span class="math inline">\(F\)</span> é Uniforme<span class="math inline">\((0,\vartheta)\)</span> e <span class="math inline">\(T(F) = \vartheta\)</span>, o estimador é
+<span class="math inline">\(X_{(n)}\)</span> e o bootstrap falha, pois
+<span class="math inline">\(\mathbb{P}^*\left(\hat{\theta}^* = \hat{\theta}_n\right)
+\to 1 - e^{-1}\)</span>, ao passo que a distribuição limite verdadeira é
+contínua.</p>
+<p><strong>Definição</strong> (Intervalo t).
+O intervalo t de nível <span class="math inline">\(1-\alpha\)</span> para <span class="math inline">\(\theta\)</span> é</p>
+<p><span class="math display">\[\hat{\theta}_n \pm z_{1-0,5\alpha}\,
+  \hat{\text{se}}_{\text{boot}}.\]</span></p>
+<p><strong>Definição</strong> (Intervalo percentil).
+Sejam <span class="math inline">\(\hat{\theta}^*_{(1)} \leq \ldots \leq \hat{\theta}^*_{(B)}\)</span> as
+réplicas bootstrap ordenadas e <span class="math inline">\(q^*_{\beta}\)</span> o quantil amostral de
+ordem <span class="math inline">\(\beta\)</span> destas réplicas. O intervalo percentil de nível
+<span class="math inline">\(1-\alpha\)</span> para <span class="math inline">\(\theta\)</span> é</p>
+<p><span class="math display">\[\left[q^*_{0,5\alpha},\ q^*_{1-0,5\alpha}\right].\]</span></p>
+<p><strong>Observação</strong>. O intervalo t usa o bootstrap apenas para estimar o
+erro padrão, e a sua validade depende da normalidade assintótica de
+<span class="math inline">\(\hat{\theta}_n\)</span>. O intervalo percentil usa a forma inteira da
+distribuição bootstrap e, por isso, não exige simetria: se existe uma
+transformação monótona <span class="math inline">\(\phi\)</span> tal que <span class="math inline">\(\phi(\hat{\theta}_n) -
+\phi(\theta)\)</span> tem distribuição simétrica e livre de <span class="math inline">\(\theta\)</span>, então o
+intervalo percentil é aproximadamente correto <strong>sem que seja
+necessário conhecer <span class="math inline">\(\phi\)</span></strong>. Esta invariância por
+reparametrização é a sua principal vantagem.</p>
+</div>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-1-jackknife-de-funcionais-lineares" class="section level2">
+<h2>Exercício 1 (Jackknife de funcionais lineares)</h2>
+<ol style="list-style-type: lower-alpha">
+<li>Seja <span class="math inline">\(T(F) = \int g \, dF\)</span>. Mostre que
+<span class="math inline">\(\hat{b}_{\text{jack}} = 0\)</span> e que</li>
+</ol>
+<p><span class="math display">\[\hat{v}_{\text{jack}} = \frac{1}{n(n-1)}\sum_{i=1}^{n}
+  \left(g(X_i) - \overline{g}\right)^2,
+  \qquad \overline{g} = \frac{1}{n}\sum_{i=1}^{n}g(X_i).\]</span></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Verifique que (a) generaliza o Exemplo 1.</p></li>
+<li><p>Compare o resultado de (a) com o Corolário 2 da Aula 4, usando a
+função de influência obtida no Exemplo 5 daquela aula.</p></li>
+<li><p>Complete a identidade usada no Exemplo 2, isto é, mostre que
+<span class="math inline">\(\sum_{j \neq i}\left(X_j - \bar{X}_{-i}\right)^2
+= SS - n(n-1)^{-1}\left(X_i - \bar{X}\right)^2\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-2-onde-o-jackknife-falha" class="section level2">
+<h2>Exercício 2 (Onde o jackknife falha)</h2>
+<p>Seja <span class="math inline">\(F\)</span> contínua e <span class="math inline">\(T(F)\)</span> a mediana, com <span class="math inline">\(n = 2m+1\)</span> ímpar.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que <span class="math inline">\(\hat{\theta}_{-i}\)</span> assume apenas dois valores
+distintos, <span class="math inline">\(X_{(m)}\)</span> e <span class="math inline">\(X_{(m+2)}\)</span>, e determine quantos índices
+<span class="math inline">\(i\)</span> produzem cada um deles.</p></li>
+<li><p>Obtenha <span class="math inline">\(\hat{v}_{\text{jack}}\)</span> em função de
+<span class="math inline">\(X_{(m+2)} - X_{(m)}\)</span>.</p></li>
+<li><p>Compare o resultado de (b) com a variância assintótica obtida no
+Exemplo 7 da Aula 4. Argumente que <span class="math inline">\(\hat{v}_{\text{jack}}\)</span> não é
+consistente.</p></li>
+<li><p>Explique o resultado em termos da Observação que relaciona
+pseudo-valores e função de influência.</p></li>
+</ol>
+</div>
+<div id="exercício-3-o-bootstrap-como-plug-in" class="section level2">
+<h2>Exercício 3 (O bootstrap como plug-in)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Para <span class="math inline">\(T(F) = \int x \, dF\)</span>, obtenha <span class="math inline">\(v(\hat{F}_n)\)</span> em forma
+fechada, isto é, calcule <span class="math inline">\(\mathbb{V}^*\left[\hat{\theta}^*\right]\)</span>
+sem recorrer a Monte Carlo. Compare com <span class="math inline">\(S^2n^{-1}\)</span>.</p></li>
+<li><p>Mostre que, no item (a),
+<span class="math inline">\(\mathbb{E}^*\left[\hat{\theta}^*\right] = \hat{\theta}_n\)</span>, e
+conclua que o bootstrap não detecta viés neste caso.</p></li>
+<li><p>Seja <span class="math inline">\(N_i\)</span> o número de vezes que <span class="math inline">\(X_i\)</span> aparece em uma amostra
+bootstrap. Obtenha a distribuição conjunta de
+<span class="math inline">\((N_1, \ldots, N_n)\)</span> e mostre que
+<span class="math inline">\(\mathbb{P}^*\left(N_i = 0\right) \to e^{-1}\)</span>.</p></li>
+<li><p>Use (c) para explicar o contraexemplo do máximo de uniformes
+mencionado na Observação após o Teorema 2.</p></li>
+</ol>
+</div>
+<div id="exercício-4-intervalos-de-confiança" class="section level2">
+<h2>Exercício 4 (Intervalos de confiança)</h2>
+<ol style="list-style-type: lower-alpha">
+<li><p>Descreva, em pseudo-código, um algoritmo que produza os
+intervalos t e percentil a partir de <span class="math inline">\(X_1, \ldots, X_n\)</span>, <span class="math inline">\(B\)</span> e
+<span class="math inline">\(\alpha\)</span>.</p></li>
+<li><p>Mostre que o intervalo percentil é invariante por transformações
+monótonas, isto é, que se <span class="math inline">\(\phi\)</span> é crescente, então o intervalo
+percentil para <span class="math inline">\(\phi(\theta)\)</span> é a imagem por <span class="math inline">\(\phi\)</span> do intervalo
+percentil para <span class="math inline">\(\theta\)</span>. O intervalo t tem esta propriedade?</p></li>
+<li><p>Simule dados de uma distribuição assimétrica, por exemplo
+Exponencial, e compare a cobertura empírica dos dois intervalos
+para a variância, com <span class="math inline">\(n\)</span> pequeno.</p></li>
+<li><p>O intervalo t pode conter valores fora do espaço paramétrico,
+por exemplo variâncias negativas. Isto pode ocorrer com o
+intervalo percentil?</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-BickelFreedman1981" class="csl-entry">
+Bickel, Peter J., and David A. Freedman. 1981. <span>“Some Asymptotic Theory for the Bootstrap.”</span> <em>The Annals of Statistics</em> 9 (6): 1196–1217.
+</div>
+<div id="ref-Singh1981" class="csl-entry">
+Singh, Kesar. 1981. <span>“On the Asymptotic Accuracy of Efron’s Bootstrap.”</span> <em>The Annals of Statistics</em> 9 (6): 1187–95.
+</div>
+<div id="ref-Wasserman2006" class="csl-entry">
+Wasserman, Larry. 2006. <em>All of Nonparametric Statistics</em>. Springer.
+</div>
+</div>
+</div>

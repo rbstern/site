@@ -1,0 +1,368 @@
+---
+title: "Aula 7: Estimador de densidade por kernel"
+linkTitle: "Aula 7: KDE"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 70
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 6:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 27/08/2026.
+
+**Leitura**: @Tsybakov2009, Seção 1.2.
+
+# Estimador de densidade por kernel
+
+Ao longo desta aula, $X_1, \ldots, X_n$ são i.i.d. com função de
+distribuição $F$ e densidade $f$ em $\mathbb{R}$, e $\hat{F}_n$ é a
+distribuição empírica da Aula 2.
+
+**Exemplo 1** (Estimador baseado na distribuição empírica).
+Como $f = F'$, para $h > 0$ pequeno,
+
+$$f(x) \approx \frac{F(x+h) - F(x-h)}{2h}.$$
+
+Aplicando o princípio plug-in da Aula 4, isto é, substituindo $F$ por
+$\hat{F}_n$, obtém-se
+
+\begin{align*}
+ \hat{f}_n(x)
+ &= \frac{\hat{F}_n(x+h) - \hat{F}_n(x-h)}{2h} \\
+ &= \frac{1}{2nh}\sum_{i=1}^{n}\mathbb{I}\left(x-h < X_i \leq x+h\right) \\
+ &= \frac{1}{nh}\sum_{i=1}^{n}K_0\left(\frac{X_i - x}{h}\right),
+\end{align*}
+
+em que $K_0(u) = 2^{-1}\mathbb{I}(-1 < u \leq 1)$ é o kernel uniforme.
+Assim, $\hat{f}_n(x)$ conta as observações em uma janela de largura
+$2h$ centrada em $x$. Ao contrário do histograma da Aula 1, cujos
+intervalos são fixos, a janela acompanha o ponto $x$.
+
+**Definição** (Kernel).
+Um kernel é uma função $K: \mathbb{R} \to \mathbb{R}$ integrável e tal
+que
+
+$$\int K(u) \, du = 1
+  \qquad \text{e} \qquad
+  R(K) = \int K(u)^2 \, du < \infty.$$
+
+Para $j \geq 0$, denote $\kappa_j = \int |u|^j |K(u)| \, du \in [0, \infty]$.
+
+**Definição** (Kernel de ordem $k$, @Tsybakov2009).
+Seja $k \geq 1$ inteiro. Um kernel $K$ é de ordem $k$ se
+
+$$\kappa_k < \infty
+  \qquad \text{e} \qquad
+  \int u^jK(u) \, du = 0, \quad \text{para } 1 \leq j \leq k.$$
+
+Por convenção, todo kernel é de ordem $0$.
+
+**Observação**. Para $k = 1$, as condições se reduzem a
+$\kappa_1 < \infty$ e $\int uK(u)\,du = 0$, e valem para todo kernel
+simétrico com primeiro momento finito. O papel da ordem
+aparece no Lema 4 e no Exercício 3: quanto maior $k$, mais termos da
+expansão de Taylor de $f$ se anulam no viés.
+
+**Definição** (Estimador de densidade por kernel, @Rosenblatt1956; @Parzen1962).
+Sejam $K$ um kernel e $h > 0$. O estimador de densidade por kernel
+(KDE) com kernel $K$ e banda $h$ é
+
+$$\hat{f}_n(x) = \frac{1}{nh}\sum_{i=1}^{n}
+  K\left(\frac{X_i - x}{h}\right).$$
+
+**Exemplo 2** (Kernels usuais).
+Os kernels abaixo são simétricos, de modo que $\int uK(u)\,du = 0$,
+e de ordem $1$.
+
+| Kernel | $K(u)$ | $\kappa_2$ | $R(K)$ |
+|:--|:--|:--:|:--:|
+| Uniforme | $2^{-1}\mathbb{I}(\lvert u \rvert \leq 1)$ | $3^{-1}$ | $2^{-1}$ |
+| Epanechnikov | $4^{-1}3(1-u^2)\,\mathbb{I}(\lvert u \rvert \leq 1)$ | $5^{-1}$ | $5^{-1}3$ |
+| Gaussiano | $(2\pi)^{-1/2}e^{-u^2/2}$ | $1$ | $(2\sqrt{\pi})^{-1}$ |
+
+O Exemplo 1 é o KDE com o kernel uniforme.
+
+**Observação**. A banda $h$ controla o compromisso da Aula 1. Com $h$
+pequeno, $\hat{f}_n(x)$ usa poucas observações próximas de $x$: pouco
+viés e muita variância. Com $h$ grande, usa muitas observações,
+inclusive distantes: pouca variância e muito viés. As seções a seguir
+tornam este compromisso quantitativo.
+
+# Viés, variância e risco
+
+**Definição** (Classe de Hölder, @Tsybakov2009).
+Sejam $\beta > 0$, $L > 0$ e $\ell$ o maior inteiro estritamente menor que
+$\beta$. A classe de Hölder $\Sigma(\beta, L)$ é o conjunto das funções
+$f: \mathbb{R} \to \mathbb{R}$ que são $\ell$ vezes diferenciáveis e tais
+que
+
+$$\left|f^{(\ell)}(y) - f^{(\ell)}(x)\right| \leq L|y - x|^{\beta - \ell},
+  \qquad \text{para todos } x, y \in \mathbb{R}.$$
+
+Em particular, se $\beta \in (0, 1]$, então $\ell = 0$ e a condição se
+reduz a $|f(y) - f(x)| \leq L|y - x|^{\beta}$. Se $\beta = 2$, então
+$\ell = 1$ e $f'$ é $L$-Lipschitz, o que vale, por exemplo, quando
+$|f''| \leq L$.
+
+**Suposição** (A1) (Suavidade).
+$f \in \Sigma(\beta, L)$ para algum $\beta > 0$ e algum $L > 0$.
+
+Ao longo desta seção, $\ell$ é o maior inteiro estritamente menor que
+$\beta$, e $C > 0$ denota uma constante que depende apenas de $\beta$,
+$L$ e $K$, e não de $n$, $h$ ou $x$. Quanto maior $\beta$, mais suave é
+$f$.
+
+**Lema 1** (Decomposição do risco).
+Para todo $x \in \mathbb{R}$,
+
+$$\text{MSE}\left(\hat{f}_n(x)\right)
+  := \mathbb{E}\left[\left(\hat{f}_n(x) - f(x)\right)^2\right]
+  = \left(\mathbb{E}\left[\hat{f}_n(x)\right] - f(x)\right)^2
+  + \mathbb{V}\left[\hat{f}_n(x)\right].$$
+
+*Prova*. Escreva $\mu = \mathbb{E}[\hat{f}_n(x)]$. Então
+
+\begin{align*}
+ \mathbb{E}\left[\left(\hat{f}_n(x) - f(x)\right)^2\right]
+ &= \mathbb{E}\left[\left(\hat{f}_n(x) - \mu\right)^2\right]
+    + 2(\mu - f(x))\,\mathbb{E}\left[\hat{f}_n(x) - \mu\right]
+    + (\mu - f(x))^2 \\
+ &= \mathbb{V}\left[\hat{f}_n(x)\right] + (\mu - f(x))^2,
+\end{align*}
+
+pois $\mathbb{E}[\hat{f}_n(x) - \mu] = 0$. $\blacksquare$
+
+**Lema 2** (Esperança e variância do KDE).
+Para todo $x \in \mathbb{R}$,
+
+$$\mathbb{E}\left[\hat{f}_n(x)\right] = \int K(u)f(x+uh)\,du
+  \qquad \text{e} \qquad
+  \mathbb{V}\left[\hat{f}_n(x)\right]
+  \leq \frac{1}{nh}\int K(u)^2 f(x+uh)\,du.$$
+
+*Prova*. Seja $Z_i = h^{-1}K\left((X_i - x)h^{-1}\right)$, de modo que
+$\hat{f}_n(x) = n^{-1}\sum_{i=1}^{n}Z_i$, com $Z_1, \ldots, Z_n$ i.i.d.
+Com a mudança de variáveis $y = x + uh$,
+
+$$\mathbb{E}[Z_1] = \frac{1}{h}\int K\left(\frac{y-x}{h}\right)f(y)\,dy
+  = \int K(u)f(x+uh)\,du,$$
+
+o que prova a primeira afirmação. Para a segunda, como
+$\mathbb{V}[\hat{f}_n(x)] = n^{-1}\mathbb{V}[Z_1]
+\leq n^{-1}\mathbb{E}[Z_1^2]$, a mesma mudança de variáveis fornece
+
+$$\mathbb{E}[Z_1^2]
+  = \frac{1}{h^2}\int K\left(\frac{y-x}{h}\right)^2 f(y)\,dy
+  = \frac{1}{h}\int K(u)^2 f(x+uh)\,du. \qquad \blacksquare$$
+
+**Lema 3** (Expansão de Taylor).
+Sob (A1), para todos $x, t \in \mathbb{R}$,
+
+$$f(x+t) = \sum_{j=0}^{\ell}\frac{f^{(j)}(x)}{j!}t^j + R_x(t),
+  \qquad \text{com} \qquad
+  |R_x(t)| \leq \frac{L}{\ell!}|t|^{\beta}.$$
+
+*Prova*. Se $\ell = 0$, então $R_x(t) = f(x+t) - f(x)$ e a conclusão é
+exatamente (A1). Se $\ell \geq 1$, a fórmula de Taylor com resto de
+Lagrange fornece $\xi$ entre $x$ e $x+t$ tal que
+
+$$f(x+t) = \sum_{j=0}^{\ell-1}\frac{f^{(j)}(x)}{j!}t^j
+  + \frac{f^{(\ell)}(\xi)}{\ell!}t^\ell.$$
+
+Somando e subtraindo $f^{(\ell)}(x)t^\ell(\ell!)^{-1}$, obtém-se a
+expansão do enunciado com
+$R_x(t) = \left(f^{(\ell)}(\xi) - f^{(\ell)}(x)\right)t^\ell(\ell!)^{-1}$.
+Como $|\xi - x| \leq |t|$, decorre de (A1) que
+$\left|f^{(\ell)}(\xi) - f^{(\ell)}(x)\right| \leq L|t|^{\beta - \ell}$.
+$\blacksquare$
+
+**Lema 4** (Viés do KDE).
+Sob (A1), se $K$ é um kernel de ordem $\ell$ com $\kappa_\beta < \infty$,
+então, para todos $x \in \mathbb{R}$ e $h > 0$,
+
+$$\int K(u)f(x+uh)\,du - f(x) = \int K(u)R_x(uh)\,du
+  \qquad \text{e} \qquad
+  \left|\mathbb{E}\left[\hat{f}_n(x)\right] - f(x)\right| \leq Ch^{\beta}.$$
+
+*Prova*. Como $\int K = 1$, decorre dos Lemas 2 e 3 que
+
+\begin{align*}
+ \int K(u)f(x+uh)\,du - f(x)
+ &= \int K(u)\left(f(x+uh) - f(x)\right)du \\
+ &= \int K(u)\left(\sum_{j=1}^{\ell}\frac{f^{(j)}(x)}{j!}(uh)^j
+    + R_x(uh)\right)du \\
+ &= \sum_{j=1}^{\ell}\frac{f^{(j)}(x)h^j}{j!}\int u^jK(u)\,du
+    + \int K(u)R_x(uh)\,du \\
+ &= \int K(u)R_x(uh)\,du.
+\end{align*}
+
+A segunda igualdade é a expansão de Taylor do Lema 3 com $t = uh$. A
+última decorre de $K$ ter ordem $\ell$, isto é, de
+$\int u^jK(u)\,du = 0$ para $1 \leq j \leq \ell$. Pelo Lema 2, o lado
+esquerdo é o viés de $\hat{f}_n(x)$, e pelo Lema 3,
+
+$$\left|\int K(u)R_x(uh)\,du\right|
+  \leq \frac{L}{\ell!}h^{\beta}\int |u|^{\beta}|K(u)|\,du
+  = \frac{L\kappa_\beta}{\ell!}h^{\beta}. \qquad \blacksquare$$
+
+**Observação** (O papel da série de Taylor).
+A prova do Lema 4 é o centro desta aula. A série de Taylor decompõe
+$f(x+uh) - f(x)$ em um polinômio de grau $\ell$ em $uh$ e um resto de
+ordem $|uh|^{\beta}$. Ao integrar contra $K$, cada termo do polinômio é
+multiplicado por um momento de $K$, e a ordem $\ell$ anula exatamente
+esses momentos. O viés, portanto, é inteiramente determinado pelo resto
+de Taylor. Com um kernel de ordem menor, algum termo do polinômio
+sobreviveria e dominaria o viés; com $f$ menos suave, o próprio resto
+seria maior.
+
+**Lema 5** (Cota superior para $f$).
+Sob (A1), se $K$ é um kernel limitado de ordem $\ell$ com
+$\kappa_\beta < \infty$, então $f$ é limitada.
+
+*Prova*. Tomando $h = 1$ na identidade do Lema 4,
+
+$$f(x) = \int K(u)f(x+u)\,du - \int K(u)R_x(u)\,du.$$
+
+O primeiro termo é, em módulo, no máximo
+$\sup_u |K(u)| \int f = \sup_u |K(u)|$. Pelo Lema 3, o segundo é, em
+módulo, no máximo $L\kappa_\beta(\ell!)^{-1}$. $\blacksquare$
+
+**Observação**. O Lema 5 é o análogo do Lema 2 da Aula 1: a suavidade
+de $f$, junto com $\int f = 1$, impede que $f$ seja arbitrariamente
+grande. Note que a prova reaproveita a mesma expansão de Taylor usada
+no viés.
+
+**Corolário 1** (Variância do KDE).
+Sob as hipóteses do Lema 5, para todos $x \in \mathbb{R}$ e $h > 0$,
+
+$$\mathbb{V}\left[\hat{f}_n(x)\right] \leq \frac{C}{nh}.$$
+
+*Prova*. Pelo Lema 2,
+$\mathbb{V}[\hat{f}_n(x)] \leq (nh)^{-1}\sup_y f(y)\int K^2$. A
+conclusão decorre do Lema 5 e de $R(K) < \infty$. $\blacksquare$
+
+**Teorema 1** (Risco do KDE).
+Sob (A1), se $K$ é um kernel limitado de ordem $\ell$ com
+$\kappa_\beta < \infty$, então, para todos $x \in \mathbb{R}$ e $h > 0$,
+
+$$\text{MSE}\left(\hat{f}_n(x)\right)
+  \leq C\left(h^{2\beta} + \frac{1}{nh}\right).$$
+
+Em particular, tomando $h = n^{-1/(2\beta+1)}$,
+
+$$\sup_{x \in \mathbb{R}}\text{MSE}\left(\hat{f}_n(x)\right)
+  \leq 2C\,n^{-\frac{2\beta}{2\beta+1}}.$$
+
+*Prova*. A primeira cota decorre do Lema 1, do Lema 4 e do Corolário 1.
+Para $h = n^{-1/(2\beta+1)}$, os dois termos coincidem:
+
+$$h^{2\beta} = n^{-\frac{2\beta}{2\beta+1}}
+  \qquad \text{e} \qquad
+  \frac{1}{nh} = n^{-1 + \frac{1}{2\beta+1}} = n^{-\frac{2\beta}{2\beta+1}}.$$
+
+Como a cota não depende de $x$, ela também vale para o supremo.
+$\blacksquare$
+
+**Observação** (Taxas). A escolha $h \asymp n^{-1/(2\beta+1)}$ equilibra
+o viés ao quadrado, que cresce com $h$, e a variância, que decresce com
+$h$. Para $\beta \leq 1$, nenhum momento de $K$ precisa se anular. Em
+particular, para $\beta = 1$, $f$ é Lipschitz, o que vale sob a
+suposição $|f'| \leq L$ da Aula 1, e a taxa é $n^{-2/3}$, a mesma do
+histograma no Teorema 1 da Aula 1. Para $\beta = 2$, basta um kernel
+simétrico, e a taxa é $n^{-4/5}$. Quando $\beta \to \infty$, a taxa se
+aproxima de $n^{-1}$, a taxa com que $\hat{F}_n$ estima $F$ na Aula 2.
+O preço de explorar $\beta > 2$ é que kernels de ordem $2$ ou mais
+assumem valores negativos (Exercício 3).
+
+**Observação**. O Teorema 1 determina apenas a ordem da banda,
+$h \asymp n^{-1/(2\beta+1)}$. Multiplicar $h$ por uma constante não
+altera a taxa, mas altera o risco, e a melhor constante depende de $f$,
+que é desconhecida. Escolher $h$ a partir dos dados é o problema da
+Aula 8.
+
+# Exercícios
+
+## Exercício 1 (Propriedades do KDE)
+
+(a) Mostre que, se $K \geq 0$, então $\hat{f}_n$ é uma densidade, isto
+    é, $\hat{f}_n \geq 0$ e $\int \hat{f}_n(x)\,dx = 1$.
+
+(b) Verifique os valores de $\kappa_2$ e $R(K)$ na tabela do
+    Exemplo 2.
+
+(c) Mostre que $\hat{f}_n$ herda a regularidade de $K$: se $K$ é
+    contínuo, então $\hat{f}_n$ é contínua; se $K$ é diferenciável,
+    então $\hat{f}_n$ é diferenciável. Isto vale para o histograma?
+
+## Exercício 2 (O papel da simetria)
+
+(a) Suponha (A1) com $\beta = 2$, $\kappa_2 < \infty$ e
+    $\int uK(u)\,du = m \neq 0$.
+    Mostre que $\mathbb{E}[\hat{f}_n(x)] - f(x) = hmf'(x) + O(h^2)$.
+
+(b) Conclua que, neste caso, o viés é de ordem $h$ e a taxa do MSE é
+    $n^{-2/3}$, e não $n^{-4/5}$. Identifique, na prova do Lema 4, qual
+    termo da série de Taylor deixa de se anular.
+
+## Exercício 3 (Kernels de ordem superior)
+
+(a) Seja $\phi$ a densidade da Normal padrão. Mostre que
+    $K(u) = 2^{-1}(3 - u^2)\phi(u)$ é um kernel de ordem $3$.
+
+(b) Mostre que, se $K$ tem ordem $k \geq 2$, então $K$ assume
+    valores negativos. Que consequência isto tem para $\hat{f}_n$?
+
+(c) Suponha que $f \in \Sigma(4, L) \cap \Sigma(2, L)$, mas que se usa
+    um kernel de ordem $1$ com $\kappa_2 < \infty$. Que taxa o Teorema 1 garante? Relacione com a
+    saturação do histograma no Exercício 1 da Aula 1.
+
+## Exercício 4 (Risco integrado)
+
+(a) Mostre que
+
+$$\int \mathbb{V}\left[\hat{f}_n(x)\right]dx \leq \frac{R(K)}{nh},$$
+
+    sem supor que $f$ é limitada. Compare com o Teorema 2 da Aula 1.
+
+(b) Explique por que a cota pontual do Lema 4 não pode ser integrada
+    em $\mathbb{R}$ para obter uma cota para o MISE. Que tipo de
+    hipótese sobre $f$ substituiria (A1) no caso integrado?
+
+## Exercício 5 (Outra cota para $f$)
+
+(a) Suponha (A1) com $\beta = 2$. Somando as expansões de Taylor de
+    $f(x+t)$ e $f(x-t)$ e integrando em $t \in [0,1]$, mostre que
+    $f(x) \leq 2^{-1} + 6^{-1}L$, sem usar kernel algum.
+
+(b) Calcule a cota do Lema 5 para o kernel uniforme e compare com (a).
+
+# Referências

@@ -1,0 +1,343 @@
+---
+title: "Aula 4: Função de influência"
+linkTitle: "Aula 4: Função de influência"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 40
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 3:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 18/08/2026.
+
+**Leitura**: @Wasserman2006, Capítulo 2.
+
+# Funcionais estatísticos
+
+**Definição** (Funcional estatístico).
+Sejam $\mathcal{D}$ um conjunto de funções de distribuição em
+$\mathbb{R}$ e $F \in \mathcal{D}$. Um funcional estatístico é uma
+função $T: \mathcal{D} \to \mathbb{R}$, e $T(F)$ é o parâmetro de
+interesse.
+
+**Observação**. Em um modelo paramétrico, o parâmetro é um ponto de
+$\mathbb{R}^d$ que indexa a distribuição. Aqui, ao contrário, o
+parâmetro é uma característica da distribuição, definida diretamente
+a partir dela e sem supor que $F$ pertença a uma família indexada por
+uma quantidade de dimensão finita.
+
+**Exemplo 1** (Média).
+$T(F) = \int x \, dF(x)$, com
+$\mathcal{D} = \left\{F: \int |x| dF(x) < \infty\right\}$.
+
+**Exemplo 2** (Variância).
+$T(F) = \int x^2 dF(x) - \left(\int x \, dF(x)\right)^2$, com
+$\mathcal{D} = \left\{F: \int x^2 dF(x) < \infty\right\}$.
+
+**Exemplo 3** (Quantis).
+$T(F) = \xi_p(F) = \inf\{x \in \mathbb{R}: F(x) \geq p\}$,
+para $p \in (0,1)$ fixo. Se $p = 2^{-1}$, $T$ é a mediana.
+
+**Definição** (Funcional linear).
+$T$ é um funcional linear se existe $g: \mathbb{R} \to \mathbb{R}$
+tal que
+
+$$T(F) = \int g(x) \, dF(x), \qquad \text{para todo } F \in \mathcal{D}.$$
+
+**Observação**. O nome se justifica porque, se $T$ é linear e
+$\lambda \in [0,1]$, então
+$T\left((1-\lambda)F + \lambda G\right)
+= (1-\lambda)T(F) + \lambda T(G)$, isto é, $T$ é afim ao longo de
+misturas. O Exemplo 1 é linear, com $g(x) = x$. Os Exemplos 2 e 3
+não são: para a variância, o termo $\left(\int x \, dF\right)^2$
+é quadrático em $F$.
+
+**Definição** (Composição de funcionais lineares).
+$T$ é uma composição de funcionais lineares se existem
+$g_1, \ldots, g_k: \mathbb{R} \to \mathbb{R}$ e
+$h: \mathbb{R}^k \to \mathbb{R}$ tais que
+
+$$T(F) = h\left(\int g_1 \, dF, \ldots, \int g_k \, dF\right).$$
+
+**Exemplo 4** (A variância é uma composição).
+O funcional do Exemplo 2 é a composição obtida tomando
+$g_1(x) = x$, $g_2(x) = x^2$ e $h(a,b) = b - a^2$.
+
+**Definição** (Estimador plug-in).
+Sejam $X_1, \ldots, X_n$ i.i.d. com distribuição $F$ e $\hat{F}_n$ a
+distribuição empírica. O estimador plug-in de $T(F)$ é
+$T(\hat{F}_n)$.
+
+**Lema 1** (Plug-in de um funcional linear).
+Se $T(F) = \int g \, dF$, então
+
+$$T(\hat{F}_n) = \frac{1}{n}\sum_{i=1}^{n}g(X_i).$$
+
+Em particular, se $\mathbb{V}[g(X_1)] < \infty$, então
+$\mathbb{E}\left[T(\hat{F}_n)\right] = T(F)$ e
+$\mathbb{V}\left[T(\hat{F}_n)\right] = n^{-1}\mathbb{V}[g(X_1)]$.
+
+*Prova*. Como $\hat{F}_n$ atribui massa $n^{-1}$ a cada uma das
+observações $X_1, \ldots, X_n$,
+
+$$T(\hat{F}_n) = \int g(x) \, d\hat{F}_n(x)
+  = \sum_{i=1}^{n}\frac{1}{n}g(X_i).$$
+
+As duas últimas afirmações decorrem de
+$\mathbb{E}[g(X_1)] = T(F)$, da linearidade da esperança e de
+$g(X_1), \ldots, g(X_n)$ serem i.i.d. $\blacksquare$
+
+**Corolário 1**.
+Nas condições do Lema 1, $T(\hat{F}_n) \to T(F)$ quase certamente e
+
+$$\sqrt{n}\left(T(\hat{F}_n) - T(F)\right)
+  \xrightarrow{d} N\left(0, \mathbb{V}[g(X_1)]\right).$$
+
+*Prova*. Decorre do Lema 1 que $T(\hat{F}_n)$ é a média de $n$
+variáveis i.i.d. com esperança $T(F)$ e variância finita. As
+conclusões decorrem da Lei Forte dos Grandes Números e do Teorema
+Central do Limite. $\blacksquare$
+
+**Lema 2** (Plug-in de uma composição).
+Se $T(F) = h\left(\int g_1 dF, \ldots, \int g_k dF\right)$, com $h$
+contínua e $\int |g_j| dF < \infty$ para todo $j$, então
+$T(\hat{F}_n) \to T(F)$ quase certamente.
+
+*Prova*. Decorre do Lema 1 que a $j$-ésima coordenada de
+$T(\hat{F}_n)$ é $n^{-1}\sum_{i=1}^{n}g_j(X_i)$, que converge quase
+certamente a $\int g_j dF$, pela Lei Forte dos Grandes Números. Como
+a interseção de $k$ eventos de probabilidade $1$ tem probabilidade
+$1$, o vetor destas médias converge quase certamente. A conclusão
+decorre da continuidade de $h$. $\blacksquare$
+
+**Observação**. Os Lemas 1 e 2 esgotam os casos fáceis. Para um
+funcional linear, o plug-in é uma média amostral, e a Lei dos Grandes
+Números e o Teorema Central do Limite se aplicam diretamente. Para uma
+composição, a consistência decorre da continuidade, e a normalidade
+assintótica decorreria do método delta. Para um funcional qualquer,
+como o quantil do Exemplo 3, nenhum dos dois argumentos está
+disponível. A função de influência resolve este caso, mostrando que
+todo funcional suficientemente regular se comporta, assintoticamente,
+como um funcional linear.
+
+# Função de influência
+
+**Definição** (Contaminação).
+Sejam $x \in \mathbb{R}$ e $\delta_x$ a distribuição degenerada em $x$.
+Para $\varepsilon \in [0,1]$, a contaminação de $F$ por $x$ é
+
+$$F_{\varepsilon,x} = (1-\varepsilon)F + \varepsilon\delta_x.$$
+
+**Definição** (Função de influência).
+A função de influência de $T$ em $F$ é
+
+$$\text{IF}(x) = \lim_{\varepsilon \downarrow 0}
+  \frac{T(F_{\varepsilon,x}) - T(F)}{\varepsilon},$$
+
+quando o limite existe para todo $x \in \mathbb{R}$.
+
+**Observação**. A função de influência é a derivada de $T$ na direção
+de $\delta_x$, e mede o efeito sobre $T(F)$ de uma contaminação
+infinitesimal da população por observações em $x$. Nesta leitura,
+$\text{IF}(x)$ descreve o quanto uma única observação em $x$
+influencia o estimador, o que explica o nome.
+
+**Exemplo 5** (Funcional linear).
+Se $T(F) = \int g \, dF$, então $\text{IF}(x) = g(x) - T(F)$.
+De fato,
+$T(F_{\varepsilon,x}) = (1-\varepsilon)T(F) + \varepsilon g(x)$,
+de modo que
+$T(F_{\varepsilon,x}) - T(F) = \varepsilon\left(g(x) - T(F)\right)$.
+Em particular, para a média, $\text{IF}(x) = x - \mu$.
+
+**Exemplo 6** (Variância).
+Se $T$ é o funcional do Exemplo 2, $\mu = \int x \, dF$ e
+$\sigma^2 = T(F)$, então
+$\text{IF}(x) = (x-\mu)^2 - \sigma^2$.
+De fato, escrevendo $m_2 = \int x^2 dF$, decorre do Exemplo 5 que as
+derivadas em $\varepsilon = 0$ de $\int x \, dF_{\varepsilon,x}$ e de
+$\int x^2 dF_{\varepsilon,x}$ são $x - \mu$ e $x^2 - m_2$. Pela regra
+da cadeia aplicada a $h(a,b) = b - a^2$ do Exemplo 4,
+
+$$\text{IF}(x) = \left(x^2 - m_2\right) - 2\mu\left(x - \mu\right)
+  = (x - \mu)^2 - \sigma^2.$$
+
+**Exemplo 7** (Quantis).
+Seja $T(F) = \xi_p$ o funcional do Exemplo 3 e suponha que $F$ é
+diferenciável em $\xi_p$, com $F'(\xi_p) = f(\xi_p) > 0$. Então
+
+$$\text{IF}(x) = \frac{p - \mathbb{I}(x \leq \xi_p)}{f(\xi_p)}.$$
+
+De fato, seja $\xi_p(\varepsilon)$ o quantil de $F_{\varepsilon,x}$,
+de modo que
+$(1-\varepsilon)F(\xi_p(\varepsilon))
++ \varepsilon\mathbb{I}(x \leq \xi_p(\varepsilon)) = p$.
+Derivando esta identidade em $\varepsilon = 0$, obtém-se
+
+$$-F(\xi_p) + f(\xi_p)\,\xi_p'(0) + \mathbb{I}(x \leq \xi_p) = 0,$$
+
+e a conclusão decorre de $F(\xi_p) = p$. Em particular, para a
+mediana, $\text{IF}(x) = \text{sinal}(x - \xi_{0,5})
+\left(2f(\xi_{0,5})\right)^{-1}$.
+
+**Observação**. Em todos os exemplos acima,
+$\int \text{IF}(x) \, dF(x) = 0$. No Exemplo 5, porque
+$\int (g - T(F)) dF = 0$; no Exemplo 6, porque
+$\int \left((x-\mu)^2 - \sigma^2\right)dF = 0$; e no Exemplo 7,
+porque $\int \left(p - \mathbb{I}(x \leq \xi_p)\right)dF
+= p - F(\xi_p) = 0$. Esta propriedade é geral e é o que permite
+interpretar $\text{IF}$ como um desvio em torno de $T(F)$.
+
+**Suposição** (A1).
+$T$ admite a expansão de von Mises em $F$, isto é, para $G$ em uma
+vizinhança de $F$,
+
+$$T(G) - T(F) = \int \text{IF}(x) \, d(G - F)(x) + R(G,F),$$
+
+em que o resto satisfaz $\sqrt{n}\,R(\hat{F}_n, F) \to 0$ em
+probabilidade. Além disso,
+$\tau^2 = \int \text{IF}(x)^2 dF(x) \in (0,\infty)$.
+
+**Teorema 1** (Normalidade assintótica do plug-in).
+Sob (A1),
+
+$$\sqrt{n}\left(T(\hat{F}_n) - T(F)\right)
+  \xrightarrow{d} N\left(0, \tau^2\right).$$
+
+**Observação**. A prova, que não faremos, consiste em notar que, por
+(A1) e por $\int \text{IF} \, dF = 0$,
+
+$$\sqrt{n}\left(T(\hat{F}_n) - T(F)\right)
+  = \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\text{IF}(X_i)
+  + \sqrt{n}\,R(\hat{F}_n,F),$$
+
+de modo que o Teorema Central do Limite se aplica ao primeiro termo e
+o segundo é desprezível. Em outras palavras, o Teorema 1 diz que todo
+funcional que satisfaz (A1) é, assintoticamente, o funcional linear
+associado a $g = \text{IF}$. Comparando com o Corolário 1, o papel de
+$\mathbb{V}[g(X_1)]$ passa a ser desempenhado por $\tau^2$.
+
+**Corolário 2** (Erro padrão e intervalo de confiança).
+Sob (A1), se $\widehat{\text{IF}}$ é a função de influência calculada
+em $\hat{F}_n$ e $\hat{\tau}^2 = n^{-1}\sum_{i=1}^{n}
+\widehat{\text{IF}}(X_i)^2$ é consistente para $\tau^2$, então
+
+$$T(\hat{F}_n) \pm z_{1-0,5\alpha}\,\frac{\hat{\tau}}{\sqrt{n}}$$
+
+é um intervalo de confiança assintótico de nível $1-\alpha$
+para $T(F)$.
+
+**Observação**. A função de influência também mede a robustez do
+estimador. No Exemplo 5, $\text{IF}$ é ilimitada quando $g$ o é: uma
+única observação distante pode deslocar arbitrariamente a média. Já no
+Exemplo 7, $\text{IF}$ é limitada por $\left(f(\xi_p)\right)^{-1}$,
+qualquer que seja $x$: nenhuma observação isolada desloca muito a
+mediana. A quantidade $\sup_x |\text{IF}(x)|$ é chamada de
+sensibilidade a erros grosseiros e é uma das medidas clássicas de
+robustez (@Hampel1974).
+
+# Exercícios
+
+## Exercício 1 (Funcionais e estimadores plug-in)
+
+(a) Mostre que o funcional do Exemplo 2 satisfaz
+
+$$T(\hat{F}_n) = \frac{1}{n}\sum_{i=1}^{n}
+  \left(X_i - \bar{X}\right)^2,$$
+
+    isto é, que o plug-in da variância é a variância amostral com
+    denominador $n$. Ele é não-viesado?
+
+(b) Exiba $g_1, \ldots, g_k$ e $h$ que representem a covariância
+    como composição de funcionais lineares.
+
+(c) Mostre que o funcional do Exemplo 3 não é uma composição de
+    funcionais lineares.
+    Sugestão: composições são contínuas em $F$ com respeito à
+    convergência em distribuição.
+
+(d) Use o Teorema 2 da Aula 2 para mostrar que, se $T$ é contínuo com
+    respeito à norma do supremo, então $T(\hat{F}_n) \to T(F)$ quase
+    certamente. Este critério cobre o Exemplo 3?
+
+## Exercício 2 (Cálculo de funções de influência)
+
+(a) Obtenha a função de influência de $T(F) = \int g \, dF$ quando
+    $g(x) = \mathbb{I}(x \leq t)$, com $t$ fixo. Relacione o resultado
+    com o Lema 1 da Aula 2.
+
+(b) Seja $T(F) = h\left(\int g_1 dF, \ldots, \int g_k dF\right)$, com
+    $h$ diferenciável. Mostre que
+
+$$\text{IF}(x) = \sum_{j=1}^{k}\frac{\partial h}{\partial a_j}
+  \left(\theta_1,\ldots,\theta_k\right)
+  \left(g_j(x) - \theta_j\right),
+  \qquad \theta_j = \int g_j \, dF.$$
+
+(c) Verifique que (b) recupera o Exemplo 6.
+
+(d) Obtenha a função de influência da razão de médias,
+    $T(F) = \int g_1 dF \left(\int g_2 dF\right)^{-1}$, supondo
+    $\int g_2 dF \neq 0$.
+
+(e) Verifique que $\int \text{IF} \, dF = 0$ em (b).
+
+## Exercício 3 (Consequências do Teorema 1)
+
+(a) Verifique que, para um funcional linear, o Teorema 1 e o
+    Corolário 1 fornecem a mesma distribuição assintótica.
+
+(b) Use o Teorema 1 e o Exemplo 6 para obter um intervalo de
+    confiança assintótico para a variância. De que momento de $F$
+    a variância assintótica depende?
+
+(c) Use o Teorema 1 e o Exemplo 7 para obter a distribuição
+    assintótica da mediana amostral. Por que o intervalo de confiança
+    resultante é difícil de usar na prática?
+
+(d) O item (c) motiva as próximas aulas. Explique por que o
+    bootstrap é uma alternativa atraente neste caso.
+
+## Exercício 4 (Robustez)
+
+(a) Compare $\sup_x |\text{IF}(x)|$ para a média e para a mediana.
+
+(b) A média aparada de nível $\alpha$ é definida por
+    $T(F) = (1-2\alpha)^{-1}\int_{\xi_{\alpha}}^{\xi_{1-\alpha}}
+    x \, dF(x)$. Argumente, sem calcular, que a sua função de
+    influência é limitada.
+
+(c) Um estimador com função de influência limitada é
+    necessariamente preferível? Discuta em termos da variância
+    assintótica $\tau^2$ quando $F$ é Normal.
+
+# Referências
