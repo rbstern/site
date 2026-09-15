@@ -150,6 +150,45 @@ Assim,
  &= x^Te_1 = 1. \qquad \blacksquare
 \end{align*}
 
+**Exemplo 1** (Regressão linear penalizada).
+Seja $\lambda > 0$. A regressão linear penalizada (ridge) usa
+
+$$\hat{\beta}_\lambda
+  = \arg\min_{\beta \in \mathbb{R}^p}
+    \left(\|\mathbf{Y} - \mathbb{X}\beta\|^2 + \lambda\|\beta\|^2\right)
+  = \left(\mathbb{X}^T\mathbb{X} + \lambda I\right)^{-1}\mathbb{X}^T\mathbf{Y}.$$
+
+A matriz $\mathbb{X}^T\mathbb{X} + \lambda I$ é invertível mesmo sem
+(A1). Para verificar que $\hat{\beta}_\lambda$ é o minimizador, note que
+$\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta}_\lambda) - \lambda\hat{\beta}_\lambda = 0$.
+Assim, como na prova do Lema 1, para todo $\beta \in \mathbb{R}^p$,
+
+\begin{align*}
+ \|\mathbf{Y} - \mathbb{X}\beta\|^2 + \lambda\|\beta\|^2
+ &= \|\mathbf{Y} - \mathbb{X}\hat{\beta}_\lambda\|^2
+    + \lambda\|\hat{\beta}_\lambda\|^2
+    + 2(\hat{\beta}_\lambda - \beta)^T\left(\mathbb{X}^T(\mathbf{Y} - \mathbb{X}\hat{\beta}_\lambda)
+    - \lambda\hat{\beta}_\lambda\right) \\
+ &\quad + \|\mathbb{X}(\hat{\beta}_\lambda - \beta)\|^2
+    + \lambda\|\hat{\beta}_\lambda - \beta\|^2 \\
+ &= \|\mathbf{Y} - \mathbb{X}\hat{\beta}_\lambda\|^2
+    + \lambda\|\hat{\beta}_\lambda\|^2
+    + \|\mathbb{X}(\hat{\beta}_\lambda - \beta)\|^2
+    + \lambda\|\hat{\beta}_\lambda - \beta\|^2 \\
+ &\geq \|\mathbf{Y} - \mathbb{X}\hat{\beta}_\lambda\|^2
+    + \lambda\|\hat{\beta}_\lambda\|^2,
+\end{align*}
+
+com igualdade se e somente se $\beta = \hat{\beta}_\lambda$. Como no
+Lema 2, a predição $\hat{r}_n(x) = x^T\hat{\beta}_\lambda$ satisfaz
+
+$$\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i,
+  \qquad \text{com} \qquad
+  \ell_i(x) = x^T\left(\mathbb{X}^T\mathbb{X} + \lambda I\right)^{-1}X_i.$$
+
+Como a penalidade também age sobre o intercepto, em geral
+$\sum_{i=1}^{n}\ell_i(x) \neq 1$.
+
 **Observação**. Os pesos $\ell_i(x)$ dependem de $x$ e de
 $X_1, \ldots, X_n$, mas não de $Y_1, \ldots, Y_n$. Por outro lado, eles
 são determinados pela forma global do modelo: podem ser negativos, e
@@ -166,12 +205,13 @@ de $x$ e de $X_1, \ldots, X_n$, mas não de $Y_1, \ldots, Y_n$, tal que
 
 $$\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i.$$
 
-**Observação**. Pelo Lema 2, a predição da regressão linear é um linear
-smoother. Todos os exemplos a seguir satisfazem
-$\sum_{i=1}^{n}\ell_i(x) = 1$ (Exercício 2), de modo que, se $Y_i = c$
-para todo $i$, então $\hat{r}_n(x) = c$. Nos exemplos, $d = 1$.
+**Observação**. Pelo Lema 2 e pelo Exemplo 1, as predições da regressão
+linear e da regressão linear penalizada são linear smoothers. Os
+Exemplos 2 a 6 satisfazem $\sum_{i=1}^{n}\ell_i(x) = 1$ (Exercício 2),
+de modo que, se $Y_i = c$ para todo $i$, então $\hat{r}_n(x) = c$. Nos
+exemplos a seguir, $d = 1$.
 
-**Exemplo 1** (Regressograma).
+**Exemplo 2** (Regressograma).
 Suponha $X_i \in [0,1]$ e considere, como no histograma da Aula 1, a
 partição de $[0,1]$ em $m$ intervalos $B_1, \ldots, B_m$ de comprimento
 $h = m^{-1}$. O regressograma é a média das respostas cujas covariáveis
@@ -190,7 +230,7 @@ $$\ell_i(x) = \frac{\mathbb{I}(X_i \in B_j)}
 Assim como o histograma, $\hat{r}_n$ é constante em cada $B_j$, e $h$
 controla o compromisso entre viés e variância.
 
-**Exemplo 2** ($k$ vizinhos mais próximos).
+**Exemplo 3** ($k$ vizinhos mais próximos).
 Seja $k \in \{1, \ldots, n\}$. Para $x \in \mathbb{R}$, seja $N_k(x)$ o
 conjunto dos índices das $k$ observações com $X_i$ mais próximo de $x$,
 com empates desfeitos pelo menor índice. O estimador de $k$ vizinhos
@@ -207,7 +247,7 @@ estreita onde há muitas. O número $k$ faz o papel da banda: $k = n$
 fornece $\hat{r}_n \equiv \bar{Y}$, e $k = 1$ fornece
 $\hat{r}_n(X_i) = Y_i$.
 
-**Exemplo 3** (Médias locais).
+**Exemplo 4** (Médias locais).
 Seja $h > 0$. A média local em $x$ é a média das respostas cujas
 covariáveis estão na janela $(x-h, x+h]$:
 
@@ -231,7 +271,7 @@ partição pré-definida: a janela é centrada em $x$ e acompanha o ponto,
 assim como o KDE em relação ao histograma. Ao contrário do $k$-NN, a
 largura da janela é a mesma para todo $x$.
 
-**Exemplo 4** (Nadaraya-Watson, @Nadaraya1964; @Watson1964).
+**Exemplo 5** (Nadaraya-Watson, @Nadaraya1964; @Watson1964).
 Suponha que $(X_1, Y_1)$ tem densidade conjunta $f(y, x)$ e seja $f(x)$
 a densidade marginal de $X_1$. Então, se $f(x) > 0$,
 
@@ -275,7 +315,7 @@ As médias locais são o caso $K = K_0$. Com $K \geq 0$ contínuo, como o
 gaussiano ou o de Epanechnikov, os pesos decaem continuamente com
 $|X_i - x|$ e $\hat{r}_n$ é contínua.
 
-**Exemplo 5** (Regressão polinomial local).
+**Exemplo 6** (Regressão polinomial local).
 Sejam $K \geq 0$ um kernel, $h > 0$ e $q \in \{0, 1, 2, \ldots\}$. Pela
 série de Taylor, como no Lema 3 da Aula 7, se $r$ é suave, então, para
 $u$ próximo de $x$,
@@ -321,6 +361,32 @@ $\hat{r}_n(x) = \sum_i w_i(x)Y_i / \sum_s w_s(x)$ é o estimador de
 Nadaraya-Watson. Para $q = 1$, obtém-se a regressão linear local
 (Exercício 4).
 
+**Exemplo 7** (Processos gaussianos).
+Seja $c: \mathbb{R}^2 \to \mathbb{R}$ uma função de covariância. Suponha
+que, a priori, $r$ é um processo gaussiano de média $0$ e covariância
+$c$, e que, condicionalmente a $X_1, \ldots, X_n$ e a $r$,
+$\varepsilon_1, \ldots, \varepsilon_n$ são i.i.d. $N(0, \sigma^2)$. Sejam
+$\mathbf{C}$ a matriz $n \times n$ com $\mathbf{C}_{ij} = c(X_i, X_j)$ e
+$\mathbf{c}(x) = (c(x, X_1), \ldots, c(x, X_n))^T$. Condicionalmente a
+$X_1, \ldots, X_n$, o vetor $(r(x), \mathbf{Y})$ é normal com média $0$,
+
+$$\text{Cov}(r(x), \mathbf{Y}) = \mathbf{c}(x)^T
+  \qquad \text{e} \qquad
+  \mathbb{V}[\mathbf{Y}] = \mathbf{C} + \sigma^2 I.$$
+
+Pela fórmula da esperança condicional da normal multivariada, a média a
+posteriori é
+
+$$\hat{r}_n(x) = \mathbb{E}[r(x) \mid X_1, \ldots, X_n, \mathbf{Y}]
+  = \mathbf{c}(x)^T\left(\mathbf{C} + \sigma^2 I\right)^{-1}\mathbf{Y},$$
+
+um linear smoother com
+$\ell(x)^T = \mathbf{c}(x)^T(\mathbf{C} + \sigma^2 I)^{-1}$. Embora o
+modelo trate $r$ como aleatória, a média a posteriori, vista como função
+dos dados, é um linear smoother, e as propriedades de linear smoothers
+valem para ela. Como a média a priori é $0$, em geral
+$\sum_{i=1}^{n}\ell_i(x) \neq 1$.
+
 # Exercícios
 
 ## Exercício 1 (Matriz de suavização)
@@ -343,15 +409,15 @@ número efetivo de graus de liberdade é $\nu = \text{tr}(\mathbf{L})$.
 
 ## Exercício 2 (Reprodução de polinômios)
 
-(a) Mostre que, nos Exemplos 1 a 4, com $K \geq 0$ no Exemplo 4,
+(a) Mostre que, nos Exemplos 2 a 5, com $K \geq 0$ no Exemplo 5,
     $\ell_i(x) \geq 0$ e $\sum_{i=1}^{n}\ell_i(x) = 1$.
 
-(b) No Exemplo 5, mostre que, se $Y_i = P(X_i)$ para todo $i$, em que
+(b) No Exemplo 6, mostre que, se $Y_i = P(X_i)$ para todo $i$, em que
     $P$ é um polinômio de grau no máximo $q$, então
     $\hat{r}_n(x) = P(x)$. Sugestão: escreva $P(u) = z_x(u)^Ta^*$ e
     note que o critério se anula em $a^*$.
 
-(c) Conclua de (b) que, no Exemplo 5, $\sum_{i=1}^{n}\ell_i(x) = 1$ e
+(c) Conclua de (b) que, no Exemplo 6, $\sum_{i=1}^{n}\ell_i(x) = 1$ e
     $\sum_{i=1}^{n}\ell_i(x)(X_i - x)^j = 0$ para $1 \leq j \leq q$.
     Compare com a definição de kernel de ordem $q$ da Aula 7.
 
@@ -377,7 +443,7 @@ $$\mathbb{E}\left[\hat{r}_n(x) \mid X_1, \ldots, X_n\right]
 
 ## Exercício 4 (Regressão linear local)
 
-Considere o Exemplo 5 com $q = 1$ e seja
+Considere o Exemplo 6 com $q = 1$ e seja
 $S_j = \sum_{i=1}^{n}w_i(x)(X_i - x)^j$, para $j \in \{0, 1, 2\}$.
 
 (a) Mostre que

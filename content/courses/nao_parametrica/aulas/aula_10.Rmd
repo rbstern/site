@@ -1,0 +1,642 @@
+---
+title: "Aula 10: Propriedades de linear smoothers"
+linkTitle: "Aula 10: Propriedades de linear smoothers"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 100
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 9:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Estimadores sem a i-ésima observação indicados por -i, e não por (i).
+- Termos técnicos em inglês quando consagrados (kernel, linear smoother).
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 15/09/2026.
+
+**Leitura**: @Wasserman2006, Capítulo 5.
+
+Ao longo desta aula, vale o modelo de regressão da Aula 9 com $d = 1$:
+$(X_1, Y_1), \ldots, (X_n, Y_n)$ são i.i.d.,
+$Y_i = r(X_i) + \varepsilon_i$ e, condicionalmente a
+$X_1, \ldots, X_n$, os erros $\varepsilon_1, \ldots, \varepsilon_n$ são
+independentes, com média $0$ e variância $\sigma^2$. O estimador
+$\hat{r}_n(x) = \sum_{i=1}^{n}\ell_i(x)Y_i$ é um linear smoother.
+
+# Matriz de suavização
+
+**Definição** (Desenho).
+Denote $\mathbf{X} = (X_1, \ldots, X_n)$. Esperanças, variâncias e
+probabilidades condicionais ao desenho são escritas como
+$\mathbb{E}[\cdot \mid \mathbf{X}]$, $\mathbb{V}[\cdot \mid \mathbf{X}]$ e
+$\mathbb{P}(\cdot \mid \mathbf{X})$.
+
+**Definição** (Matriz de suavização).
+A matriz de suavização é a matriz $\mathbf{L}$, de dimensão
+$n \times n$, com $\mathbf{L}_{ij} = \ell_j(X_i)$. Assim, sendo
+$\mathbf{Y} = (Y_1, \ldots, Y_n)^T$ e
+$\mathbf{r} = (r(X_1), \ldots, r(X_n))^T$, os valores ajustados são
+
+$$\hat{\mathbf{r}} = (\hat{r}_n(X_1), \ldots, \hat{r}_n(X_n))^T
+  = \mathbf{L}\mathbf{Y}.$$
+
+**Definição** (Graus de liberdade efetivos).
+O número efetivo de graus de liberdade do linear smoother é
+$\nu = \text{tr}(\mathbf{L}) = \sum_{i=1}^{n}\ell_i(X_i)$.
+
+**Exemplo 1** (Graus de liberdade).
+Pelo Exercício 1 da Aula 9:
+
+- na regressão linear, $\mathbf{L} = \mathbb{X}(\mathbb{X}^T\mathbb{X})^{-1}\mathbb{X}^T$
+  e $\nu = \text{tr}((\mathbb{X}^T\mathbb{X})^{-1}\mathbb{X}^T\mathbb{X}) = p$;
+- no $k$-NN com $X_1, \ldots, X_n$ distintos, $\mathbf{L}_{ii} = k^{-1}$ e
+  $\nu = n/k$;
+- no Nadaraya-Watson,
+  $\nu = \sum_{i=1}^{n}K(0)\big/\sum_{s=1}^{n}K\left(\frac{X_s - X_i}{h}\right)$.
+
+Os parâmetros de suavização $h$, $k$ e $p$ não são comparáveis entre
+si, mas $\nu$ é: ele permite comparar métodos diferentes com a mesma
+complexidade. Para $k = n$ no $k$-NN, $\nu = 1$, a complexidade de
+ajustar uma constante; para $k = 1$, $\nu = n$, a de interpolar os
+dados.
+
+# Viés, variância e risco
+
+**Lema 1** (Viés e variância condicionais).
+Para todo $x$,
+
+$$\mathbb{E}\left[\hat{r}_n(x) \mid \mathbf{X}\right] = \sum_{i=1}^{n}\ell_i(x)r(X_i)
+  \qquad \text{e} \qquad
+  \mathbb{V}\left[\hat{r}_n(x) \mid \mathbf{X}\right] = \sigma^2\sum_{i=1}^{n}\ell_i(x)^2.$$
+
+Se, além disso, $\sum_{i=1}^{n}\ell_i(x) = 1$, então
+$\mathbb{E}[\hat{r}_n(x) \mid \mathbf{X}] - r(x) = \sum_{i=1}^{n}\ell_i(x)(r(X_i) - r(x))$.
+
+*Prova*. Como os pesos dependem apenas de $x$ e de $X_1, \ldots, X_n$,
+
+$$\mathbb{E}\left[\hat{r}_n(x) \mid \mathbf{X}\right]
+  = \sum_{i=1}^{n}\ell_i(x)\left(r(X_i) + \mathbb{E}[\varepsilon_i \mid \mathbf{X}]\right)
+  = \sum_{i=1}^{n}\ell_i(x)r(X_i),$$
+
+e, pela independência condicional dos erros,
+$\mathbb{V}[\hat{r}_n(x) \mid \mathbf{X}] = \sum_{i=1}^{n}\ell_i(x)^2\mathbb{V}[\varepsilon_i \mid \mathbf{X}]
+= \sigma^2\sum_{i=1}^{n}\ell_i(x)^2$. A última afirmação decorre de
+$r(x) = \sum_{i=1}^{n}\ell_i(x)r(x)$. $\blacksquare$
+
+**Suposição** (A1) (Suavidade).
+$r \in \Sigma(\beta, L)$, a classe de Hölder da Aula 7, para algum
+$\beta > 0$ e algum $L > 0$. Seja $m$ o maior inteiro estritamente menor
+que $\beta$.
+
+**Suposição** (A2) (Pesos locais que reproduzem polinômios).
+Para $x \in \mathbb{R}$ e $h > 0$ fixos, existe $C_0 > 0$ tal que:
+
+- (P1) $\sum_{i=1}^{n}\ell_i(x) = 1$ e
+  $\sum_{i=1}^{n}\ell_i(x)(X_i - x)^j = 0$, para $1 \leq j \leq m$;
+- (P2) $\ell_i(x) = 0$ sempre que $|X_i - x| > h$;
+- (P3) $\sum_{i=1}^{n}|\ell_i(x)| \leq C_0$ e
+  $\max_{i}|\ell_i(x)| \leq C_0(nh)^{-1}$.
+
+Como os pesos dependem de $X_1, \ldots, X_n$, (A2) é uma condição sobre
+o desenho observado. Ao longo desta seção, $C > 0$ denota uma constante
+que depende apenas de $\beta$, $L$, $C_0$ e $\sigma^2$.
+
+**Teorema 1** (Risco de linear smoothers).
+Sob (A1) e (A2),
+
+$$\left|\mathbb{E}\left[\hat{r}_n(x) \mid \mathbf{X}\right] - r(x)\right| \leq Ch^{\beta},
+  \qquad
+  \mathbb{V}\left[\hat{r}_n(x) \mid \mathbf{X}\right] \leq \frac{C}{nh}
+  \qquad \text{e} \qquad
+  \mathbb{E}\left[\left(\hat{r}_n(x) - r(x)\right)^2 \mid \mathbf{X}\right]
+  \leq C\left(h^{2\beta} + \frac{1}{nh}\right).$$
+
+Em particular, se (A2) vale com $h = n^{-1/(2\beta+1)}$, então
+$\mathbb{E}[(\hat{r}_n(x) - r(x))^2 \mid \mathbf{X}] \leq 2C\,n^{-\frac{2\beta}{2\beta+1}}$.
+
+*Prova*. Seja $R_x$ o resto de Taylor do Lema 3 da Aula 7, aplicado a
+$r$, de modo que $|R_x(t)| \leq L|t|^{\beta}(m!)^{-1}$. Pelo Lema 1 e por
+(P1),
+
+\begin{align*}
+ \mathbb{E}\left[\hat{r}_n(x) \mid \mathbf{X}\right] - r(x)
+ &= \sum_{i=1}^{n}\ell_i(x)\left(r(X_i) - r(x)\right) \\
+ &= \sum_{i=1}^{n}\ell_i(x)\left(\sum_{j=1}^{m}\frac{r^{(j)}(x)}{j!}(X_i - x)^j
+    + R_x(X_i - x)\right) \\
+ &= \sum_{j=1}^{m}\frac{r^{(j)}(x)}{j!}\sum_{i=1}^{n}\ell_i(x)(X_i - x)^j
+    + \sum_{i=1}^{n}\ell_i(x)R_x(X_i - x) \\
+ &= \sum_{i=1}^{n}\ell_i(x)R_x(X_i - x).
+\end{align*}
+
+A segunda igualdade é a expansão de Taylor com $t = X_i - x$, e a
+última usa (P1). Assim,
+
+\begin{align*}
+ \left|\mathbb{E}\left[\hat{r}_n(x) \mid \mathbf{X}\right] - r(x)\right|
+ &\leq \sum_{i=1}^{n}|\ell_i(x)|\,|R_x(X_i - x)| \\
+ &\leq \frac{L}{m!}\sum_{i=1}^{n}|\ell_i(x)|\,|X_i - x|^{\beta} \\
+ &\leq \frac{L}{m!}h^{\beta}\sum_{i=1}^{n}|\ell_i(x)| \\
+ &\leq \frac{LC_0}{m!}h^{\beta}.
+\end{align*}
+
+A terceira desigualdade usa (P2): só contribuem os termos com
+$|X_i - x| \leq h$. A última usa (P3). Para a variância, pelo Lema 1 e
+por (P3),
+
+$$\mathbb{V}\left[\hat{r}_n(x) \mid \mathbf{X}\right]
+  = \sigma^2\sum_{i=1}^{n}\ell_i(x)^2
+  \leq \sigma^2\max_i|\ell_i(x)|\sum_{i=1}^{n}|\ell_i(x)|
+  \leq \frac{\sigma^2C_0^2}{nh}.$$
+
+A cota para o risco decorre da decomposição em viés ao quadrado e
+variância, como no Lema 1 da Aula 7, e a taxa decorre da mesma conta do
+Teorema 1 da Aula 7. $\blacksquare$
+
+**Observação**. O Teorema 1 é o Lema 4 e o Corolário 1 da Aula 7 com
+uma soma no lugar da integral. (P1) faz o papel da ordem do kernel e
+anula o polinômio de Taylor; (P2) faz o papel do suporte compacto; (P3)
+faz o papel de $\kappa_\beta$ e de $R(K)$. O resultado não é
+assintótico: vale para cada $n$ e para cada desenho que satisfaz (A2).
+Para cada método, resta verificar (A2).
+
+**Corolário 1** (Nadaraya-Watson).
+Seja $K \geq 0$ um kernel com $K(u) = 0$ para $|u| > 1$ e
+$K \leq K_{\max}$. Suponha (A1) com $\beta \leq 1$ e que
+$\sum_{s=1}^{n}K\left(\frac{X_s - x}{h}\right) \geq c_0nh$ para algum
+$c_0 > 0$. Então o estimador de Nadaraya-Watson satisfaz (A2) e,
+portanto, as conclusões do Teorema 1.
+
+*Prova*. Como $\beta \leq 1$, $m = 0$ e (P1) exige apenas
+$\sum_i \ell_i(x) = 1$, que vale pela definição dos pesos. (P2) decorre
+de $K(u) = 0$ para $|u| > 1$. Como $\ell_i(x) \geq 0$,
+$\sum_i|\ell_i(x)| = 1$, e
+
+$$\max_i|\ell_i(x)|
+  = \max_i\frac{K\left(\frac{X_i - x}{h}\right)}{\sum_{s=1}^{n}K\left(\frac{X_s - x}{h}\right)}
+  \leq \frac{K_{\max}}{c_0nh},$$
+
+o que prova (P3) com $C_0 = \max(1, K_{\max}c_0^{-1})$. $\blacksquare$
+
+**Observação**. A condição sobre o desenho é
+$\hat{f}_n(x) \geq c_0$, em que $\hat{f}_n$ é o KDE da Aula 7. Para
+$\beta > 1$, (P1) exige $\sum_i\ell_i(x)(X_i - x) = 0$, o que em geral
+não vale para o Nadaraya-Watson (Exercício 4 da Aula 9): seu viés passa
+a depender da distribuição de $X_1, \ldots, X_n$ ao redor de $x$. A
+regressão polinomial local corrige isso.
+
+**Definição** (Pesos reescalados da regressão polinomial local).
+Considere a regressão polinomial local de grau $q$ do Exemplo 6 da
+Aula 9, com kernel $K \geq 0$. Sejam $Z_i = (X_i - x)/h$,
+
+$$U(u) = \left(1, \, u, \, \frac{u^2}{2!}, \, \ldots, \, \frac{u^q}{q!}\right)^T
+  \qquad \text{e} \qquad
+  B_x = \frac{1}{nh}\sum_{i=1}^{n}K(Z_i)U(Z_i)U(Z_i)^T.$$
+
+**Lema 2** (Pesos da regressão polinomial local).
+Se $B_x$ é invertível, então, para todo $i$,
+
+$$\ell_i(x) = \frac{1}{nh}K(Z_i)\,e_1^TB_x^{-1}U(Z_i).$$
+
+Além disso, $\sum_{i=1}^{n}\ell_i(x) = 1$ e
+$\sum_{i=1}^{n}\ell_i(x)(X_i - x)^j = 0$, para $1 \leq j \leq q$.
+
+*Prova*. Seja $D_h = \text{diag}(1, h, \ldots, h^q)$. Como
+$(X_i - x)^j/j! = h^jZ_i^j/j!$, vale $z_x(X_i) = D_hU(Z_i)$. Assim, com
+a notação do Exemplo 6 da Aula 9,
+
+$$\mathbb{X}_x^TW_x\mathbb{X}_x
+  = \sum_{i=1}^{n}K(Z_i)z_x(X_i)z_x(X_i)^T
+  = nh\,D_hB_xD_h.$$
+
+Como $e_1^TD_h^{-1} = e_1^T$,
+
+\begin{align*}
+ \ell_i(x)
+ &= K(Z_i)\,e_1^T\left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}z_x(X_i) \\
+ &= \frac{1}{nh}K(Z_i)\,e_1^TD_h^{-1}B_x^{-1}D_h^{-1}D_hU(Z_i) \\
+ &= \frac{1}{nh}K(Z_i)\,e_1^TB_x^{-1}U(Z_i).
+\end{align*}
+
+Para a segunda afirmação,
+
+\begin{align*}
+ \sum_{i=1}^{n}\ell_i(x)z_x(X_i)^T
+ &= e_1^T\left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}
+    \sum_{i=1}^{n}K(Z_i)z_x(X_i)z_x(X_i)^T \\
+ &= e_1^T\left(\mathbb{X}_x^TW_x\mathbb{X}_x\right)^{-1}\mathbb{X}_x^TW_x\mathbb{X}_x \\
+ &= e_1^T.
+\end{align*}
+
+A primeira coordenada fornece $\sum_i\ell_i(x) = 1$, e a coordenada
+$j+1$ fornece $\sum_i\ell_i(x)(X_i - x)^j/j! = 0$. $\blacksquare$
+
+**Corolário 2** (Regressão polinomial local).
+Seja $K \geq 0$ um kernel com $K(u) = 0$ para $|u| > 1$ e
+$K \leq K_{\max}$. Suponha (A1), $q \geq m$ e que existem
+$\lambda_0 > 0$ e $a_0 > 0$ tais que:
+
+- (D1) o menor autovalor de $B_x$ é pelo menos $\lambda_0$;
+- (D2) $\sum_{i=1}^{n}\mathbb{I}(|X_i - x| \leq h) \leq a_0nh$.
+
+Então a regressão polinomial local de grau $q$ satisfaz (A2) e,
+portanto, as conclusões do Teorema 1.
+
+*Prova*. (P1) decorre do Lema 2, pois $q \geq m$. (P2) decorre de
+$K(Z_i) = 0$ para $|Z_i| > 1$. Para (P3), se $|Z_i| \leq 1$, então
+$\|U(Z_i)\|^2 = \sum_{j=0}^{q}Z_i^{2j}(j!)^{-2} \leq q+1$. Pelo Lema 2,
+pela desigualdade de Cauchy-Schwarz e por (D1), que garante que os
+autovalores de $B_x^{-1}$ são no máximo $\lambda_0^{-1}$,
+
+\begin{align*}
+ |\ell_i(x)|
+ &\leq \frac{K_{\max}}{nh}\left|e_1^TB_x^{-1}U(Z_i)\right| \\
+ &\leq \frac{K_{\max}}{nh}\left\|B_x^{-1}U(Z_i)\right\| \\
+ &\leq \frac{K_{\max}}{nh\lambda_0}\left\|U(Z_i)\right\| \\
+ &\leq \frac{K_{\max}\sqrt{q+1}}{\lambda_0}\cdot\frac{1}{nh}.
+\end{align*}
+
+Como $\ell_i(x) = 0$ para $|X_i - x| > h$, por (D2),
+$\sum_i|\ell_i(x)| \leq a_0nh\max_i|\ell_i(x)|
+\leq a_0K_{\max}\sqrt{q+1}\,\lambda_0^{-1}$. $\blacksquare$
+
+**Observação** (Condições sobre o desenho). (D1) é a invertibilidade de
+$\mathbb{X}_x^TW_x\mathbb{X}_x$ na Aula 9, de forma quantitativa. Se
+$X_1$ tem densidade $f$ contínua com $f(x) > 0$, então, quando $h \to 0$
+e $nh \to \infty$,
+
+$$B_x \to f(x)\mathbf{B},
+  \qquad \text{com} \qquad
+  \mathbf{B} = \int K(u)U(u)U(u)^T\,du,$$
+
+em probabilidade, pois $\mathbb{E}[B_x] = \int K(u)U(u)U(u)^Tf(x+uh)\,du$.
+A matriz $\mathbf{B}$ é positiva definida quando $K > 0$ em um conjunto
+de medida positiva, pois, para $v \neq 0$,
+$v^T\mathbf{B}v = \int K(u)(v^TU(u))^2\,du > 0$, já que $v^TU$ é um
+polinômio não nulo. Do mesmo modo, (D2) vale com probabilidade próxima
+de $1$ se $f$ é limitada. Assim, para desenhos aleatórios usuais, (D1) e
+(D2) valem com probabilidade tendendo a $1$.
+
+# Kernel equivalente
+
+**Definição** (Kernel equivalente).
+Seja $K \geq 0$ um kernel limitado, com $K(u) = 0$ para $|u| > 1$ e
+$\mathbf{B} = \int K(u)U(u)U(u)^T\,du$ positiva definida. O kernel
+equivalente da regressão polinomial local de grau $q$ é
+
+$$K^*(u) = e_1^T\mathbf{B}^{-1}U(u)\,K(u).$$
+
+**Lema 3** (O kernel equivalente tem ordem $q$).
+$K^*$ é um kernel de ordem $q$, na convenção da Aula 7.
+
+*Prova*. $K^*$ é limitado e se anula fora de $[-1,1]$, de modo que é
+integrável, $R(K^*) < \infty$ e $\kappa_q < \infty$. Além disso,
+
+$$\int K^*(u)U(u)^T\,du
+  = e_1^T\mathbf{B}^{-1}\int K(u)U(u)U(u)^T\,du
+  = e_1^T\mathbf{B}^{-1}\mathbf{B} = e_1^T.$$
+
+A primeira coordenada fornece $\int K^* = 1$, e a coordenada $j+1$
+fornece $\int u^jK^*(u)\,du = 0$, para $1 \leq j \leq q$. $\blacksquare$
+
+**Observação** (Risco assintótico, @FanGijbels1996). Pelo Lema 2 e pela
+observação sobre o desenho, $B_x \approx f(x)\mathbf{B}$ e, portanto,
+
+$$\ell_i(x) \approx \frac{1}{nhf(x)}K^*\left(\frac{X_i - x}{h}\right).$$
+
+Isto é, a regressão polinomial local se comporta como uma média
+ponderada por um kernel de ordem $q$, sem denominador aleatório. Esta
+aproximação fornece, heuristicamente,
+
+\begin{align*}
+ \mathbb{V}\left[\hat{r}_n(x) \mid \mathbf{X}\right]
+ &\approx \frac{\sigma^2}{(nhf(x))^2}\sum_{i=1}^{n}K^*(Z_i)^2
+ \approx \frac{\sigma^2R(K^*)}{nhf(x)}, \\
+ \mathbb{E}\left[\hat{r}_n(x) \mid \mathbf{X}\right] - r(x)
+ &\approx \frac{r^{(q+1)}(x)h^{q+1}}{(q+1)!}\int u^{q+1}K^*(u)\,du,
+\end{align*}
+
+a segunda quando $r$ tem $q+1$ derivadas e a integral não se anula. Se
+$K$ é simétrico, $K^*$ também é, e a integral se anula quando $q$ é par;
+nesse caso, o termo principal do viés tem ordem $h^{q+2}$ e depende de
+$f'(x)$. Para $K$ simétrico, $q = 0$ e $q = 1$ têm o mesmo kernel
+equivalente $K^* = K$ (Exercício 4). Assim, o Nadaraya-Watson ($q = 0$)
+e a regressão linear local ($q = 1$) têm a mesma variância assintótica,
+mas o viés da regressão linear local, $h^2r''(x)\kappa_2/2$, não depende
+do desenho.
+
+# Validação cruzada
+
+**Definição** (Validação cruzada).
+Seja $\hat{r}_{-i}$ o estimador calculado com a amostra sem a
+observação $i$. O critério de validação cruzada é
+
+$$\text{CV} = \frac{1}{n}\sum_{i=1}^{n}\left(Y_i - \hat{r}_{-i}(X_i)\right)^2.$$
+
+**Lema 4** (Sherman-Morrison).
+Sejam $A$ uma matriz $p \times p$ simétrica invertível e
+$v \in \mathbb{R}^p$ com $v^TA^{-1}v \neq 1$. Então
+
+$$\left(A - vv^T\right)^{-1}
+  = A^{-1} + \frac{A^{-1}vv^TA^{-1}}{1 - v^TA^{-1}v}.$$
+
+*Prova*. Seja $a = v^TA^{-1}v$. Então
+
+\begin{align*}
+ \left(A - vv^T\right)\left(A^{-1} + \frac{A^{-1}vv^TA^{-1}}{1 - a}\right)
+ &= I - vv^TA^{-1} + \frac{vv^TA^{-1} - avv^TA^{-1}}{1 - a} \\
+ &= I - vv^TA^{-1} + vv^TA^{-1} \\
+ &= I. \qquad \blacksquare
+\end{align*}
+
+**Teorema 2** (Validação cruzada com um único ajuste).
+Suponha que vale uma das condições abaixo:
+
+(a) $\ell_j(x) = g_j(x)/\sum_{s=1}^{n}g_s(x)$, em que $g_j(x) \geq 0$
+    depende apenas de $x$ e de $X_j$, e $\sum_{s \neq i}g_s(X_i) > 0$;
+
+(b) $\hat{r}_n$ é a predição da regressão linear e $\mathbf{L}_{ii} < 1$.
+
+Então, para todo $i$,
+
+$$Y_i - \hat{r}_{-i}(X_i) = \frac{Y_i - \hat{r}_n(X_i)}{1 - \mathbf{L}_{ii}}
+  \qquad \text{e, portanto,} \qquad
+  \text{CV} = \frac{1}{n}\sum_{i=1}^{n}
+  \left(\frac{Y_i - \hat{r}_n(X_i)}{1 - \mathbf{L}_{ii}}\right)^2.$$
+
+*Prova*. (a) Escreva $g_s = g_s(X_i)$. Como $g_j$ não depende das
+demais observações, retirar a observação $i$ apenas remove o termo $i$
+das somas. Assim,
+
+\begin{align*}
+ Y_i - \hat{r}_{-i}(X_i)
+ &= \frac{\sum_{s \neq i}g_s(Y_i - Y_s)}{\sum_{s \neq i}g_s} \\
+ &= \frac{\sum_{s=1}^{n}g_s(Y_i - Y_s)}{\sum_{s \neq i}g_s} \\
+ &= \frac{\sum_{s=1}^{n}g_s(Y_i - Y_s)}{\sum_{s=1}^{n}g_s}
+    \cdot\frac{\sum_{s=1}^{n}g_s}{\sum_{s \neq i}g_s} \\
+ &= \frac{Y_i - \hat{r}_n(X_i)}{1 - \mathbf{L}_{ii}}.
+\end{align*}
+
+A segunda igualdade usa que o termo $s = i$ é nulo, e a última usa
+$\mathbf{L}_{ii} = g_i/\sum_s g_s$.
+
+(b) Sejam $A = \mathbb{X}^T\mathbb{X}$ e $v = X_i$, de modo que
+$\mathbf{L}_{ii} = v^TA^{-1}v$. Sem a observação $i$, a matriz e o vetor
+do Lema 1 da Aula 9 passam a ser $A - vv^T$ e
+$\mathbb{X}^T\mathbf{Y} - vY_i$. Pelo Lema 4,
+
+$$v^T\left(A - vv^T\right)^{-1}
+  = v^TA^{-1} + \frac{\mathbf{L}_{ii}v^TA^{-1}}{1 - \mathbf{L}_{ii}}
+  = \frac{v^TA^{-1}}{1 - \mathbf{L}_{ii}}.$$
+
+Assim,
+
+\begin{align*}
+ \hat{r}_{-i}(X_i)
+ &= v^T\left(A - vv^T\right)^{-1}\left(\mathbb{X}^T\mathbf{Y} - vY_i\right) \\
+ &= \frac{v^TA^{-1}\mathbb{X}^T\mathbf{Y} - \mathbf{L}_{ii}Y_i}{1 - \mathbf{L}_{ii}} \\
+ &= \frac{\hat{r}_n(X_i) - \mathbf{L}_{ii}Y_i}{1 - \mathbf{L}_{ii}},
+\end{align*}
+
+e $Y_i - \hat{r}_{-i}(X_i)
+= \left((1 - \mathbf{L}_{ii})Y_i - \hat{r}_n(X_i) + \mathbf{L}_{ii}Y_i\right)(1 - \mathbf{L}_{ii})^{-1}
+= (Y_i - \hat{r}_n(X_i))(1 - \mathbf{L}_{ii})^{-1}$. $\blacksquare$
+
+**Observação** (Alcance do Teorema 2). A condição (a) inclui o
+regressograma, as médias locais e o Nadaraya-Watson, e é o análogo do
+Lema 5 da Aula 8. O argumento de (b) também vale para a regressão
+polinomial local, para a regressão linear penalizada e para
+processos gaussianos
+(Exercícios 1 e 2). A fórmula não vale para o $k$-NN, pois retirar a
+observação $i$ altera o conjunto de vizinhos (Exercício 3).
+
+**Observação** (Custo computacional). Para métodos globais, como
+regressão linear, ridge ou processos gaussianos, calcular
+$\hat{r}_{-i}$ diretamente exige $n$ reajustes, cada um com uma
+inversão de matriz; o Teorema 2 exige um único ajuste. Para métodos
+locais, como o Nadaraya-Watson, o ganho é menor, pois cada
+$\hat{r}_{-i}(X_i)$ já custa $O(n)$ operações, mas o Teorema 2 ainda
+permite reaproveitar $\hat{\mathbf{r}}$ e a diagonal de $\mathbf{L}$.
+
+**Definição** (Validação cruzada generalizada, @CravenWahba1979).
+
+$$\text{GCV} = \frac{1}{n}\sum_{i=1}^{n}
+  \left(\frac{Y_i - \hat{r}_n(X_i)}{1 - \nu/n}\right)^2.$$
+
+**Observação**. A validação cruzada generalizada troca cada
+$\mathbf{L}_{ii}$ pela sua média $\nu/n$. Ela exige apenas o traço de
+$\mathbf{L}$, que muitas vezes é mais barato que a diagonal.
+
+# Estimação não-viesada do risco
+
+**Definição** (Risco nos pontos do desenho).
+
+$$\mathcal{R}_n = \frac{1}{n}\mathbb{E}\left[\|\hat{\mathbf{r}} - \mathbf{r}\|^2 \mid \mathbf{X}\right]
+  = \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[\left(\hat{r}_n(X_i) - r(X_i)\right)^2 \mid \mathbf{X}\right].$$
+
+**Lema 5** (Esperança de formas quadráticas).
+Sejam $\mathbf{v} \in \mathbb{R}^n$ e $M$ uma matriz $n \times n$ que
+dependem apenas de $X_1, \ldots, X_n$, e
+$\boldsymbol{\varepsilon} = (\varepsilon_1, \ldots, \varepsilon_n)^T$.
+Então
+
+$$\mathbb{E}\left[\|\mathbf{v} + M\boldsymbol{\varepsilon}\|^2 \mid \mathbf{X}\right]
+  = \|\mathbf{v}\|^2 + \sigma^2\,\text{tr}\left(M^TM\right).$$
+
+*Prova*. Como $\mathbb{E}[\boldsymbol{\varepsilon} \mid \mathbf{X}] = 0$ e
+$\mathbb{E}[\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T \mid \mathbf{X}] = \sigma^2I$,
+
+\begin{align*}
+ \mathbb{E}\left[\|\mathbf{v} + M\boldsymbol{\varepsilon}\|^2 \mid \mathbf{X}\right]
+ &= \|\mathbf{v}\|^2 + 2\mathbf{v}^TM\,\mathbb{E}[\boldsymbol{\varepsilon} \mid \mathbf{X}]
+    + \mathbb{E}\left[\text{tr}\left(M^TM\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T\right) \mid \mathbf{X}\right] \\
+ &= \|\mathbf{v}\|^2 + \text{tr}\left(M^TM\,\mathbb{E}\left[\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T \mid \mathbf{X}\right]\right) \\
+ &= \|\mathbf{v}\|^2 + \sigma^2\,\text{tr}\left(M^TM\right). \qquad \blacksquare
+\end{align*}
+
+**Teorema 3** ($C_p$ de Mallows, @Mallows1973).
+Seja
+
+$$\hat{C}_p = \frac{1}{n}\|\mathbf{Y} - \mathbf{L}\mathbf{Y}\|^2
+  + \frac{2\sigma^2\nu}{n}.$$
+
+Então $\mathbb{E}[\hat{C}_p \mid \mathbf{X}] = \mathcal{R}_n + \sigma^2$.
+
+*Prova*. Como $\mathbf{Y} = \mathbf{r} + \boldsymbol{\varepsilon}$,
+$\mathbf{Y} - \mathbf{L}\mathbf{Y} = (I - \mathbf{L})\mathbf{r} + (I - \mathbf{L})\boldsymbol{\varepsilon}$
+e $\hat{\mathbf{r}} - \mathbf{r} = (\mathbf{L} - I)\mathbf{r} + \mathbf{L}\boldsymbol{\varepsilon}$.
+Pelo Lema 5, aplicado duas vezes,
+
+\begin{align*}
+ \mathbb{E}\left[\|\mathbf{Y} - \mathbf{L}\mathbf{Y}\|^2 \mid \mathbf{X}\right]
+ &= \|(I - \mathbf{L})\mathbf{r}\|^2
+    + \sigma^2\,\text{tr}\left((I - \mathbf{L})^T(I - \mathbf{L})\right) \\
+ &= \|(\mathbf{L} - I)\mathbf{r}\|^2
+    + \sigma^2\left(n - 2\nu + \text{tr}\left(\mathbf{L}^T\mathbf{L}\right)\right) \\
+ &= \mathbb{E}\left[\|\hat{\mathbf{r}} - \mathbf{r}\|^2 \mid \mathbf{X}\right]
+    + \sigma^2(n - 2\nu).
+\end{align*}
+
+Dividindo por $n$ e somando $2\sigma^2\nu/n$, obtém-se o resultado.
+$\blacksquare$
+
+**Observação**. Como $\sigma^2$ não depende de $h$, minimizar
+$\mathbb{E}[\hat{C}_p \mid \mathbf{X}]$ em $h$ equivale a minimizar $\mathcal{R}_n$, assim como,
+na Aula 8, o termo $\int f^2$ não afetava a escolha de $h$. O erro
+quadrático médio dos resíduos, $n^{-1}\|\mathbf{Y} - \mathbf{L}\mathbf{Y}\|^2$,
+subestima o risco, e $2\sigma^2\nu/n$ é a correção: quanto mais
+complexo o smoother, maior a penalidade. Na prática, $\sigma^2$ é
+substituído por um estimador (Exercício 5).
+
+# Inferência
+
+**Corolário 3** (Intervalo para a média suavizada).
+Suponha que, condicionalmente a $X_1, \ldots, X_n$, os erros são
+i.i.d. $N(0, \sigma^2)$, e seja $z_{\alpha}$ o quantil $1 - \alpha/2$ da
+normal padrão. Então
+
+$$\mathbb{P}\left(\left|\hat{r}_n(x) - \mathbb{E}[\hat{r}_n(x) \mid \mathbf{X}]\right|
+  \leq z_{\alpha}\,\sigma\|\ell(x)\| \,\Big|\, \mathbf{X}\right)
+  = 1 - \alpha.$$
+
+*Prova*. Condicionalmente, $\hat{r}_n(x) = \sum_i\ell_i(x)Y_i$ é uma
+combinação linear de normais independentes e, pelo Lema 1, tem
+distribuição $N(\mathbb{E}[\hat{r}_n(x) \mid \mathbf{X}], \sigma^2\|\ell(x)\|^2)$.
+$\blacksquare$
+
+**Observação** (Viés e subsuavização). O intervalo do Corolário 3 é
+centrado em $\mathbb{E}[\hat{r}_n(x) \mid \mathbf{X}]$, e não em $r(x)$. Sob (A2), por
+(P1), (P2) e a desigualdade de Cauchy-Schwarz, se
+$\sum_i\mathbb{I}(|X_i - x| \leq h) \leq a_0nh$, então
+
+$$1 = \left(\sum_{i=1}^{n}\ell_i(x)\right)^2
+  \leq a_0nh\,\|\ell(x)\|^2,$$
+
+de modo que o desvio padrão é pelo menos $\sigma(a_0nh)^{-1/2}$. Pelo
+Teorema 1, a razão entre viés e desvio padrão é no máximo
+$C\sqrt{nh^{2\beta+1}}$. Com a banda ótima $h \asymp n^{-1/(2\beta+1)}$,
+essa razão é de ordem constante e o intervalo pode não cobrir $r(x)$
+com a probabilidade nominal. Tomando $h$ tal que $nh^{2\beta+1} \to 0$
+(subsuavização), o viés torna-se desprezível em relação ao desvio
+padrão, ao custo de intervalos mais largos.
+
+# Limitações
+
+**Observação** (Banda escolhida pelos dados). Os resultados desta aula
+supõem $h$ fixo. Se $h$ é escolhido por validação cruzada ou por
+$\hat{C}_p$, a banda depende de $\mathbf{Y}$, e o estimador final deixa
+de ser um linear smoother. O Teorema 1 vale para cada $h$ fixo, mas não
+se aplica diretamente ao estimador com banda escolhida.
+
+**Observação** (Otimalidade). Nas classes de Hölder, a taxa
+$n^{-2\beta/(2\beta+1)}$ do Teorema 1 é a taxa minimax, como será visto
+nas aulas sobre cotas inferiores. Contudo, existem classes de funções
+com suavidade espacialmente heterogênea, como bolas em espaços de Besov
+$B^s_{p,q}$ com $p < 2$, nas quais nenhum estimador linear atinge a taxa
+minimax, enquanto estimadores não lineares, como wavelets com
+thresholding, a atingem [@DonohoJohnstone1998]. Os linear smoothers
+usam a mesma quantidade de suavização em todo o domínio, o que é
+inadequado quando $r$ é suave em algumas regiões e irregular em outras.
+
+# Exercícios
+
+## Exercício 1 (Exclusão na regressão polinomial local)
+
+Considere a regressão polinomial local de grau $q$ avaliada em
+$x = X_i$, com $A = \mathbb{X}_x^TW_x\mathbb{X}_x$.
+
+(a) Mostre que $z_x(x) = e_1$ e que, retirando a observação $i$, a
+    matriz $A$ passa a ser $A - vv^T$ com $v = K(0)^{1/2}e_1$.
+
+(b) Mostre que $\mathbf{L}_{ii} = K(0)\,e_1^TA^{-1}e_1$ e, usando o
+    Lema 4, conclua que a fórmula do Teorema 2 vale para a regressão
+    polinomial local.
+
+## Exercício 2 (Regressão linear penalizada e processos gaussianos)
+
+(a) Para a regressão linear penalizada do Exemplo 1 da Aula 9, mostre
+    que $\mathbf{L} = \mathbb{X}(\mathbb{X}^T\mathbb{X} + \lambda I)^{-1}\mathbb{X}^T$.
+    Sendo $d_1, \ldots, d_p$ os valores singulares de $\mathbb{X}$,
+    mostre que $\nu = \sum_{j=1}^{p}d_j^2/(d_j^2 + \lambda)$ e que $\nu$
+    decresce de $p$ a $0$ quando $\lambda$ cresce de $0$ a $\infty$.
+
+(b) Adapte a prova do Teorema 2 (b) e mostre que a fórmula de exclusão
+    vale para a regressão linear penalizada.
+
+(c) Para a média a posteriori do Exemplo 7 da Aula 9, mostre que
+    $\mathbf{L} = \mathbf{C}(\mathbf{C} + \sigma^2I)^{-1}
+    = I - \sigma^2(\mathbf{C} + \sigma^2I)^{-1}$ e conclua que a fórmula
+    de exclusão também vale.
+
+## Exercício 3 ($k$-NN e validação cruzada)
+
+Suponha $X_1, \ldots, X_n$ distintos e $k \geq 2$.
+
+(a) Mostre que $\mathbf{L}_{ii} = k^{-1}$ e que
+    $\sum_{j \neq i}\ell_j(X_i)Y_j/(1 - \mathbf{L}_{ii})$ é a média das
+    respostas dos $k-1$ vizinhos mais próximos de $X_i$ entre as demais
+    observações.
+
+(b) Mostre que $\hat{r}_{-i}(X_i)$, calculado com o $k$-NN na amostra
+    sem a observação $i$, é a média das respostas dos $k$ vizinhos mais
+    próximos de $X_i$ entre as demais observações. Conclua que a fórmula
+    do Teorema 2 não calcula o CV do $k$-NN, mas o do $(k-1)$-NN.
+
+## Exercício 4 (Kernel equivalente)
+
+(a) Mostre que, para $q = 0$, $K^* = K$.
+
+(b) Mostre que, se $K$ é simétrico e $q = 1$, então $\mathbf{B}$ é
+    diagonal e $K^* = K$.
+
+(c) Sejam $K$ simétrico, $q = 2$ e $\kappa_j = \int u^jK(u)\,du$.
+    Mostre que
+
+$$K^*(u) = \frac{\kappa_4 - \kappa_2u^2}{\kappa_4 - \kappa_2^2}K(u).$$
+
+(d) Para o kernel gaussiano, compare o resultado de (c) com o kernel do
+    Exercício 3 da Aula 7. Mostre que, se $K$ é simétrico, $K^*$ com
+    $q = 2$ tem ordem $3$, e não apenas $2$.
+
+## Exercício 5 (Estimação da variância)
+
+(a) Usando a prova do Teorema 3, mostre que
+
+$$\mathbb{E}\left[\frac{\|\mathbf{Y} - \mathbf{L}\mathbf{Y}\|^2}
+  {n - 2\nu + \text{tr}(\mathbf{L}^T\mathbf{L})} \mid \mathbf{X}\right]
+  = \sigma^2 + \frac{\|(I - \mathbf{L})\mathbf{r}\|^2}
+  {n - 2\nu + \text{tr}(\mathbf{L}^T\mathbf{L})}.$$
+
+(b) Verifique que, na regressão linear, o denominador é $n - p$ e o
+    estimador é não-viesado se o modelo linear está correto.
+
+(c) Sob as hipóteses do Teorema 1 com $h \to 0$ e $nh \to \infty$,
+    argumente que o viés deste estimador de $\sigma^2$ tende a zero.
+
+# Referências
