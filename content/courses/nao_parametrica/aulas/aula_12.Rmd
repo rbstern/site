@@ -1,0 +1,188 @@
+---
+title: "Aula 12: Revisão e exercícios"
+linkTitle: "Aula 12: Revisão"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 120
+bibliography: refs.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 11:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Estimadores sem a i-ésima observação indicados por -i, e não por (i).
+- Termos técnicos em inglês quando consagrados (kernel, linear smoother).
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+
+**Data**: 22/09/2026.
+
+Esta aula revisa os resultados das Aulas 1 a 11 e resolve exercícios em
+preparação para a Prova 1.
+
+# Exercícios
+
+## Exercício (Funcionais contínuos na norma do supremo)
+
+Sejam $X_1, \ldots, X_n$ i.i.d. com função de distribuição $F$,
+$\hat{F}_n$ a distribuição empírica e $M > 0$.
+
+(a) Seja $T$ um funcional definido nas funções de distribuição em
+    $\mathbb{R}$ e suponha que existe $L > 0$ tal que
+
+$$|T(G_1) - T(G_2)| \leq L\sup_{x \in \mathbb{R}}|G_1(x) - G_2(x)|,$$
+
+    para todas as funções de distribuição $G_1$ e $G_2$. Mostre que
+    $T(\hat{F}_n) \to T(F)$ quase certamente.
+
+(b) Seja $T(F) = \int_0^M F(x)^2\,dx$. Mostre que $T$ satisfaz a
+    condição de (a) e conclua que $T(\hat{F}_n) \to T(F)$ quase
+    certamente.
+
+## Exercício (Consistência da mediana amostral)
+
+Sejam $X_1, \ldots, X_n$ i.i.d. com função de distribuição $F$ e
+densidade $f$ em $[0,1]$, e suponha que existem constantes
+$0 < C_1 \leq C_2$ tais que $C_1 \leq f(x) \leq C_2$, para todo
+$x \in [0,1]$. Sejam $m$ a mediana de $F$, $D_n = \sup_{x \in \mathbb{R}}|F(x) - \hat{F}_n(x)|$
+e $\hat{m}_n$ uma mediana amostral, isto é, um ponto tal que
+$\hat{F}_n(\hat{m}_n^-) \leq 2^{-1} \leq \hat{F}_n(\hat{m}_n)$. Mostre
+que:
+
+(a) quase certamente,
+
+$$|\hat{m}_n - m| \leq \frac{D_n + n^{-1}}{C_1};$$
+
+(b) $\hat{m}_n$ converge quase certamente para $m$. Obtenha uma taxa de
+    convergência para $|\hat{m}_n - m|$.
+
+## Exercício (Dimensão VC de uma união)
+
+Seja
+
+$$\mathcal{C} = \left\{(-\infty, a] \cup (b, c) : a < b < c\right\}.$$
+
+(a) Mostre que $\mathcal{C}$ fragmenta algum conjunto de $3$ pontos.
+
+(b) Mostre que $\mathcal{C}$ não fragmenta nenhum conjunto de $4$
+    pontos. Sugestão: descreva os traços de $\mathcal{C}$ em
+    $\{x_1, x_2, x_3, x_4\}$, com $x_1 < x_2 < x_3 < x_4$.
+
+(c) Determine $\text{VC}(\mathcal{C})$ e conclua, do Lema 2 e do
+    Corolário 1 da Aula 3, que
+    $\|P_n - P\|_{\mathcal{C}} \to 0$ quase certamente, para toda
+    probabilidade $P$ em $\mathbb{R}$.
+
+## Exercício (Função de influência da assimetria, @Wasserman2006, Exercício 3.8.1)
+
+Sejam $\mu(F) = \int x\,dF(x)$,
+$\sigma(F)^2 = \int \left(x - \mu(F)\right)^2dF(x)$ e
+
+$$T(F) = \frac{\int \left(x - \mu(F)\right)^3dF(x)}{\sigma(F)^3},$$
+
+e suponha que $\sigma(F) > 0$ e $\int x^6\,dF(x) < \infty$.
+
+(a) Encontre a função de influência de $T$. Note que $\mu$ e $\sigma$
+    também dependem de $F$.
+
+(b) Obtenha, do Teorema 1 da Aula 4, um teorema do limite central para
+    $T(\hat{F}_n)$.
+
+## Exercício (Número de amostras bootstrap distintas, @Wasserman2006, Exercício 3.8.8)
+
+Mostre que uma amostra de tamanho $n$ admite exatamente
+
+$$\frac{(2n-1)!}{n!\,(n-1)!}$$
+
+amostras bootstrap distintas, isto é, distintas como multiconjuntos.
+Compare com o número de amostras bootstrap ordenadas.
+
+## Exercício (Jackknife e bootstrap para $\mu^2$)
+
+Sejam $X_1, \ldots, X_n$ i.i.d. com média $\mu$ e variância
+$\sigma^2 < \infty$. Considere $\theta = \mu^2$, o estimador plug-in
+$\hat{\theta}_n = \bar{X}^2$ e
+$\hat{\sigma}^2 = n^{-1}\sum_{i=1}^{n}(X_i - \bar{X})^2$.
+
+(a) Mostre que $\mathbb{E}[\hat{\theta}_n] - \theta = \sigma^2n^{-1}$,
+    isto é, que a Suposição (A1) da Aula 6 vale com $a = \sigma^2$ e
+    $b = 0$.
+
+(b) Mostre que $\bar{X}_{-i} = (n\bar{X} - X_i)(n-1)^{-1}$ e que
+
+$$\hat{\theta}_{\text{jack}} = \bar{X}^2 - \frac{\hat{\sigma}^2}{n-1}.$$
+
+(c) Conclua que $\hat{\theta}_{\text{jack}}$ é não-viesado para
+    $\theta$, e não apenas com viés $O(n^{-2})$, como garante o
+    Teorema 1 da Aula 6. Explique o resultado em termos de (a).
+
+(d) Mostre que o estimador bootstrap do viés é
+    $\hat{b}^* = \hat{\sigma}^2n^{-1}$ e que o estimador corrigido,
+    $\bar{X}^2 - \hat{\sigma}^2n^{-1}$, tem viés $\sigma^2n^{-2}$.
+    Compare com (b).
+
+## Exercício (KDE bivariado, @Tsybakov2009, Exercício 1.3)
+
+Sejam $(X_1, Z_1), \ldots, (X_n, Z_n)$ i.i.d. com densidade $f$ em
+$\mathbb{R}^2$, $\beta \in (0, 1]$, $L > 0$, e $K$ um kernel, no sentido
+da Aula 7, com $\kappa_\beta < \infty$. Suponha que
+
+$$\left|f(x, z) - f(x', z')\right|
+  \leq L\left(|x - x'|^{\beta} + |z - z'|^{\beta}\right),
+  \qquad \text{para todos } (x, z), (x', z') \in \mathbb{R}^2,$$
+
+e, para $h > 0$, considere o estimador de densidade bivariado
+
+$$\hat{f}_h(x, z) = \frac{1}{nh^2}\sum_{i=1}^{n}
+  K\left(\frac{X_i - x}{h}\right)K\left(\frac{Z_i - z}{h}\right).$$
+
+Determine:
+
+(a) uma cota superior para $f$, mostrando que ela é limitada;
+
+(b) a ordem de convergência do viés de $\hat{f}_h(x, z)$;
+
+(c) a ordem de convergência da variância de $\hat{f}_h(x, z)$;
+
+(d) a escolha ótima de $h$ e a ordem de convergência do MSE de
+    $\hat{f}_h(x, z)$. Compare esta taxa com a do Teorema 1 da Aula 7,
+    para o mesmo valor de $\beta$.
+
+## Exercício (Viés e variância do regressograma)
+
+Considere o regressograma do Exemplo 2 da Aula 9, com intervalos de
+comprimento $h$, e suponha que $r$ é $L$-Lipschitz. Sejam $x \in B_j$,
+$n_j = \sum_{i=1}^{n}\mathbb{I}(X_i \in B_j)$ e $c_0 > 0$ tal que
+$n_j \geq c_0nh$.
+
+(a) Obtenha cotas superiores para o módulo do viés condicional e para a
+    variância condicional de $\hat{r}_n(x)$.
+
+(b) Mostre que o MSE converge para $0$ quando $h = h_n$ é
+    escolhido adequadamente, e determine as condições sobre $h_n$.
+
+# Referências

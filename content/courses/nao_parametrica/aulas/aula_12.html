@@ -1,0 +1,177 @@
+---
+title: "Aula 12: Revisão e exercícios"
+linkTitle: "Aula 12: Revisão"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 120
+bibliography: refs.bib
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Convenções das Aulas 1 a 11:
+- Ambientes em negrito: **Definição**, **Suposição** (A1), (A2), ...,
+  **Exemplo n**, **Lema n**, **Teorema n**, **Corolário n**,
+  **Observação**.
+- Provas iniciadas por *Prova* e encerradas por $\blacksquare$.
+- Numeração contínua ao longo do arquivo, reiniciando a cada aula.
+- Notação usada mais de uma vez ganha **Definição** própria e anterior
+  ao primeiro uso, não é introduzida dentro do enunciado de um lema.
+- Equações com mais de uma linha em \begin{align*}, com um único & por
+  linha, antes do relacional.
+- Cadeias de desigualdades desenvolvidas do lado esquerdo do enunciado
+  até o lado direito, com as justificativas de cada passo logo abaixo.
+- Estimadores sem a i-ésima observação indicados por -i, e não por (i).
+- Termos técnicos em inglês quando consagrados (kernel, linear smoother).
+- Referências pelo refs.bib, citadas como @Autor2000.
+-->
+<p><strong>Data</strong>: 22/09/2026.</p>
+<p>Esta aula revisa os resultados das Aulas 1 a 11 e resolve exercícios em
+preparação para a Prova 1.</p>
+<div id="exercícios" class="section level1">
+<h1>Exercícios</h1>
+<div id="exercício-funcionais-contínuos-na-norma-do-supremo" class="section level2">
+<h2>Exercício (Funcionais contínuos na norma do supremo)</h2>
+<p>Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. com função de distribuição <span class="math inline">\(F\)</span>,
+<span class="math inline">\(\hat{F}_n\)</span> a distribuição empírica e <span class="math inline">\(M &gt; 0\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Seja <span class="math inline">\(T\)</span> um funcional definido nas funções de distribuição em
+<span class="math inline">\(\mathbb{R}\)</span> e suponha que existe <span class="math inline">\(L &gt; 0\)</span> tal que</li>
+</ol>
+<p><span class="math display">\[|T(G_1) - T(G_2)| \leq L\sup_{x \in \mathbb{R}}|G_1(x) - G_2(x)|,\]</span></p>
+<pre><code>para todas as funções de distribuição $G_1$ e $G_2$. Mostre que
+$T(\hat{F}_n) \to T(F)$ quase certamente.</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Seja <span class="math inline">\(T(F) = \int_0^M F(x)^2\,dx\)</span>. Mostre que <span class="math inline">\(T\)</span> satisfaz a
+condição de (a) e conclua que <span class="math inline">\(T(\hat{F}_n) \to T(F)\)</span> quase
+certamente.</li>
+</ol>
+</div>
+<div id="exercício-consistência-da-mediana-amostral" class="section level2">
+<h2>Exercício (Consistência da mediana amostral)</h2>
+<p>Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. com função de distribuição <span class="math inline">\(F\)</span> e
+densidade <span class="math inline">\(f\)</span> em <span class="math inline">\([0,1]\)</span>, e suponha que existem constantes
+<span class="math inline">\(0 &lt; C_1 \leq C_2\)</span> tais que <span class="math inline">\(C_1 \leq f(x) \leq C_2\)</span>, para todo
+<span class="math inline">\(x \in [0,1]\)</span>. Sejam <span class="math inline">\(m\)</span> a mediana de <span class="math inline">\(F\)</span>, <span class="math inline">\(D_n = \sup_{x \in \mathbb{R}}|F(x) - \hat{F}_n(x)|\)</span>
+e <span class="math inline">\(\hat{m}_n\)</span> uma mediana amostral, isto é, um ponto tal que
+<span class="math inline">\(\hat{F}_n(\hat{m}_n^-) \leq 2^{-1} \leq \hat{F}_n(\hat{m}_n)\)</span>. Mostre
+que:</p>
+<ol style="list-style-type: lower-alpha">
+<li>quase certamente,</li>
+</ol>
+<p><span class="math display">\[|\hat{m}_n - m| \leq \frac{D_n + n^{-1}}{C_1};\]</span></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><span class="math inline">\(\hat{m}_n\)</span> converge quase certamente para <span class="math inline">\(m\)</span>. Obtenha uma taxa de
+convergência para <span class="math inline">\(|\hat{m}_n - m|\)</span>.</li>
+</ol>
+</div>
+<div id="exercício-dimensão-vc-de-uma-união" class="section level2">
+<h2>Exercício (Dimensão VC de uma união)</h2>
+<p>Seja</p>
+<p><span class="math display">\[\mathcal{C} = \left\{(-\infty, a] \cup (b, c) : a &lt; b &lt; c\right\}.\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que <span class="math inline">\(\mathcal{C}\)</span> fragmenta algum conjunto de <span class="math inline">\(3\)</span> pontos.</p></li>
+<li><p>Mostre que <span class="math inline">\(\mathcal{C}\)</span> não fragmenta nenhum conjunto de <span class="math inline">\(4\)</span>
+pontos. Sugestão: descreva os traços de <span class="math inline">\(\mathcal{C}\)</span> em
+<span class="math inline">\(\{x_1, x_2, x_3, x_4\}\)</span>, com <span class="math inline">\(x_1 &lt; x_2 &lt; x_3 &lt; x_4\)</span>.</p></li>
+<li><p>Determine <span class="math inline">\(\text{VC}(\mathcal{C})\)</span> e conclua, do Lema 2 e do
+Corolário 1 da Aula 3, que
+<span class="math inline">\(\|P_n - P\|_{\mathcal{C}} \to 0\)</span> quase certamente, para toda
+probabilidade <span class="math inline">\(P\)</span> em <span class="math inline">\(\mathbb{R}\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-função-de-influência-da-assimetria-wasserman2006-exercício-3.8.1" class="section level2">
+<h2>Exercício (Função de influência da assimetria, <span class="citation">Wasserman (<a href="#ref-Wasserman2006">2006</a>)</span>, Exercício 3.8.1)</h2>
+<p>Sejam <span class="math inline">\(\mu(F) = \int x\,dF(x)\)</span>,
+<span class="math inline">\(\sigma(F)^2 = \int \left(x - \mu(F)\right)^2dF(x)\)</span> e</p>
+<p><span class="math display">\[T(F) = \frac{\int \left(x - \mu(F)\right)^3dF(x)}{\sigma(F)^3},\]</span></p>
+<p>e suponha que <span class="math inline">\(\sigma(F) &gt; 0\)</span> e <span class="math inline">\(\int x^6\,dF(x) &lt; \infty\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Encontre a função de influência de <span class="math inline">\(T\)</span>. Note que <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>
+também dependem de <span class="math inline">\(F\)</span>.</p></li>
+<li><p>Obtenha, do Teorema 1 da Aula 4, um teorema do limite central para
+<span class="math inline">\(T(\hat{F}_n)\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-número-de-amostras-bootstrap-distintas-wasserman2006-exercício-3.8.8" class="section level2">
+<h2>Exercício (Número de amostras bootstrap distintas, <span class="citation">Wasserman (<a href="#ref-Wasserman2006">2006</a>)</span>, Exercício 3.8.8)</h2>
+<p>Mostre que uma amostra de tamanho <span class="math inline">\(n\)</span> admite exatamente</p>
+<p><span class="math display">\[\frac{(2n-1)!}{n!\,(n-1)!}\]</span></p>
+<p>amostras bootstrap distintas, isto é, distintas como multiconjuntos.
+Compare com o número de amostras bootstrap ordenadas.</p>
+</div>
+<div id="exercício-jackknife-e-bootstrap-para-mu2" class="section level2">
+<h2>Exercício (Jackknife e bootstrap para <span class="math inline">\(\mu^2\)</span>)</h2>
+<p>Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. com média <span class="math inline">\(\mu\)</span> e variância
+<span class="math inline">\(\sigma^2 &lt; \infty\)</span>. Considere <span class="math inline">\(\theta = \mu^2\)</span>, o estimador plug-in
+<span class="math inline">\(\hat{\theta}_n = \bar{X}^2\)</span> e
+<span class="math inline">\(\hat{\sigma}^2 = n^{-1}\sum_{i=1}^{n}(X_i - \bar{X})^2\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que <span class="math inline">\(\mathbb{E}[\hat{\theta}_n] - \theta = \sigma^2n^{-1}\)</span>,
+isto é, que a Suposição (A1) da Aula 6 vale com <span class="math inline">\(a = \sigma^2\)</span> e
+<span class="math inline">\(b = 0\)</span>.</p></li>
+<li><p>Mostre que <span class="math inline">\(\bar{X}_{-i} = (n\bar{X} - X_i)(n-1)^{-1}\)</span> e que</p></li>
+</ol>
+<p><span class="math display">\[\hat{\theta}_{\text{jack}} = \bar{X}^2 - \frac{\hat{\sigma}^2}{n-1}.\]</span></p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>Conclua que <span class="math inline">\(\hat{\theta}_{\text{jack}}\)</span> é não-viesado para
+<span class="math inline">\(\theta\)</span>, e não apenas com viés <span class="math inline">\(O(n^{-2})\)</span>, como garante o
+Teorema 1 da Aula 6. Explique o resultado em termos de (a).</p></li>
+<li><p>Mostre que o estimador bootstrap do viés é
+<span class="math inline">\(\hat{b}^* = \hat{\sigma}^2n^{-1}\)</span> e que o estimador corrigido,
+<span class="math inline">\(\bar{X}^2 - \hat{\sigma}^2n^{-1}\)</span>, tem viés <span class="math inline">\(\sigma^2n^{-2}\)</span>.
+Compare com (b).</p></li>
+</ol>
+</div>
+<div id="exercício-kde-bivariado-tsybakov2009-exercício-1.3" class="section level2">
+<h2>Exercício (KDE bivariado, <span class="citation">Tsybakov (<a href="#ref-Tsybakov2009">2009</a>)</span>, Exercício 1.3)</h2>
+<p>Sejam <span class="math inline">\((X_1, Z_1), \ldots, (X_n, Z_n)\)</span> i.i.d. com densidade <span class="math inline">\(f\)</span> em
+<span class="math inline">\(\mathbb{R}^2\)</span>, <span class="math inline">\(\beta \in (0, 1]\)</span>, <span class="math inline">\(L &gt; 0\)</span>, e <span class="math inline">\(K\)</span> um kernel, no sentido
+da Aula 7, com <span class="math inline">\(\kappa_\beta &lt; \infty\)</span>. Suponha que</p>
+<p><span class="math display">\[\left|f(x, z) - f(x&#39;, z&#39;)\right|
+  \leq L\left(|x - x&#39;|^{\beta} + |z - z&#39;|^{\beta}\right),
+  \qquad \text{para todos } (x, z), (x&#39;, z&#39;) \in \mathbb{R}^2,\]</span></p>
+<p>e, para <span class="math inline">\(h &gt; 0\)</span>, considere o estimador de densidade bivariado</p>
+<p><span class="math display">\[\hat{f}_h(x, z) = \frac{1}{nh^2}\sum_{i=1}^{n}
+  K\left(\frac{X_i - x}{h}\right)K\left(\frac{Z_i - z}{h}\right).\]</span></p>
+<p>Determine:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>uma cota superior para <span class="math inline">\(f\)</span>, mostrando que ela é limitada;</p></li>
+<li><p>a ordem de convergência do viés de <span class="math inline">\(\hat{f}_h(x, z)\)</span>;</p></li>
+<li><p>a ordem de convergência da variância de <span class="math inline">\(\hat{f}_h(x, z)\)</span>;</p></li>
+<li><p>a escolha ótima de <span class="math inline">\(h\)</span> e a ordem de convergência do MSE de
+<span class="math inline">\(\hat{f}_h(x, z)\)</span>. Compare esta taxa com a do Teorema 1 da Aula 7,
+para o mesmo valor de <span class="math inline">\(\beta\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-viés-e-variância-do-regressograma" class="section level2">
+<h2>Exercício (Viés e variância do regressograma)</h2>
+<p>Considere o regressograma do Exemplo 2 da Aula 9, com intervalos de
+comprimento <span class="math inline">\(h\)</span>, e suponha que <span class="math inline">\(r\)</span> é <span class="math inline">\(L\)</span>-Lipschitz. Sejam <span class="math inline">\(x \in B_j\)</span>,
+<span class="math inline">\(n_j = \sum_{i=1}^{n}\mathbb{I}(X_i \in B_j)\)</span> e <span class="math inline">\(c_0 &gt; 0\)</span> tal que
+<span class="math inline">\(n_j \geq c_0nh\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Obtenha cotas superiores para o módulo do viés condicional e para a
+variância condicional de <span class="math inline">\(\hat{r}_n(x)\)</span>.</p></li>
+<li><p>Mostre que o MSE condicional converge para <span class="math inline">\(0\)</span> quando <span class="math inline">\(h = h_n\)</span> é
+escolhido adequadamente, e determine as condições sobre <span class="math inline">\(h_n\)</span>.</p></li>
+</ol>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Tsybakov2009" class="csl-entry">
+Tsybakov, Alexandre B. 2009. <em>Introduction to Nonparametric Estimation</em>. Springer.
+</div>
+<div id="ref-Wasserman2006" class="csl-entry">
+Wasserman, Larry. 2006. <em>All of Nonparametric Statistics</em>. Springer.
+</div>
+</div>
+</div>
