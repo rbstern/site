@@ -54,7 +54,7 @@ $\hat{F}_n$ a distribuição empírica e $M > 0$.
 (a) Seja $T$ um funcional definido nas funções de distribuição em
     $\mathbb{R}$ e suponha que existe $L > 0$ tal que
 
-$$|T(G_1) - T(G_2)| \leq L\sup_{x \in \mathbb{R}}|G_1(x) - G_2(x)|,$$
+    $$|T(G_1) - T(G_2)| \leq L\sup_{x \in \mathbb{R}}|G_1(x) - G_2(x)|,$$
 
     para todas as funções de distribuição $G_1$ e $G_2$. Mostre que
     $T(\hat{F}_n) \to T(F)$ quase certamente.

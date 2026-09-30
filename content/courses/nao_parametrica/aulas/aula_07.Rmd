@@ -349,7 +349,7 @@ Aula 8.
 
 (a) Mostre que
 
-$$\int \mathbb{V}\left[\hat{f}_n(x)\right]dx \leq \frac{R(K)}{nh},$$
+    $$\int \mathbb{V}\left[\hat{f}_n(x)\right]dx \leq \frac{R(K)}{nh},$$
 
     sem supor que $f$ é limitada. Compare com o Teorema 2 da Aula 1.
 
