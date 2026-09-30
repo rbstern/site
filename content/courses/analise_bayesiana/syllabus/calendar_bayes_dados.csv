@@ -5,18 +5,18 @@ date,lecture
 20/08/26,Metropolis-Hastings e Amostrador de Gibbs
 25/08/26,Monte Carlo Hamiltoniano (HMC)
 27/08/26,Introdução e Aplicações do Stan
-01/09/26,Regressão linear bayesiana: prioris de regularização e implementação em Stan
-03/09/26,Crítica de modelos: checagens preditivas a posteriori
+01/09/26,Crítica de modelos: checagens preditivas a posteriori
+03/09/26,Modelos hierárquicos: paradoxo de Stein e shrinkage
 08/09/26,Semana da Pátria (não haverá aula)
 10/09/26,Semana da Pátria (não haverá aula)
-15/09/26,"Comparação e seleção de modelos: validação cruzada, LOO e WAIC"
-17/09/26,"Modelos lineares generalizados: logística, contagens e dados categóricos"
-22/09/26,Modelos robustos: verossimilhanças de cauda pesada
-24/09/26,Revisão
-29/09/26,Prova 1
-01/10/26,Modelos hierárquicos: shrinkage e pooling parcial
-06/10/26,Modelos multinível: interceptos e inclinações aleatórios
-08/10/26,Reparametrização não centrada e o funil de Neal
+15/09/26,Modelos hierárquicos: pooling parcial
+17/09/26,Modelos hierárquicos: aplicação a textos (LDA)
+22/09/26,Bayes variacional I
+24/09/26,Bayes variacional II
+29/09/26,Semana da Estatística
+01/10/26,Semana da Estatística
+06/10/26,Revisão
+08/10/26,Prova 1
 13/10/26,Regressão não linear paramétrica
 15/10/26,Splines penalizadas e modelos aditivos
 20/10/26,Processos gaussianos: regressão e núcleos
