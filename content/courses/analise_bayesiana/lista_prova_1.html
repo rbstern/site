@@ -1,0 +1,165 @@
+---
+title: "Lista de revisão para a Prova 1"
+linkTitle: "Revisão: Prova 1"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 20
+---
+
+
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Objetivo da lista: treinar conceitos, com contas simples que ilustrem o
+uso de cada conceito.
+-->
+<p><strong>Prova</strong>: 08/10/2026.</p>
+<div id="lista-de-exercícios-de-revisão-para-a-prova" class="section level1">
+<h1>Lista de exercícios de revisão para a Prova</h1>
+<div id="exercício-conjugação-normal-com-média-desconhecida" class="section level2">
+<h2>Exercício (Conjugação normal com média desconhecida)</h2>
+<p>Sejam <span class="math inline">\(\tau_1^2 &gt; 0\)</span> conhecido, <span class="math inline">\(\mu \sim N(\mu_0, \tau_0^2)\)</span> e, dado
+<span class="math inline">\(\mu\)</span>, sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> i.i.d. <span class="math inline">\(N(\mu, \tau_1^2)\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Obtenha a distribuição a posteriori de <span class="math inline">\(\mu\)</span> dado
+<span class="math inline">\(X_1, \ldots, X_n\)</span>.</p></li>
+<li><p>Obtenha a distribuição marginal de <span class="math inline">\(\bar{X}\)</span>, isto é, a preditiva a priori.</p></li>
+</ol>
+</div>
+<div id="exercício-reversibilidade-no-metropolis-hastings" class="section level2">
+<h2>Exercício (Reversibilidade no Metropolis-Hastings)</h2>
+<p>Seja <span class="math inline">\(\pi\)</span> uma densidade a posteriori em <span class="math inline">\(\mathbb{R}^d\)</span>, conhecida a
+menos de constante multiplicativa, e seja <span class="math inline">\(q(y \mid x)\)</span> a densidade de
+proposta do algoritmo de Metropolis-Hastings, cuja probabilidade de
+aceitação é</p>
+<p><span class="math display">\[\alpha(x, y) = \min\left\{1,
+  \frac{\pi(y)\,q(x \mid y)}{\pi(x)\,q(y \mid x)}\right\}.\]</span></p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que, para todos <span class="math inline">\(x \neq y\)</span>,</p>
+<p><span class="math display">\[\pi(x)\,q(y \mid x)\,\alpha(x,y) = \pi(y)\,q(x \mid y)\,\alpha(y,x),\]</span></p>
+<p>isto é, que <span class="math inline">\(\pi\)</span> é reversível para a cadeia gerada pelo algoritmo.
+Observe que <span class="math inline">\(\alpha\)</span> não se altera quando <span class="math inline">\(\pi\)</span> é multiplicada por
+uma constante.</p></li>
+<li><p>Sejam <span class="math inline">\(\mathcal{X}\)</span> um espaço de estados finito, <span class="math inline">\(P\)</span> a matriz de
+transição de uma cadeia de Markov em <span class="math inline">\(\mathcal{X}\)</span> e <span class="math inline">\(\pi\)</span> uma
+distribuição reversível para <span class="math inline">\(P\)</span>, isto é, tal que</p>
+<p><span class="math display">\[\pi(x)P(x,y) = \pi(y)P(y,x), \qquad \text{para todos } x, y \in \mathcal{X}.\]</span></p>
+<p>Mostre que <span class="math inline">\(\pi\)</span> é invariante, isto é, que
+<span class="math inline">\(\sum_{x \in \mathcal{X}}\pi(x)P(x,y) = \pi(y)\)</span>, para todo
+<span class="math inline">\(y \in \mathcal{X}\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-modelo-hierárquico-de-contagem-com-observação-parcial" class="section level2">
+<h2>Exercício (Modelo hierárquico de contagem com observação parcial)</h2>
+<p>Sejam <span class="math inline">\(a, b &gt; 0\)</span> e <span class="math inline">\(p \in (0,1)\)</span> conhecidos e considere o modelo</p>
+<p><span class="math display">\[\lambda \sim \text{Gamma}(a, b), \qquad
+  N \mid \lambda \sim \text{Poisson}(\lambda), \qquad
+  Y \mid N \sim \text{Binomial}(N, p),\]</span></p>
+<p>em que <span class="math inline">\(N\)</span> é o número total de eventos, dos quais apenas <span class="math inline">\(Y\)</span> são
+observados, cada um com probabilidade <span class="math inline">\(p\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Mostre que <span class="math inline">\(\lambda \mid N, Y \sim \text{Gamma}(a + N,\, b + 1)\)</span> e
+explique por que <span class="math inline">\(Y\)</span> não aparece nesta distribuição.</p></li>
+<li><p>Mostre que <span class="math inline">\(N - Y \mid \lambda, Y \sim \text{Poisson}(\lambda(1-p))\)</span>.</p></li>
+<li><p>Mostre que <span class="math inline">\(Y \mid \lambda \sim \text{Poisson}(\lambda p)\)</span> e conclua
+que <span class="math inline">\(\lambda \mid Y \sim \text{Gamma}(a + Y, b + p)\)</span>.</p></li>
+<li><p>Obtenha <span class="math inline">\(\mathbb{E}[\lambda \mid Y]\)</span> e escreva-a como combinação
+convexa de <span class="math inline">\(a/b\)</span> e de <span class="math inline">\(Y/p\)</span>.</p></li>
+<li><p>Obtenha <span class="math inline">\(\mathbb{E}[N \mid Y]\)</span> e interprete cada uma de suas duas
+parcelas.</p></li>
+<li><p>Indique como implementar um Amostrador de Gibbs para <span class="math inline">\((N,\lambda)\)</span>.</p></li>
+</ol>
+</div>
+<div id="exercício-conceitos-de-preditiva-a-posteriori" class="section level2">
+<h2>Exercício (Conceitos de preditiva a posteriori)</h2>
+<p>Responda a cada item em poucas linhas, sem contas.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Explique a diferença entre a preditiva a posteriori
+<span class="math inline">\(p(\tilde{y} \mid y)\)</span> e a densidade <span class="math inline">\(p(\tilde{y} \mid \hat{\theta})\)</span>,
+em que <span class="math inline">\(\hat{\theta}\)</span> é a média a posteriori. Qual das duas
+subestima a incerteza sobre <span class="math inline">\(\tilde{y}\)</span>, e por quê?</p></li>
+<li><p>Descreva a diferença entre a preditiva a priori e a preditiva a
+posteriori, e diga para que serve cada uma na crítica de um modelo.</p></li>
+<li><p>Explique a diferença conceitual entre uma réplica <span class="math inline">\(y^{\text{rep}}\)</span>
+gerada da preditiva a posteriori e uma observação futura avaliada
+fora da amostra.</p></li>
+</ol>
+</div>
+<div id="exercício-interpretação-de-uma-checagem-preditiva" class="section level2">
+<h2>Exercício (Interpretação de uma checagem preditiva)</h2>
+<p>Um hospital registrou o número de internações <span class="math inline">\(Y_i\)</span> em cada um dos
+<span class="math inline">\(n = 365\)</span> dias de um ano. Ajustou-se o modelo</p>
+<p><span class="math display">\[Y_1, \ldots, Y_n \mid \lambda \ \text{i.i.d.} \sim \text{Poisson}(\lambda),
+  \qquad \lambda \sim \text{Gamma}(a, b),\]</span></p>
+<p>com <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span> pequenos, e simularam-se réplicas <span class="math inline">\(y^{\text{rep}}\)</span> da
+preditiva a posteriori. Para cada estatística <span class="math inline">\(T\)</span>, a tabela traz o valor
+observado e o p-valor preditivo
+<span class="math inline">\(\mathbb{P}\left(T(y^{\text{rep}}) \geq T(y) \mid y\right)\)</span>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Estatística <span class="math inline">\(T(y)\)</span></th>
+<th align="center">Observado</th>
+<th align="center">p-valor preditivo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Média</td>
+<td align="center"><span class="math inline">\(4{,}1\)</span></td>
+<td align="center"><span class="math inline">\(0{,}52\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Razão variância/média</td>
+<td align="center"><span class="math inline">\(3{,}4\)</span></td>
+<td align="center"><span class="math inline">\(0{,}002\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Proporção de dias com zero internações</td>
+<td align="center"><span class="math inline">\(0{,}12\)</span></td>
+<td align="center"><span class="math inline">\(0{,}004\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Máximo</td>
+<td align="center"><span class="math inline">\(19\)</span></td>
+<td align="center"><span class="math inline">\(0{,}01\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Autocorrelação de defasagem <span class="math inline">\(1\)</span></td>
+<td align="center"><span class="math inline">\(0{,}31\)</span></td>
+<td align="center"><span class="math inline">\(0{,}001\)</span></td>
+</tr>
+</tbody>
+</table>
+<ol style="list-style-type: lower-alpha">
+<li><p>Explique por que o p-valor da média é próximo de <span class="math inline">\(0{,}5\)</span> e por que
+isso, isoladamente, não é evidência de bom ajuste.</p></li>
+<li><p>O que a razão variância/média indica sobre o modelo? Proponha uma
+alteração que trate esse problema.</p></li>
+<li><p>Interprete o que a proporção de zeros e o máximo revelam. A alteração
+proposta em (b) resolveria as duas checagens? Justifique.</p></li>
+<li><p>Após as alterações, todas as checagens passam, e um colega conclui
+que o modelo é o correto. Critique a conclusão.</p></li>
+<li><p>Suponha que a análise serve para dimensionar o número de leitos.
+Qual das cinco estatísticas você priorizaria, e por quê?</p></li>
+</ol>
+</div>
+<div id="exercício-campo-médio-e-cavi-em-um-modelo-de-contagem" class="section level2">
+<h2>Exercício (Campo médio e CAVI em um modelo de contagem)</h2>
+<p>Considere o modelo do exercício sobre contagens com observação parcial,
+isto é, <span class="math inline">\(\lambda \sim \text{Gamma}(a,b)\)</span>, <span class="math inline">\(N \mid \lambda \sim
+\text{Poisson}(\lambda)\)</span> e <span class="math inline">\(Y \mid N \sim \text{Binomial}(N,p)\)</span>, em que
+<span class="math inline">\(Y\)</span> é observado e <span class="math inline">\(N\)</span> é latente. Considere a aproximação de campo médio
+<span class="math inline">\(q(\lambda, N) = q_1(\lambda)q_2(N)\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Deduza <span class="math inline">\(ELBO(q)\)</span>.</p></li>
+<li><p>Deduza o algoritmo CAVI para atualizar <span class="math inline">\(q_1(\lambda)\)</span> e <span class="math inline">\(q_2(N)\)</span>.</p></li>
+<li><p>Explique por que a fatoração <span class="math inline">\(q(\lambda)q(N)\)</span> não reproduz a dependência a posteriori entre <span class="math inline">\(\lambda\)</span> e <span class="math inline">\(N\)</span>, e relacione com o que você observou no item anterior.</p></li>
+</ol>
+<p>–</p>
+</div>
+</div>

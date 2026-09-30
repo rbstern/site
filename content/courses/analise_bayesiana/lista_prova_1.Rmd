@@ -1,0 +1,163 @@
+---
+title: "Lista de revisão para a Prova 1"
+linkTitle: "Revisão: Prova 1"
+author: "Rafael B. Stern"
+highlight: true
+date: ""
+output: html_document
+type: book
+weight: 20
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4)
+```
+
+<!--
+Itens iniciados por "--" indicam o que falta desenvolver.
+
+Objetivo da lista: treinar conceitos, com contas simples que ilustrem o
+uso de cada conceito.
+-->
+
+**Prova**: 08/10/2026.
+
+# Lista de exercícios de revisão para a Prova
+
+## Exercício (Conjugação normal com média desconhecida)
+
+Sejam $\tau_1^2 > 0$ conhecido, $\mu \sim N(\mu_0, \tau_0^2)$ e, dado
+$\mu$, sejam $X_1, \ldots, X_n$ i.i.d. $N(\mu, \tau_1^2)$.
+
+(a) Obtenha a distribuição a posteriori de $\mu$ dado
+    $X_1, \ldots, X_n$.
+
+(b) Obtenha a distribuição marginal de $\bar{X}$, isto é, a preditiva a priori.
+
+## Exercício (Reversibilidade no Metropolis-Hastings)
+
+Seja $\pi$ uma densidade a posteriori em $\mathbb{R}^d$, conhecida a
+menos de constante multiplicativa, e seja $q(y \mid x)$ a densidade de
+proposta do algoritmo de Metropolis-Hastings, cuja probabilidade de
+aceitação é
+
+$$\alpha(x, y) = \min\left\{1,
+  \frac{\pi(y)\,q(x \mid y)}{\pi(x)\,q(y \mid x)}\right\}.$$
+
+(a) Mostre que, para todos $x \neq y$,
+
+    $$\pi(x)\,q(y \mid x)\,\alpha(x,y) = \pi(y)\,q(x \mid y)\,\alpha(y,x),$$
+
+    isto é, que $\pi$ é reversível para a cadeia gerada pelo algoritmo.
+    Observe que $\alpha$ não se altera quando $\pi$ é multiplicada por
+    uma constante.
+
+(b) Sejam $\mathcal{X}$ um espaço de estados finito, $P$ a matriz de
+    transição de uma cadeia de Markov em $\mathcal{X}$ e $\pi$ uma
+    distribuição reversível para $P$, isto é, tal que
+
+    $$\pi(x)P(x,y) = \pi(y)P(y,x), \qquad \text{para todos } x, y \in \mathcal{X}.$$
+
+    Mostre que $\pi$ é invariante, isto é, que
+    $\sum_{x \in \mathcal{X}}\pi(x)P(x,y) = \pi(y)$, para todo
+    $y \in \mathcal{X}$.
+
+## Exercício (Modelo hierárquico de contagem com observação parcial)
+
+Sejam $a, b > 0$ e $p \in (0,1)$ conhecidos e considere o modelo
+
+$$\lambda \sim \text{Gamma}(a, b), \qquad
+  N \mid \lambda \sim \text{Poisson}(\lambda), \qquad
+  Y \mid N \sim \text{Binomial}(N, p),$$
+
+em que $N$ é o número total de eventos, dos quais apenas $Y$ são
+observados, cada um com probabilidade $p$.
+
+(a) Mostre que $\lambda \mid N, Y \sim \text{Gamma}(a + N,\, b + 1)$ e
+    explique por que $Y$ não aparece nesta distribuição.
+
+(b) Mostre que $N - Y \mid \lambda, Y \sim \text{Poisson}(\lambda(1-p))$.
+
+(c) Mostre que $Y \mid \lambda \sim \text{Poisson}(\lambda p)$ e conclua
+    que $\lambda \mid Y \sim \text{Gamma}(a + Y, b + p)$.
+
+(d) Obtenha $\mathbb{E}[\lambda \mid Y]$ e escreva-a como combinação
+    convexa de $a/b$ e de $Y/p$.
+
+(e) Obtenha $\mathbb{E}[N \mid Y]$ e interprete cada uma de suas duas
+    parcelas.
+
+(f) Indique como implementar um Amostrador de Gibbs para $(N,\lambda)$.
+
+## Exercício (Conceitos de preditiva a posteriori)
+
+Responda a cada item em poucas linhas, sem contas.
+
+(a) Explique a diferença entre a preditiva a posteriori
+    $p(\tilde{y} \mid y)$ e a densidade $p(\tilde{y} \mid \hat{\theta})$,
+    em que $\hat{\theta}$ é a média a posteriori. Qual das duas
+    subestima a incerteza sobre $\tilde{y}$, e por quê?
+
+(b) Descreva a diferença entre a preditiva a priori e a preditiva a
+    posteriori, e diga para que serve cada uma na crítica de um modelo.
+
+(c) Explique a diferença conceitual entre uma réplica $y^{\text{rep}}$
+    gerada da preditiva a posteriori e uma observação futura avaliada
+    fora da amostra.
+
+## Exercício (Interpretação de uma checagem preditiva)
+
+Um hospital registrou o número de internações $Y_i$ em cada um dos
+$n = 365$ dias de um ano. Ajustou-se o modelo
+
+$$Y_1, \ldots, Y_n \mid \lambda \ \text{i.i.d.} \sim \text{Poisson}(\lambda),
+  \qquad \lambda \sim \text{Gamma}(a, b),$$
+
+com $a$ e $b$ pequenos, e simularam-se réplicas $y^{\text{rep}}$ da
+preditiva a posteriori. Para cada estatística $T$, a tabela traz o valor
+observado e o p-valor preditivo
+$\mathbb{P}\left(T(y^{\text{rep}}) \geq T(y) \mid y\right)$.
+
+| Estatística $T(y)$ | Observado | p-valor preditivo |
+|:--|:--:|:--:|
+| Média | $4{,}1$ | $0{,}52$ |
+| Razão variância/média | $3{,}4$ | $0{,}002$ |
+| Proporção de dias com zero internações | $0{,}12$ | $0{,}004$ |
+| Máximo | $19$ | $0{,}01$ |
+| Autocorrelação de defasagem $1$ | $0{,}31$ | $0{,}001$ |
+
+(a) Explique por que o p-valor da média é próximo de $0{,}5$ e por que
+    isso, isoladamente, não é evidência de bom ajuste.
+
+(b) O que a razão variância/média indica sobre o modelo? Proponha uma
+    alteração que trate esse problema.
+
+(c) Interprete o que a proporção de zeros e o máximo revelam. A alteração
+    proposta em (b) resolveria as duas checagens? Justifique.
+
+(d) Após as alterações, todas as checagens passam, e um colega conclui
+    que o modelo é o correto. Critique a conclusão.
+
+(e) Suponha que a análise serve para dimensionar o número de leitos.
+    Qual das cinco estatísticas você priorizaria, e por quê?
+
+## Exercício (Campo médio e CAVI em um modelo de contagem)
+
+Considere o modelo do exercício sobre contagens com observação parcial,
+isto é, $\lambda \sim \text{Gamma}(a,b)$, $N \mid \lambda \sim
+\text{Poisson}(\lambda)$ e $Y \mid N \sim \text{Binomial}(N,p)$, em que
+$Y$ é observado e $N$ é latente. Considere a aproximação de campo médio
+$q(\lambda, N) = q_1(\lambda)q_2(N)$.
+
+(a) Deduza $ELBO(q)$.
+
+(b) Deduza o algoritmo CAVI para atualizar $q_1(\lambda)$ e $q_2(N)$.
+
+(c) Explique por que a fatoração $q(\lambda)q(N)$ não reproduz a dependência a posteriori entre $\lambda$ e $N$, e relacione com o que você observou no item anterior.
+
+--
